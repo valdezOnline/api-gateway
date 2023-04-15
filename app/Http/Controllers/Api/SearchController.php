@@ -13,5 +13,4 @@ class SearchController extends Controller
         $results = ['query' => $query];
         return response()->json($results);
     }
-
 }
