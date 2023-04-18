@@ -58,3 +58,7 @@ div.search-source-header {
 div.search-results {
   padding: 1em;
 }
+
+div.search-error {
+  color: red;
+}

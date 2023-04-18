@@ -4,7 +4,8 @@
     results: [],
     count: 0,
     all_results_url: '',
-    loading: true
+    loading: true,
+    error: ''
   }" x-init=" fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + query + '&s=' + source)
   .then(res => res.json())
   .then(res => {
@@ -12,6 +13,7 @@
     count = res.total;
     all_results_url = res.all_results_url;
     loading = false;
+    error = res.error;
   })">
   <div class="search-source-header">
     <div class="source-title" x-text="source">&nbsp</div>
@@ -24,6 +26,10 @@
 
     <div x-show="loading">
       Loading...
+    </div>
+
+    <div class="search-error" x-show="error">
+      Error loading results: <span x-text="error"></span>
     </div>
   </div>
 </div>
