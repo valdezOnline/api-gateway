@@ -9,7 +9,10 @@
     results = res.results;
     count = res.total;
   })">
-  <h4 class="search-source-title">Result count: <span x-text="count">&nbsp;</span></h4>
+  <div class="search-source-title">
+    <div x-text="source">&nbsp</div>
+    <a class="all-results-link" :href="result.all-results-url">See all <span x-text="result.count">&nbsp;</span> results</a>
+  </div>
   <template x-for="result in results">
     <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
   </template>
