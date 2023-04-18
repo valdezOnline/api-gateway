@@ -46,7 +46,7 @@ class Calisphere implements SearchSourceInterface
       'source' => 'Calisphere',
       'results' => $results,
       'total' => 4,
-      'all_results_ur' => 'https://calisphere.org/search/?q=' . urlencode($this->query)
+      'all_results_url' => 'https://calisphere.org/search/?q=' . urlencode($this->query)
     ];
 
     return $response;
