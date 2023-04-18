@@ -1,0 +1,17 @@
+div.search-block {
+  margin: 0 auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+}
+
+.search-link {
+  color: #000;
+  text-decoration: none;
+}
+
+.search-source-title {
+  font-size: 18px;
+  font-weight: bold;
+}
