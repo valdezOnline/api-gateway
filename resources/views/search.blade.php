@@ -15,7 +15,9 @@
     <div x-text="source">&nbsp</div>
     <a class="all-results-link" :href="all_results_url">See all <span x-text="count">&nbsp;</span> results</a>
   </div>
-  <template x-for="result in results">
-    <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
-  </template>
+  <div class="search-results">
+    <template x-for="result in results">
+      <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
+    </template>
+  </div>
 </div>
