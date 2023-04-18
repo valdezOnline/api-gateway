@@ -7,11 +7,10 @@ div.search-block {
 }
 
 a.search-link {
-  color: #000 !important;
   text-decoration: none !important;
   display: block;
   font-weight: 600;
-  color: #2d6cc0;
+  color: #2d6cc0 !important;
 }
 
 a.search-link:hover {
@@ -47,11 +46,11 @@ a.search-link::after {
 }
 
 div.search-source-header {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   background-color: #F2F3F4;
   margin: 0;
-  padding: 1em;
+  padding: .75em;
   display: flex;
   justify-content: space-between;
 }
