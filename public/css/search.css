@@ -10,7 +10,7 @@ a.search-link {
   text-decoration: none !important;
   display: block;
   font-weight: 600;
-  color: #2d6cc0 !important;
+  color: rgb(0, 61, 165) !important;
 }
 
 a.search-link:hover {

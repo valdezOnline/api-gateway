@@ -24,6 +24,10 @@ class SearchSource
                 throw new Exception('Search source does not exist');
             }
 
+            if (empty($query)) {
+                throw new Exception('Search query is empty');
+            }
+
             $instance = new $class($query);
             $results = $instance->results();
         } catch (Exception $e) {
