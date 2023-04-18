@@ -27,26 +27,19 @@ a.all-results-link {
 }
 
 a.all-results-link::after {
+  content: "";
   display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: 14px;
+  font: normal normal normal 24px/1 "Material Design Icons";
+  font-size: 24px;
+  line-height: 1;
+  font-size: 24px;
   line-height: 1;
   font-size: inherit;
   text-rendering: auto;
+  line-height: inherit;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  transform: translate(0, 0);
-  line-height: 1;
-  text-decoration: inherit;
-  text-transform: none;
-  content: "\f105";
-  position: relative;
-  margin-left: 5px;
-  color: #f1ab00;
-  font-size: 24px;
-  top: 1px;
+  padding-left: 4px;
 }
 
 a.search-link::after {
