@@ -11,8 +11,8 @@
     count = res.total;
     all_results_url = res.all_results_url;
   })">
-  <div class="search-source-title">
-    <div x-text="source">&nbsp</div>
+  <div class="search-source-header">
+    <div class="source-title" x-text="source">&nbsp</div>
     <a class="all-results-link" :href="all_results_url">See all <span x-text="count">&nbsp;</span> results</a>
   </div>
   <div class="search-results">
