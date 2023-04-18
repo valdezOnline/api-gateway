@@ -9,6 +9,11 @@ div.search-block {
 a.search-link {
   color: #000 !important;
   text-decoration: none !important;
+  display: block;
+}
+
+a.search-link::after {
+  display: none;
 }
 
 h4.search-source-title {
