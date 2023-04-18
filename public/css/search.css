@@ -22,9 +22,8 @@ a.all-results-link {
   color: #000 !important;
   text-decoration: none !important;
   display: block;
-  font-size: 18px;
   font-weight: bold;
-  float: right;
+  text-align: right;
 }
 
 a.search-link::after {
@@ -37,11 +36,8 @@ div.search-source-header {
   background-color: #F2F3F4;
   margin: 0;
   padding: 1em;
-}
-
-div.source-title {
-  width: auto;
-  max-width: 50%;
+  display: flex;
+  justify-content: space-between;
 }
 
 div.search-results {
