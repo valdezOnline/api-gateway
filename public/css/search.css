@@ -26,6 +26,29 @@ a.all-results-link {
   text-align: right;
 }
 
+a.all-results-link::after {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: 14px;
+  line-height: 1;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  transform: translate(0, 0);
+  line-height: 1;
+  text-decoration: inherit;
+  text-transform: none;
+  content: "\f105";
+  position: relative;
+  margin-left: 5px;
+  color: #f1ab00;
+  font-size: 24px;
+  top: 1px;
+}
+
 a.search-link::after {
   display: none;
 }
