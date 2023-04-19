@@ -26,14 +26,12 @@ class CourseReserves implements SearchSourceInterface
     ]);
   }
 
-  public function results() : SearchResult
+  public function results(): SearchResult
   {
     $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=CourseReserves&limit=5&q=any,contains," . urlencode($this->query) . "&apikey=$this->apiKey";
 
     $json = Http::acceptJson()
-      ->withHeaders([
-        'X-Authentication-Token' => '82dbd622-32c4-4169-b25f-5435ef337a93',
-      ])->get($url)
+      ->get($url)
       ->throw()
       ->json();
 
