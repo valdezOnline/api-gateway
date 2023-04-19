@@ -3,5 +3,5 @@
 namespace App\Search;
 
 interface SearchSourceInterface {
-    public function results();
+    public function results() : SearchResult;
 }

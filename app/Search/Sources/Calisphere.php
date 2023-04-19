@@ -2,19 +2,26 @@
 
 namespace App\Search\Sources;
 
+use App\Search\SearchResult;
 use App\Search\SearchSourceInterface;
 use Illuminate\Support\Facades\Http;
 
 class Calisphere implements SearchSourceInterface
 {
-  protected $query;
+  protected SearchResult $results;
+
+  protected string $query;
 
   public function __construct($query)
   {
     $this->query = $query;
+
+    $this->searchResults = new SearchResult([
+      'source' => 'Calisphere',
+    ]);
   }
 
-  public function results()
+  public function results() : SearchResult
   {
     $res = Http::acceptJson()
       ->withHeaders([
@@ -43,14 +50,10 @@ class Calisphere implements SearchSourceInterface
       throw new Exeption("Calisphere API error: " . $res);
     }
 
-    $response = [
-      'query' => $this->query,
-      'source' => 'Calisphere',
-      'results' => $results,
-      'total' => $json['response']['numFound'],
-      'all_results_url' => "https://calisphere.org/search/?q=" . urlencode($this->query)
-    ];
+    $this->searchResults->results = $results;
+    $this->searchResults->total = $json['response']['numFound'];
+    $this->searchResults->allResultsLink = "https://calisphere.org/search/?q=" . urlencode($this->query);
 
-    return $response;
+    return $this->searchResults;
   }
 }

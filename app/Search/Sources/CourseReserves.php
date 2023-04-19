@@ -2,11 +2,14 @@
 
 namespace App\Search\Sources;
 
+use App\Search\SearchResult;
 use App\Search\SearchSourceInterface;
 use Illuminate\Support\Facades\Http;
 
 class CourseReserves implements SearchSourceInterface
 {
+  protected SearchResult $results;
+
   private $apiKey = "l7xx51dbfa2e1bca487188b187aae5807b81";
 
   private $apiUrl = "https://api-na.hosted.exlibrisgroup.com/primo/v1/search";
@@ -16,9 +19,14 @@ class CourseReserves implements SearchSourceInterface
   public function __construct($query)
   {
     $this->query = $query;
+
+
+    $this->searchResults = new SearchResult([
+      'source' => 'Course Reserves',
+    ]);
   }
 
-  public function results()
+  public function results() : SearchResult
   {
     $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=CourseReserves&limit=5&q=any,contains," . urlencode($this->query) . "&apikey=$this->apiKey";
 
@@ -47,14 +55,10 @@ class CourseReserves implements SearchSourceInterface
       }
     }
 
-    $response = [
-      'query' => $this->query,
-      'source' => 'Course Reserves',
-      'results' => $results,
-      'total' => $json['info']['total'],
-      'all_results_url' => "https://search.library.ucr.edu/discovery/search?query=any,contains," . urlencode($this->query) . "&tab=CourseReserves&search_scope=CourseReserves&vid=01CDL_RIV_INST:UCR&offset=0",
-    ];
+    $this->searchResults->results = $results;
+    $this->searchResults->total =  $json['info']['total'];
+    $this->searchResults->allResultsLink = "https://search.library.ucr.edu/discovery/search?query=any,contains," . urlencode($this->query) . "&tab=CourseReserves&search_scope=CourseReserves&vid=01CDL_RIV_INST:UCR&offset=0";
 
-    return $response;
+    return $this->searchResults;
   }
 }

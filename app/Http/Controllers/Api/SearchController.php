@@ -15,6 +15,6 @@ class SearchController extends Controller
 
         $results = SearchSource::search($query, $source);
 
-        return response()->json($results);
+        return response()->json($results->serializeJson());
     }
 }

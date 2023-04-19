@@ -2,21 +2,12 @@
 
 namespace App\Search;
 
-use App\Search\Sources\Calisphere;
-use App\Search\Sources\CourseReserves;
-use App\Search\Sources\UCLibrary;
-use App\Search\Sources\WorldCat;
-use App\Search\Sources\Databases;
-use App\Search\Sources\LibraryWebsite;
-use App\Search\Sources\LibGuides;
 use Exception;
 
 class SearchSource
 {
-    public function search($query, $source)
+    public function search($query, $source) : SearchResult
     {
-        $results = '';
-
         try {
             $class = 'App\\Search\\Sources\\' . $source;
 
@@ -29,11 +20,12 @@ class SearchSource
             }
 
             $instance = new $class($query);
-            $results = $instance->results();
+            return $instance->results();
         } catch (Exception $e) {
-            return ['error' => $e->getMessage(), 'source' => $source];
+            return new SearchResult([
+                'error' => $e->getMessage(),
+                'source' => $source,
+            ]);
         }
-
-        return $results;
     }
 }
