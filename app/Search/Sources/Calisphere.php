@@ -3,7 +3,7 @@
 namespace App\Search\Sources;
 
 use App\Search\SearchSourceInterface;
-use Exception;
+use Illuminate\Support\Facades\Http;
 
 class Calisphere implements SearchSourceInterface
 {
@@ -16,23 +16,15 @@ class Calisphere implements SearchSourceInterface
 
   public function results()
   {
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($curl, CURLOPT_URL, "https://solr.calisphere.org/solr/query/?q=" . urlencode($this->query) . "&rows=5&wt=json&indent=true&mm=100%25&pf3=title&pf=text,title&qs=12&ps=12");
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array('X-Authentication-Token: 82dbd622-32c4-4169-b25f-5435ef337a93'));
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $res = curl_exec($curl);
+    $res = Http::acceptJson()
+      ->withHeaders([
+        'X-Authentication-Token' => '82dbd622-32c4-4169-b25f-5435ef337a93',
+      ])->get("https://solr.calisphere.org/solr/query/?q=" . urlencode($this->query) . "&rows=5&wt=json&indent=true&mm=100%25&pf3=title&pf=text,title&qs=12&ps=12");
 
-    $results = [];
+    if ($res->successful()) {
+      $json = json_decode($res->getBody(), true);
 
-    if ($res === false) {
-      $res = curl_error($curl);
-      curl_close($curl);
-      throw new Exeption("Calisphere API error: " . $res);
-    } else {
-      curl_close($curl);
-      $json = json_decode($res, true);
+      $results = [];
       $index = 0;
 
       foreach ($json["response"]["docs"] as $doc) {
@@ -47,6 +39,8 @@ class Calisphere implements SearchSourceInterface
           break;
         }
       }
+    } else {
+      throw new Exeption("Calisphere API error: " . $res);
     }
 
     $response = [
