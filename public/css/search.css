@@ -11,6 +11,10 @@ a.search-link {
   display: block;
   font-weight: 600;
   color: rgb(0, 61, 165) !important;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 a.search-link:hover {
