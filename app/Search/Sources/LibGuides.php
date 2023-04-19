@@ -2,20 +2,52 @@
 
 namespace App\Search\Sources;
 
+use App\Search\SearchResult;
 use App\Search\SearchSourceInterface;
+use Drnxloc\LaravelHtmlDom\HtmlDomParser;
+use Illuminate\Support\Facades\Http;
 
 class LibGuides implements SearchSourceInterface
 {
+  protected SearchResult $searchResults;
+
   protected $query;
 
   public function __construct($query)
   {
     $this->query = $query;
+
+    $this->searchResults = new SearchResult([
+      'source' => 'LibGuides',
+    ]);
   }
 
-  public function results()
+  public function results(): SearchResult
   {
-    $results = ['query' => $this->query, 'source' => 'LibGuides', 'results' => [], 'total' => 0];
-    return $results;
+    $url = "http://lgapi.libapps.com/1.1/guides?site_id=534&key=97115ae9b0880f4833252d4049715874&sort_by=relevance&search_terms=". urlencode($this->query);
+    $json = Http::acceptJson()
+      ->get($url)
+      ->throw()
+      ->json();
+
+    $results = [];
+    $index = 0;
+
+    foreach ($json as $element) {
+      $results[] = [
+        'title' => $element['name'],
+        'url' => $element['url'],
+      ];
+
+      if ($index++ > 4) {
+        break;
+      }
+    }
+
+    $this->searchResults->allResultsLink = "https://guides.lib.ucr.edu/az.php?q=" . urlencode($this->query);
+    $this->searchResults->total =  count($json);
+    $this->searchResults->results = $results;
+
+    return $this->searchResults;
   }
 }
