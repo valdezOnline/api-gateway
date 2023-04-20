@@ -2,20 +2,50 @@
 
 namespace App\Search\Sources;
 
+use App\Search\SearchResult;
 use App\Search\SearchSourceInterface;
+use Drnxloc\LaravelHtmlDom\HtmlDomParser;
+use Illuminate\Support\Facades\Http;
 
 class LibraryWebsite implements SearchSourceInterface
 {
+  protected SearchResult $searchResults;
+
   protected $query;
 
   public function __construct($query)
   {
     $this->query = $query;
+
+    $this->searchResults = new SearchResult([
+      'source' => 'Library Website',
+    ]);
   }
 
-  public function results()
+  public function results(): SearchResult
   {
-    $results = ['query' => $this->query, 'source' => 'Library Website', 'results' => [], 'total' => 0];
-    return $results;
+    $url = "https://live-ucr-librarywebsite.pantheonsite.io/search?keywords=" . urlencode($this->query);
+    $html = Http::get($url)->throw();
+    $html = HtmlDomParser::str_get_html($html);
+
+    $results = [];
+    $index = 0;
+
+    foreach ($html->find('a[rel="bookmark"]') as $link) {
+      $results[] = [
+        'title' => $link->find('span')[0]->innertext,
+        'url' => 'https://live-ucr-librarywebsite.pantheonsite.io' . $link->href,
+      ];
+
+      if (++$index > 4) {
+        break;
+      }
+    }
+
+    $this->searchResults->allResultsLink = "https://live-ucr-librarywebsite.pantheonsite.io/search?keywords=" . urlencode($this->query);
+    $this->searchResults->total =  count($results);
+    $this->searchResults->results = $results;
+
+    return $this->searchResults;
   }
 }
