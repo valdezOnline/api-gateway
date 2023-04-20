@@ -66,3 +66,25 @@ div.search-results {
 div.search-error {
   color: red;
 }
+
+div#search-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+input#main-search {
+  height: 80px;
+  padding: 5px 95px 5px 20px;
+  font-size: 28px;
+  width: 100%;
+}
+
+button#search-button {
+  width: 80px;
+  height: 80px;
+  background-color: #2d6cc0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-bottom: 0;
+}
