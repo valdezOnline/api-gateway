@@ -4,7 +4,7 @@
 </div>
 <script>
   function search() {
-    let query = document.getElementById("main_search").value;
+    let query = document.getElementById("main-search").value;
     window.location.href = "/onesearch?q=" + query;
   }
 </script>
