@@ -26,7 +26,7 @@
       <div class="search-result">
         <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
         <div class="result-details">
-          Type: <span x-text="result.type">&nbsp;</span><br/>
+          Type: <span class="pill" x-text="result.type">&nbsp;</span><br/>
           Collection: <a x-text="result.collection_name" :href="result.collection_url">&nbsp;</a>
         </div>
       </div>

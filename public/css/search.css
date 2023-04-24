@@ -72,6 +72,11 @@ div.search-result {
   padding-top: 1em;
 }
 
+.pill {
+  background-color: #009B76;
+  color: #fff;
+}
+
 div.search-result:last-child  {
   border-bottom: none;
 }
