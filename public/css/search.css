@@ -61,7 +61,6 @@ div.search-source-header {
 
 div.search-results {
   padding: 1em;
-  padding-top: 0;
 }
 
 div.search-result {
@@ -69,14 +68,6 @@ div.search-result {
   font-weight: normal;
   border-bottom: solid 1px #ececec;
   padding-bottom: 1em;
-  padding-top: 1em;
-}
-
-div.loading {
-  padding-top: 1em;
-}
-
-.search-error {
   padding-top: 1em;
 }
 
