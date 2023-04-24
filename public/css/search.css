@@ -81,7 +81,7 @@ div.search-result {
 }
 
 .blue {
-  background-color: #2d6cc0;
+  background-color: #2d6cc0!important;
 }
 
 div.search-result:first-of-type {

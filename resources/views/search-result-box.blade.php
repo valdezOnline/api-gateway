@@ -113,12 +113,12 @@ fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + quer
     results</a>
 </div>
 <div class="search-results">
-  <p class="source-heading">The library offers many subject guides prepared by library staff. The guides are updated periodically with resources for specific subject areas. Use these guides to get started with finding library resources in your discipline.</p>
+  <p class="source-heading">UC Library Search connects the libraries on all 10 University of California campuses through a unified discovery and borrowing system.</p>
   <template x-for="result in results">
     <div class="search-result">
       <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
       <div class="result-details">
-        <span class="pill" x-text="result.type">&nbsp;</span>&nbsp;<span class="blue pill" x-text="result.source">&nbsp;</span><br/>
+        <span class="pill" x-text="result.type">&nbsp;</span>&nbsp;<span class="pill blue">Source: <span x-text="result.source">&nbsp;</span></span><br/>
         <span x-text="result.contents">&nbsp;</span>
       </div>
     </div>
