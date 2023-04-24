@@ -83,8 +83,10 @@ div.search-result {
 .pill {
   background-color: #009B76;
   color: #fff;
-  padding: 2px;
-  border-radius: 2px;
+  padding: 1px;
+  padding-left: 3px;
+  padding-right: 3px;
+  border-radius: 3px;
 }
 
 div.search-result:last-child  {
