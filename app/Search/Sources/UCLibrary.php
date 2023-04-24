@@ -53,7 +53,7 @@ class UCLibrary implements SearchSourceInterface
         'contents' => $contents,
       ];
 
-      if ($index++ > 4) {
+      if ($index++ > 2) {
         break;
       }
     }

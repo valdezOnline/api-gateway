@@ -41,7 +41,7 @@ class LibGuides implements SearchSourceInterface
         'type' => $element['type_label'] ?? '',
       ];
 
-      if ($index++ > 4) {
+      if ($index++ > 2) {
         break;
       }
     }

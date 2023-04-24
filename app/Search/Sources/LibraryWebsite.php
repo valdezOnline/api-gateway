@@ -37,7 +37,7 @@ class LibraryWebsite implements SearchSourceInterface
         'url' => 'https://live-ucr-librarywebsite.pantheonsite.io' . $link->href ?? '',
       ];
 
-      if (++$index > 4) {
+      if (++$index > 2) {
         break;
       }
     }

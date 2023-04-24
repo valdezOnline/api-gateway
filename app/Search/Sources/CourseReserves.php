@@ -54,7 +54,7 @@ class CourseReserves implements SearchSourceInterface
         'description' => $contents,
       ];
 
-      if ($index++ > 4) {
+      if ($index++ > 3) {
         break;
       }
     }

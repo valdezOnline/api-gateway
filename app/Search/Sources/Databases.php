@@ -44,7 +44,7 @@ class Databases implements SearchSourceInterface
         'description' => $description ?? '',
       ];
 
-      if (++$index > 4) {
+      if (++$index > 2) {
         break;
       }
     }
