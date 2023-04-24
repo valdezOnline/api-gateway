@@ -80,11 +80,11 @@ div.search-result {
   border-radius: 3px;
 }
 
-div.search-result:first-child {
+.search-result:first-child {
   padding-top: 0;
 }
 
-div.search-result:last-child {
+.search-result:last-child {
   border-bottom: none !important;
 }
 
