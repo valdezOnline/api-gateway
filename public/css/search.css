@@ -67,6 +67,7 @@ div.search-result {
   font-size: 1.1em;
   font-weight: normal;
   border-bottom: solid 1px #ececec;
+  padding-bottom: 1em;
 }
 
 div.search-result > a {
