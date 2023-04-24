@@ -53,8 +53,8 @@ class CourseReserves implements SearchSourceInterface
         'url' => $link,
         'type' => $type,
         'source' => $source,
-        'description' => Str::limit($contents, 50, '...'),
-        'crs' => explode('$$', $crs)[0] ?? '',
+        'description' => Str::limit($contents, 150, '...'),
+        'crs' => explode('$$', $crs)[2] ?? '',
       ];
 
       if ($index++ > 3) {

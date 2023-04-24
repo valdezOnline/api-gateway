@@ -51,7 +51,7 @@ class UCLibrary implements SearchSourceInterface
         'url' => $link,
         'type' => $type,
         'source' => $source,
-        'contents' => Str::limit($contents, 50, '...'),
+        'contents' => Str::limit($contents, 150, '...'),
       ];
 
       if ($index++ > 2) {
