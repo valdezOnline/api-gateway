@@ -80,11 +80,11 @@ div.search-result {
   border-radius: 3px;
 }
 
-div.search-result:last-child  {
-  border-bottom: none!important;
+div.search-result:last-child {
+  border-bottom: none !important;
 }
 
-div.search-result > a {
+div.search-result>a {
   font-weight: 400;
 }
 
@@ -115,6 +115,8 @@ button#search-button {
   background-color: #2d6cc0;
   margin-bottom: 0;
 }
+
 .source-heading {
-  font-size: 1.2em;
+  font-size: .9em;
+  font-style: italic;
 }
