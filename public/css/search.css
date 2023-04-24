@@ -64,7 +64,12 @@ div.search-results {
 }
 
 div.search-result {
-font-size: 1.2em;
+  font-size: 1.1em;
+  font-weight: normal;
+}
+
+div.search-result > a {
+  font-weight: 400;
 }
 
 div.search-error {
