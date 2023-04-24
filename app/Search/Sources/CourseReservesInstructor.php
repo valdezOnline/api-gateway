@@ -26,7 +26,7 @@ class CourseReservesInstructor implements SearchSourceInterface
     ]);
   }
 
-  public function results() : SearchResult
+  public function results(): SearchResult
   {
     $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=CourseReserves&limit=5&q=course_instructor,contains," . urlencode($this->query) . "&apikey=$this->apiKey";
 
@@ -41,13 +41,22 @@ class CourseReservesInstructor implements SearchSourceInterface
     $index = 0;
 
     foreach ($json['docs'] as $element) {
-      $docId = $element['pnx']['control']['recordid'][0];
-      $title = $element['pnx']['display']['title'][0];
+      $docId = $element['pnx']['control']['recordid'][0] ?? '';
+      $title = $element['pnx']['display']['title'][0] ?? '';
+      $source = $element['pnx']['display']['source'][0] ?? '';
+      $type = $element['pnx']['display']['type'][0] ?? '';
+      $contents = $element['pnx']['display']['contents'][0] ?? '';
+      $crs = $element['pnx']['display']['crsinfo'][0] ?? '';
+
       $link = 'https://search.library.ucr.edu/discovery/fulldisplay?docid=' . $docId . '&context=PC&vid=01CDL_RIV_INST:UCR&search_scope=CourseReserves&lang=en';
 
       $results[] = [
         'title' => $title,
         'url' => $link,
+        'type' => $type,
+        'source' => $source,
+        'contents' => $contents,
+        'crs' => $crs,
       ];
 
       if ($index++ > 4) {

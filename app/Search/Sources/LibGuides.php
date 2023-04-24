@@ -35,8 +35,10 @@ class LibGuides implements SearchSourceInterface
 
     foreach ($json as $element) {
       $results[] = [
-        'title' => $element['name'],
-        'url' => $element['url'],
+        'title' => $element['name'] ?? '',
+        'url' => $element['url'] ?? '',
+        'description' => $element['description'] ?? '',
+        'type' => $element['type_label'] ?? '',
       ];
 
       if ($index++ > 4) {

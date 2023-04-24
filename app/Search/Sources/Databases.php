@@ -35,11 +35,13 @@ class Databases implements SearchSourceInterface
     $index = 0;
 
     foreach ($html->find('div.s-lg-az-result') as $result) {
+      $description = $result->find('div.s-lg-az-result-description')[0]->innertext ?? '';
       $link =  $result->find('a');
 
       $results[] = [
-        'title' => $link[0]->innertext,
-        'url' => $link[0]->href,
+        'title' => $link[0]->innertext ?? '',
+        'url' => $link[0]->href ?? '',
+        'description' => $description ?? '',
       ];
 
       if (++$index > 4) {

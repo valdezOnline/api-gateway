@@ -35,11 +35,11 @@ class Calisphere implements SearchSourceInterface
       $index = 0;
 
       foreach ($json["response"]["docs"] as $doc) {
-        $link = $doc["url_item"];
-        $title = $doc["title_ss"][0];
-        $type = $doc["type_ss"][0];
-        $collection_name = $doc["collection_name"][0];
-        $collection_url = $doc["collection_url"][0];
+        $link = $doc["url_item"] ?? '';
+        $title = $doc["title_ss"][0] ?? '';
+        $type = $doc["type_ss"][0] ?? '';
+        $collection_name = $doc["collection_name"][0] ?? '';
+        $collection_url = $doc["collection_url"][0] ?? '';
 
         $results[] = [
           'title' => $title,

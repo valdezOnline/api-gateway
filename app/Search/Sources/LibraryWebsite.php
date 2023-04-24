@@ -33,8 +33,8 @@ class LibraryWebsite implements SearchSourceInterface
 
     foreach ($html->find('a[rel="bookmark"]') as $link) {
       $results[] = [
-        'title' => $link->find('span')[0]->innertext,
-        'url' => 'https://live-ucr-librarywebsite.pantheonsite.io' . $link->href,
+        'title' => $link->find('span')[0]->innertext ?? '',
+        'url' => 'https://live-ucr-librarywebsite.pantheonsite.io' . $link->href ?? '',
       ];
 
       if (++$index > 4) {
