@@ -49,7 +49,7 @@ class Calisphere implements SearchSourceInterface
           'collection_url' => $collection_url,
         ];
 
-        if ($index++ > 2) {
+        if (++$index > 2) {
           break;
         }
       }
