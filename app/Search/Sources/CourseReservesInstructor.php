@@ -5,6 +5,7 @@ namespace App\Search\Sources;
 use App\Search\SearchResult;
 use App\Search\SearchSourceInterface;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class CourseReservesInstructor implements SearchSourceInterface
 {
@@ -55,8 +56,8 @@ class CourseReservesInstructor implements SearchSourceInterface
         'url' => $link,
         'type' => $type,
         'source' => $source,
-        'description' => $contents,
-        'crs' => $crs,
+        'description' => Str::limit($contents, 50, '...'),
+        'crs' => explode('$$', $crs)[0] ?? '',
       ];
 
       if ($index++ > 3) {
