@@ -90,7 +90,7 @@ div.search-result {
 }
 
 div.search-result:last-child  {
-  border-bottom: none;
+  border-bottom: none!important;
 }
 
 div.search-result > a {
