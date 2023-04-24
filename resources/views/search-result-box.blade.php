@@ -6,7 +6,8 @@
     all_results_url: '',
     loading: true,
     error: ''
-  }" x-init=" fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + query + '&s=' + source)
+  }" x-init="
+  fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + query + '&s=' + source)
   .then(res => res.json())
   .then(res => {
     results = res.results;
@@ -21,11 +22,13 @@
   </div>
   <div class="search-results">
     <template x-for="result in results">
-      <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
+      <div class="search-result">
+        <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
+      </div>
     </template>
 
     <div x-show="loading">
-      Loading...
+      Loading results...
     </div>
 
     <div class="search-error" x-show="error">

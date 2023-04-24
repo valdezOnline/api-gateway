@@ -51,7 +51,7 @@ class CourseReserves implements SearchSourceInterface
         'url' => $link,
         'type' => $type,
         'source' => $source,
-        'contents' => $contents,
+        'description' => $contents,
       ];
 
       if ($index++ > 4) {

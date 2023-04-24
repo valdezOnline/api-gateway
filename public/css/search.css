@@ -63,6 +63,10 @@ div.search-results {
   padding: 1em;
 }
 
+div.search-result {
+font-size: 1.2em;
+}
+
 div.search-error {
   color: red;
 }
