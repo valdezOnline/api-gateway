@@ -72,6 +72,10 @@ div.search-result {
   padding-top: 1em;
 }
 
+div.search-result:last-child  {
+  border-bottom: none;
+}
+
 div.search-result > a {
   font-weight: 400;
 }
