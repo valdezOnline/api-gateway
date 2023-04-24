@@ -43,6 +43,7 @@ class CourseReserves implements SearchSourceInterface
       $source = $element['pnx']['display']['source'][0] ?? '';
       $type = $element['pnx']['display']['type'][0] ?? '';
       $contents = $element['pnx']['display']['contents'][0] ?? '';
+      $crs = $element['pnx']['display']['crsinfo'][0] ?? '';
 
       $link = 'https://search.library.ucr.edu/discovery/fulldisplay?docid=' . $docId . '&context=PC&vid=01CDL_RIV_INST:UCR&search_scope=CourseReserves&lang=en';
 
@@ -52,6 +53,7 @@ class CourseReserves implements SearchSourceInterface
         'type' => $type,
         'source' => $source,
         'description' => $contents,
+        'crs' => $crs,
       ];
 
       if ($index++ > 3) {
