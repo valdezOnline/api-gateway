@@ -73,6 +73,11 @@ div.search-result > a {
   font-weight: 400;
 }
 
+div.result-details {
+  font-size: 0.9em;
+  color: #666;
+}
+
 div.search-error {
   color: red;
 }
