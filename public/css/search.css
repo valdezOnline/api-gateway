@@ -84,6 +84,10 @@ div.search-result:first-of-type {
   padding-top: 0;
 }
 
+.search-result:last-of-type {
+  border-bottom: none !important;
+}
+
 div.search-result>a {
   font-weight: 400;
 }
