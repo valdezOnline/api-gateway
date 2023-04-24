@@ -80,6 +80,10 @@ div.search-result {
   border-radius: 3px;
 }
 
+.blue {
+  background-color: #2d6cc0;
+}
+
 div.search-result:first-of-type {
   padding-top: 0;
 }

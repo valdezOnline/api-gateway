@@ -5,6 +5,7 @@ namespace App\Search\Sources;
 use App\Search\SearchResult;
 use App\Search\SearchSourceInterface;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class UCLibrary implements SearchSourceInterface
 {
@@ -50,7 +51,7 @@ class UCLibrary implements SearchSourceInterface
         'url' => $link,
         'type' => $type,
         'source' => $source,
-        'contents' => $contents,
+        'contents' => Str::limit($contents, 50, '...'),
       ];
 
       if ($index++ > 2) {

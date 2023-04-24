@@ -1,38 +1,134 @@
+<!-- Calisphere -->
 <div class="search-block" x-data="{
-    source: 'Calisphere',
-    query: new URLSearchParams(location.search).get('q'),
-    results: [],
-    count: 0,
-    all_results_url: '',
-    loading: true,
-    error: ''
-  }" x-init="
-  fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + query + '&s=' + source)
-  .then(res => res.json())
-  .then(res => {
-    results = res.results;
-    count = res.total;
-    all_results_url = res.all_results_url;
-    loading = false;
-    error = res.error;
-  })">
-  <div class="search-source-header">
-    <div class="source-title" x-text="source">&nbsp</div>
-    <a class="all-results-link" :href="all_results_url" x-show="count > 0">See all <span x-text="count">&nbsp;</span> results</a>
-  </div>
-  <div class="search-results">
-    <template x-for="result in results">
-      <div class="search-result">
-        <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
+  source: 'Calisphere',
+  query: new URLSearchParams(location.search).get('q'),
+  results: [],
+  count: 0,
+  all_results_url: '',
+  loading: true,
+  error: ''
+}" x-init="
+fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + query + '&s=' + source)
+.then(res => res.json())
+.then(res => {
+  results = res.results;
+  count = res.total;
+  all_results_url = res.all_results_url;
+  loading = false;
+  error = res.error;
+})">
+<div class="search-source-header">
+  <div class="source-title" x-text="source">&nbsp</div>
+  <a class="all-results-link" :href="all_results_url" x-show="count > 0">See all <span x-text="count">&nbsp;</span>
+    results</a>
+</div>
+<div class="search-results">
+  <p class="source-heading">Calisphere is your gateway to digital collections from California's great libraries, archives, and museums. Discover over 2,100,000 images, texts, and recordings.</p>
+  <template x-for="result in results">
+    <div class="search-result">
+      <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
+      <div class="result-details">
+        <span class="pill" x-text="result.type">&nbsp;</span><br/>
+        Collection: <a x-text="result.collection_name" :href="result.collection_url">&nbsp;</a>
       </div>
-    </template>
-
-    <div x-show="loading">
-      Loading results...
     </div>
+  </template>
 
-    <div class="search-error" x-show="error">
-      Error loading results: <span x-text="error"></span>
-    </div>
+  <div class="loading" x-show="loading">
+    Loading results...
   </div>
+  <div class="search-error" x-show="error">
+    Error loading results: <span x-text="error"></span>
+  </div>
+</div>
+</div>
+
+<!-- LibGuides-->
+<div class="search-block" x-data="{
+  source: 'LibGuides',
+  query: new URLSearchParams(location.search).get('q'),
+  results: [],
+  count: 0,
+  all_results_url: '',
+  loading: true,
+  error: ''
+}" x-init="
+fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + query + '&s=' + source)
+.then(res => res.json())
+.then(res => {
+  results = res.results;
+  count = res.total;
+  all_results_url = res.all_results_url;
+  loading = false;
+  error = res.error;
+})">
+<div class="search-source-header">
+  <div class="source-title" x-text="source">&nbsp</div>
+  <a class="all-results-link" :href="all_results_url" x-show="count > 0">See all <span x-text="count">&nbsp;</span>
+    results</a>
+</div>
+<div class="search-results">
+  <p class="source-heading">The library offers many subject guides prepared by library staff. The guides are updated periodically with resources for specific subject areas. Use these guides to get started with finding library resources in your discipline.</p>
+  <template x-for="result in results">
+    <div class="search-result">
+      <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
+      <div class="result-details">
+        <span class="pill" x-text="result.type">&nbsp;</span><br/>
+        <span x-text="result.description">&nbsp;</span>
+      </div>
+    </div>
+  </template>
+
+  <div class="loading" x-show="loading">
+    Loading results...
+  </div>
+  <div class="search-error" x-show="error">
+    Error loading results: <span x-text="error"></span>
+  </div>
+</div>
+</div>
+
+<!-- UC Library Search-->
+<div class="search-block" x-data="{
+  source: 'UCLibrary',
+  query: new URLSearchParams(location.search).get('q'),
+  results: [],
+  count: 0,
+  all_results_url: '',
+  loading: true,
+  error: ''
+}" x-init="
+fetch('https://library-public-api-f7ju7.ondigitalocean.app/api/search?q=' + query + '&s=' + source)
+.then(res => res.json())
+.then(res => {
+  results = res.results;
+  count = res.total;
+  all_results_url = res.all_results_url;
+  loading = false;
+  error = res.error;
+})">
+<div class="search-source-header">
+  <div class="source-title">UC Library Search</div>
+  <a class="all-results-link" :href="all_results_url" x-show="count > 0">See all <span x-text="count">&nbsp;</span>
+    results</a>
+</div>
+<div class="search-results">
+  <p class="source-heading">The library offers many subject guides prepared by library staff. The guides are updated periodically with resources for specific subject areas. Use these guides to get started with finding library resources in your discipline.</p>
+  <template x-for="result in results">
+    <div class="search-result">
+      <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
+      <div class="result-details">
+        <span class="pill" x-text="result.type">&nbsp;</span>&nbsp;<span class="blue pill" x-text="result.source">&nbsp;</span><br/>
+        <span x-text="result.contents">&nbsp;</span>
+      </div>
+    </div>
+  </template>
+
+  <div class="loading" x-show="loading">
+    Loading results...
+  </div>
+  <div class="search-error" x-show="error">
+    Error loading results: <span x-text="error"></span>
+  </div>
+</div>
 </div>
