@@ -72,9 +72,19 @@ div.search-result {
   padding-top: 1em;
 }
 
+.loading {
+  padding-top: 1em;
+}
+
+.search-error {
+  padding-top: 1em;
+}
+
 .pill {
   background-color: #009B76;
   color: #fff;
+  padding: 2px;
+  border-radius: 2px;
 }
 
 div.search-result:last-child  {

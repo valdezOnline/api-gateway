@@ -32,7 +32,7 @@
       </div>
     </template>
 
-    <div x-show="loading">
+    <div class="loading" x-show="loading">
       Loading results...
     </div>
     <div class="search-error" x-show="error">
