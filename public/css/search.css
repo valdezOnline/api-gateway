@@ -61,6 +61,7 @@ div.search-source-header {
 
 div.search-results {
   padding: 1em;
+  padding-top: 0;
 }
 
 div.search-result {
