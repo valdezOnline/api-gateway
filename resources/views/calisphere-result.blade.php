@@ -22,6 +22,7 @@
       results</a>
   </div>
   <div class="search-results">
+    <p class="source-heading">Calisphere is your gateway to digital collections from California's great libraries, archives, and museums. Discover over 2,100,000 images, texts, and recordings.</p>
     <template x-for="result in results">
       <div class="search-result">
         <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
