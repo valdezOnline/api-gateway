@@ -134,3 +134,11 @@ button#search-button {
   font-style: italic;
   padding-bottom: 0;
 }
+
+.service-link {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: rgb(0, 61, 165) !important;
+  text-decoration: none;
+  text-transform: uppercase;
+}
