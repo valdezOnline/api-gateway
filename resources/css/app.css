@@ -4,9 +4,9 @@ div.search-block {
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
-  }
+}
 
-  a.search-link {
+a.search-link {
     text-decoration: none !important;
     display: block;
     font-weight: 600;
@@ -15,21 +15,21 @@ div.search-block {
     white-space: nowrap;
     text-overflow: ellipsis;
     max-width: 100%;
-  }
+}
 
-  a.search-link:hover {
+a.search-link:hover {
     text-decoration: underline !important;
-  }
+}
 
-  a.all-results-link {
+a.all-results-link {
     color: #000 !important;
     text-decoration: none !important;
     display: block;
     font-weight: bold;
     text-align: right;
-  }
+}
 
-  a.all-results-link::after {
+a.all-results-link::after {
     content: "";
     display: inline-block;
     font: normal normal normal 24px/1 "Material Design Icons";
@@ -43,13 +43,13 @@ div.search-block {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding-left: 4px;
-  }
+}
 
-  a.search-link::after {
+a.search-link::after {
     display: none;
-  }
+}
 
-  div.search-source-header {
+div.search-source-header {
     font-size: 16px;
     font-weight: bold;
     background-color: #F2F3F4;
@@ -57,124 +57,138 @@ div.search-block {
     padding: .75em;
     display: flex;
     justify-content: space-between;
-  }
+}
 
-  div.search-results {
+div.search-results {
     padding: 1em;
-  }
+}
 
-  div.search-result {
+div.search-result {
     font-size: 1.1em;
     font-weight: normal;
     border-bottom: solid 1px #ececec;
     padding-bottom: 1em;
     padding-top: 1em;
-  }
+}
 
-  .pill {
+.pill {
     background-color: #009B76;
     color: #fff;
     padding: 1px;
     padding-left: 3px;
     padding-right: 3px;
     border-radius: 3px;
-  }
+}
 
-  .blue {
+.blue {
     background-color: #2d6cc0 !important;
-  }
+}
 
-  .red {
+.red {
     background-color: #d9534f !important;
-  }
+}
 
-  div.search-result:first-of-type {
+div.search-result:first-of-type {
     padding-top: 0;
-  }
+}
 
-  .search-result:last-of-type {
+.search-result:last-of-type {
     border-bottom: none !important;
-  }
+}
 
-  div.search-result>a {
+div.search-result>a {
     font-weight: 400;
     margin-bottom: 4px;
-  }
+}
 
-  div.result-details {
+div.result-details {
     font-size: 0.7em;
     color: #666;
-  }
+}
 
-  div.search-error {
+div.search-error {
     color: red;
-  }
+}
 
-  div#search-container {
+div#search-container {
     display: flex;
     justify-content: flex-start;
-  }
+}
 
-  input#main-search {
+input#main-search {
     height: 80px;
     padding: 5px 95px 5px 20px;
     font-size: 28px;
     width: 100%;
-  }
+}
 
-  button#search-button {
+button#search-button {
     width: 80px;
     height: 80px;
     background-color: #2d6cc0;
     margin-bottom: 0;
-  }
+}
 
-  .source-heading {
+.source-heading {
     font-size: .9em;
     font-style: italic;
     padding-bottom: 0;
-  }
+}
 
-  .service-link {
+.service-link {
     font-size: 1.1em;
     font-weight: bold;
     color: rgb(0, 61, 165) !important;
     text-decoration: none;
     text-transform: uppercase;
-  }
+}
 
 
-  main>div#content-container div.primary-content-area a {
+main>div#content-container div.primary-content-area a {
     text-decoration: none;
     color: rgb(0, 61, 165) !important;
-  }
+}
 
-  .flex {
+.flex {
     display: flex;
     justify-content: center;
-  }
+}
 
-  .layout-col {
+.layout-col {
     flex-basis: 0;
     flex: 1 1 0px;
-  }
+}
 
-  .big {
+.big {
     font-size: 24px;
     font-weight: 300;
     line-height: 1.2;
-  }
+}
 
-  .row {
+.row {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
-  }
+}
 
-  .column {
+.column {
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
     flex: 1;
-  }
+}
+
+#hours-container {
+    width: 100%;
+    border: solid 1px #ccc;
+}
+
+main>div#content-container div.tabs-content div.tabs-panel {
+    padding: 32px !important;
+}
+
+.tabs-panel {
+    display: none;
+    padding: 0 !important;
+}
