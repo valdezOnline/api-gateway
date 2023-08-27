@@ -185,7 +185,8 @@ main>div#content-container div.primary-content-area a {
 }
 
 main>div#content-container div.tabs-content div.tabs-panel {
-    padding: 32px !important;
+    padding: 0 !important;
+    margin-top: 32px;
 }
 
 .tabs-panel {
