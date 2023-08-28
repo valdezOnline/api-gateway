@@ -1,20 +1,17 @@
 import './bootstrap';
 
-function printStartAndEndOfCurrentWeek() {
-    const today = new Date();
+function fillCalendarDays($day) {
+    const today = $day;
+    const $days = [];
+    const $names = ['Sun', 'Mon', 'Tues', 'Weds', 'Thurs', 'Fri', 'Sat'];
 
-    // Get the first day of the current week (Sunday)
-    const firstDay = new Date(
-        today.setDate(today.getDate() - today.getDay()),
-    );
-
-    // Get the last day of the current week (Saturday)
-    const lastDay = new Date(
-        today.setDate(today.getDate() - today.getDay() + 6),
-    );
-
-    console.log(firstDay);
-    console.log(lastDay);
+    // Get the days of the requested week
+    for (var i = 0; i < 7; i++) {
+        $days.push(new Date(today.setDate(today.getDate() - today.getDay() + i)));
+        var xpath = "//td[text()='" + $names[i] + "']";
+        var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        matchingElement.innerHTML = $names[i] + " " + $days[i].getDate();
+    }
 }
 
-printStartAndEndOfCurrentWeek();
+fillCalendarDays(new Date());
