@@ -195,5 +195,5 @@ main>div#content-container div.tabs-content div.tabs-panel {
 }
 
 thead td {
-    white-space: no-wrap!important;
+    white-space: nowrap!important;
 }
