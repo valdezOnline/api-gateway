@@ -193,3 +193,7 @@ main>div#content-container div.tabs-content div.tabs-panel {
     display: none;
     padding: 0 !important;
 }
+
+thead td {
+    white-space: no-wrap!important;
+}
