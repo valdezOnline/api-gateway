@@ -11,8 +11,13 @@ function fillCalendarDays() {
     for (var i = 0; i < 7; i++) {
         days.push(new Date(today.setDate(today.getDate() - today.getDay() + i)));
         var xpath = "//td[text()[contains(.,'" + names[i] + "')]]";
-        var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        matchingElement.innerHTML = names[i] + " " + days[i].getDate();
+        var result = document.evaluate(xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+        for (var j = 0; j < result.snapshotLength; j++) {
+            var node = result.snapshotItem(j);
+            console.log(node);
+            node.innerHTML = names[i] + " " + days[i].getDate();
+        }
     }
 
     document.getElementById('start').innerText = days[0].toLocaleDateString();
