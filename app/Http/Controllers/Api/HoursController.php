@@ -12,23 +12,16 @@ class HoursController extends Controller
     {
         $start = $request->input('start');
 
-        // For now, mock the results to the library website done
-        $output = [
-            "location" => []
-          ];
+        // For now, mock the response to the library website
+        $output = ["exceptions" => []];
 
-        $output['location'][] = [
-            'name' => 'rivera',
+        $output["exceptions"]["rivera"] = [];
 
-        ];
+        $output["exceptions"]["orbach"] = [];
 
-        $output['locations'][] = [
-            'name' => 'orbach',
-        ];
+        $output["exceptions"]["scua"] = [];
 
-        $output['locations'][] = [
-            'name' => 'scua',
-        ];
+        $output["exceptions"]["bearhelp"] = [];
 
         return response()->json($output);
     }
