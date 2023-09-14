@@ -3,6 +3,7 @@
 namespace App\Search;
 
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 class SearchSource
 {
@@ -20,7 +21,13 @@ class SearchSource
             }
 
             $instance = new $class($query);
-            return $instance->results();
+
+            $results = Cache::remember('search_' . $source . '_' . $query, 60 * 60, function () use ($instance) {
+                return $instance->results();
+            });
+
+            return $results;
+
         } catch (Exception $e) {
             return new SearchResult([
                 'error' => $e->getMessage(),
