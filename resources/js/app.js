@@ -20,8 +20,13 @@ function fillCalendarDays() {
         }
     }
 
-    document.getElementById('start').innerText = days[0].toLocaleDateString();
-    document.getElementById('end').innerText = days[6].toLocaleDateString();
+    try
+    {
+        document.getElementById('start').innerText = days[0].toLocaleDateString();
+        document.getElementById('end').innerText = days[6].toLocaleDateString();
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 function nextWeek() {
