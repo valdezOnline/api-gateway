@@ -15,7 +15,6 @@ function fillCalendarDays() {
 
         for (var j = 0; j < result.snapshotLength; j++) {
             var node = result.snapshotItem(j);
-            console.log(node);
             node.innerHTML = names[i] + " " + days[i].getDate();
         }
     }

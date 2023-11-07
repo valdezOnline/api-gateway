@@ -46,7 +46,7 @@ class LibGuides implements SearchSourceInterface
       }
     }
 
-    $this->searchResults->allResultsLink = "https://guides.lib.ucr.edu/az.php?q=" . urlencode($this->query);
+    $this->searchResults->allResultsLink = "https://guides.lib.ucr.edu/srch.php?q=" . urlencode($this->query);
     $this->searchResults->total =  count($json);
     $this->searchResults->results = $results;
 
