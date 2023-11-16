@@ -8,7 +8,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="antialiased">
+<body class="antialiased" onload="updateDateExceptions();">
 <button id="previous">Previous</button>
 <button id="next">Next</button>
 
@@ -81,56 +81,81 @@
     </tbody>
 </table>
 <script type="text/javascript" defer>
-    // Save the old date values so we can rewrite them if needed
+    // Save the old date values so we can rewrite them as needed
     var tables = document.querySelectorAll('table');
     var oldValues = {};
+    var locations = [
+        "All locations",
+        "Tomás Rivera Library",
+        "Library Administration",
+        "Library Support/InfoDesk - Rivera",
+        "IT Support/BearHelp - Rivera",
+        "Orbach Science Library",
+        "Library Support/InfoDesk",
+        "Creat'R Lab",
+        "IT Support/BearHelp - Orbach",
+        "Special Collections & University Archives"
+    ];
 
     tables.forEach(function (table) {
-        var rows = table.rows;
-        oldValues[table.id] = [];
-
-        for (let i = 1; i < rows.length; i++) {
-            oldValues[table.id].push(rows[i].cells[6].innerText);
-        }
+        var tBody = table.getElementsByTagName('tbody')[0];
+        oldValues[table.id] = tBody.innerHTML;
     });
 
     function updateDateExceptions() {
         var start = document.getElementById("start")?.innerText;
-        var tables = document.querySelectorAll('table');
+        var end = document.getElementById("end")?.innerText;
 
-        // Set the values based on the selected date range
-        tables.forEach(function (table) {
-            var rows = table.rows;
-            for (let i = 1; i < rows.length; i++) {
-                switch(start) {
-                    case "11/5/2023":
-                        rows[i].cells[6].innerText = "Closed";
-                        break;
-
-                    case "11/19/2023":
-                        /*
-                        if (rows[i].cells[0].innerText == "Tomás Rivera Library") {
-                            rows[i].cells[4].innerText = "7:30am - 5:00pm";
-                        }
-                        if (rows[i].cells[0].innerText == "Orbach Science Library") {
-                            rows[i].cells[4].innerText = "7:30am - 5:00pm";
-                        }
-                        rows[i].cells[5].innerText = "Closed";
-                        rows[i].cells[6].innerText = "Closed";
-                         */
-                        break;
-
-                    default:
-                        rows[i].cells[6].innerText = oldValues[table.id][i - 1];
-                        break;
-                }
-            }
-        });
+        fillExceptions(start, end);
     }
 
-    document.querySelector('#start').addEventListener('DOMSubtreeModified', updateDateExceptions);
+    function fillExceptions(start, end) {
+        console.log(end);
+        fetch('https://library-apps.ucr.edu/api/hours-exceptions?from=' + start + '&to=' + end)
+            .then(res => res.json())
+            .then(res => {
+                var tables = document.querySelectorAll('table');
 
-    updateDateExceptions();
+                // Set the values based on the selected date range
+                tables.forEach(function (table) {
+                    // Reset the table data
+                    document.getElementById(table.id).getElementsByTagName('tbody')[0].innerHTML = oldValues[table.id];
+                    var rows = table.rows;
+
+                    for (let i = 1; i < rows.length; i++) {
+                        fillRow(start, end, rows[i], res);
+                    }
+                });
+            })
+    }
+
+    function fillRow(start, end, row, exceptions) {
+        loc = row.cells[0].innerText;
+
+        // Find any exceptions for this location
+        exceptions.forEach(function(exception) {
+            dateIndex = new Date(start);
+            
+            if (exception.location == 0 || locations[exception.location] == loc ) {
+                // Loop through the row cells and set exceptions for any days as needed
+                exceptionStart = new Date(exception.started_at);
+                exceptionEnd = new Date(exception.ended_at);
+
+                for (var i = 1; i < row.cells.length; i++) {
+                    // Check if the exception falls on this date
+                    if (dateIndex >= exceptionStart &&
+                        dateIndex <= exceptionEnd) {
+                        row.cells[i].innerText = exception.description;
+                    }
+
+                    // Increment the date index
+                    dateIndex.setDate(dateIndex.getDate() + 1);
+                }
+            }
+        })
+    }
+
+    document.querySelector('#end').addEventListener('DOMSubtreeModified', updateDateExceptions);
 </script>
 </body>
 </html>
