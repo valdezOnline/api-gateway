@@ -24,7 +24,7 @@ class LibraryWebsite implements SearchSourceInterface
 
   public function results(): SearchResult
   {
-    $url = "https://live-ucr-librarywebsite.pantheonsite.io/search?keywords=" . urlencode($this->query);
+    $url = "https://library.ucr.edu/search?keywords=" . urlencode($this->query);
     $html = Http::get($url)->throw();
     $html = HtmlDomParser::str_get_html($html);
 
@@ -34,7 +34,7 @@ class LibraryWebsite implements SearchSourceInterface
     foreach ($html->find('a[rel="bookmark"]') as $link) {
       $results[] = [
         'title' => $link->find('span')[0]->innertext ?? '',
-        'url' => 'https://live-ucr-librarywebsite.pantheonsite.io' . $link->href ?? '',
+        'url' => 'https://library.ucr.edu' . $link->href ?? '',
       ];
 
       if (++$index > 2) {
@@ -42,7 +42,7 @@ class LibraryWebsite implements SearchSourceInterface
       }
     }
 
-    $this->searchResults->allResultsLink = "https://live-ucr-librarywebsite.pantheonsite.io/search?keywords=" . urlencode($this->query);
+    $this->searchResults->allResultsLink = "https://library.ucr.edu/search?keywords=" . urlencode($this->query);
     $this->searchResults->total =  count($results);
     $this->searchResults->results = $results;
 
