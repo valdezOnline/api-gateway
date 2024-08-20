@@ -31,4 +31,24 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'ucrPerson' => [
+        'key' => env("UCRGW_API_KEY"),
+        'baseUrl' => env("UCRGW_API_BASEURL"),
+        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
+        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+    ],
+
+    'sisActiveStudent' => [
+        'key' => env("UCRGW_API_KEY"),
+        'baseUrl' => env("UCRGW_API_BASEURL"),
+        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
+        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+    ],
+
+    'hrEmployeeDetail' => [
+        'key' => env("UCRGW_API_KEY"),
+        'baseUrl' => env("UCRGW_API_BASEURL"),
+        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
+        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+    ],
 ];

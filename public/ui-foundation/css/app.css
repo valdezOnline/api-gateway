@@ -1,0 +1,702 @@
+/*  Author: Joel Valdez
+    Module: app.css
+    Description: This will be the baseline CSS branding for the Library site
+
+*/
+@font-face {
+    font-family: "Fira Sans Regular",Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;
+    src: url("/fonts/FiraSans-Bold.ttf");
+    src: url("/fonts/FiraSans-Regular.ttf");
+    src: url("/fonts/FiraSans-Medium.ttf");
+    src: url("/fonts/FiraSans-SemiBold.ttf");
+}
+
+
+
+/*******************************************************/
+/* Custom Utilities */
+/*******************************************************/
+.bottom-shadow {
+    background-color: #003DA5; 
+    -webkit-box-shadow: 0 2px 3px #666666;
+    box-shadow: 0 2px 3px #666666;
+    min-height: .5em;
+}
+
+/*******************************************************/
+/* This is the Title Section of the page*/
+/*******************************************************/
+header.sticky-container {
+    height: 95px;
+}
+
+.masthead-container .masthead-title {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    font-size: 1.5rem;
+    font-weight: 500;
+    /*line-height: 1.08;*/
+    padding-left: 7px;
+    margin-bottom: 0;
+    /* color: #fefefe; */
+}
+.masthead-container .masthead-title a{
+    color: #003DA5; 
+}
+
+
+.masthead-container .masthead-slogan {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    font-size: 1.5rem;
+    font-weight: 500;
+    /*line-height: 1.08;*/
+    padding-right: 7px;
+    margin-bottom: 0;
+    /* color: #fefefe; */
+}
+
+.masthead-container {
+    padding: 10px 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #86BAFF;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease
+}
+
+    .masthead-container .masthead-logo,
+    .masthead-container .masthead-logo-line {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        text-align: right !important;
+        width: 78px;
+        height: 39px;
+        /*background: url("../images/UC_Riverside_Horiz_BluBG.svg");no-repeat;*/
+        /* background: url("../images/UCR-horizontal-logo-over-white-bg-w-yellow-line.svg");no-repeat; */
+        background-color: rgba(0, 0, 0, 0);
+        background-position-x: 0%;
+        background-position-y: 0%;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        /*background-image: url("../images/UC_Riverside_Horiz_BluBG.svg");*/
+        background-image: url("../images/UCR-horizontal-logo-over-white-bg-w-yellow-line.svg");
+        background-size: auto;
+        background-origin: padding-box;
+        background-clip: border-box;
+    }
+
+@media print, screen and (min-width:55.9375em) {
+    .masthead-container .masthead-logo,
+    .masthead-container .masthead-logo-line {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        text-align: left !important;
+        width: 190px;
+        height: 56px;
+        -webkit-transition: all 0.25s ease;
+        -o-transition: all 0.25s ease;
+        transition: all 0.25s ease
+    }
+}
+
+/*********************************/
+/* Logo to use on smaller device*/
+/********************************/
+
+@media print, screen and (min-width:55.9375em) {
+    .masthead-container .masthead-logo-line {
+        background: url("../images/UCR-horizontal-logo-over-white-bg-w-yellow-line.svg")no-repeat;
+    }
+}
+
+@media print, screen and (min-width:55.9375em) {
+    .masthead-container .masthead-title {
+        font-size: 2.0rem;
+        padding-left: 12px;
+        margin-bottom: 12px;
+        -webkit-transition: all 0.25s ease;
+        -o-transition: all 0.25s ease;
+        transition: all 0.25s ease;
+        color: #003DA5;
+    }
+}
+
+@media print, screen and (min-width:55.9375em) {
+    .masthead-container .masthead-slogan {
+        font-size: 2.0rem;
+        padding-right: 12px;
+        margin-bottom: 12px;
+        -webkit-transition: all 0.25s ease;
+        -o-transition: all 0.25s ease;
+        transition: all 0.25s ease;
+        color: #003DA5;
+        float: right;
+    }
+}
+
+@media print, screen and (min-width:55.9375em) {
+    .sticky-shrink .masthead-container {
+        padding: 8px 0 7px 0
+    }
+}
+
+@media print, screen and (min-width:55.9375em) {
+    .sticky-shrink .masthead-container .masthead-logo,
+    .sticky-shrink .masthead-container .masthead-logo-line {
+        width: 120px;
+        height: 22px
+    }
+}
+
+@media print, screen and (min-width:55.9375em) {
+    .sticky-shrink .masthead-container .masthead-title {
+        font-size: 1.5rem;
+        padding-left: 5px;
+        margin-bottom: 3px;
+        color: #003DA5;
+    }
+}
+
+@media print, screen and (min-width:55.9375em) {
+    .sticky-shrink .masthead-container .masthead-slogan,
+    .sticky-shrink .masthead-container .masthead-slogan-bold {
+        font-size: 1.5rem
+        margin-bottom: 3px;
+        color: #003DA5;
+    }
+}
+
+
+/*********************************************************/
+/* This is the TOP section of the page */
+/*********************************************************/
+.top-org-container{
+    position: relative;
+    line-height: normal;
+    max-height: 45px;
+    border-bottom: 2px solid #b0bec5
+}
+.top-org-title {
+    text-transform: uppercase;
+    /* font-family: "Fira Sans Medium",sans-serif; */
+    font-size: .9rem;
+    font-weight: 550;
+    /* line-height: 1.5; */
+    display: inline-block;
+    max-width: 100%;
+    padding: 8px 0;
+    margin: 0;
+    
+}
+
+.top-org-title span a{
+    color: #333;
+    letter-spacing: -0.01px;;
+}
+
+.top-menu-container{
+    max-height: 45px;
+}
+
+.top-menu{
+    float: right;
+    color: #003DA5;
+    /* border-bottom: 1px #003DA5; */
+}
+
+li.top-menu-link {
+    background-color: #003DA5;
+}
+
+li.top-menu-link a{
+    color: #fefefe;
+}
+
+li.top-menu-link a:hover{
+    font-family: "FiraSans-Regular",Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;
+    color: #000;
+    background-color: #FFB81C;
+}
+
+@media print,screen and (max-width: 48em) {
+    .top-org-container .top-menu-container   {
+        -ms-flex-item-align:start;
+        align-self: flex-start;
+        visibility: hidden;
+    }
+}
+
+/*********************************************************/
+/* This is the Main nav bar */
+/*********************************************************/
+.main-nav-bar {
+    background-color: #003DA5;
+}
+
+ul.menu li.menu-item{
+    background-color: #FFB81C;
+ }
+
+ul.menu li.menu-item a{
+    color: #000;
+    font-weight: 550;
+}
+
+/******************************************/
+/* This is for the breadcrumb*/
+/******************************************/
+.breadcrumb-container {
+    border: 1px solid #cacaca;
+    width: 100%;
+    line-height: normal;
+}
+
+ul.breadcrumbs ::after,
+ul.breadcrumbs ::before {
+    display: inline;
+}
+
+.bc-home-container {
+    border-right: 1px solid #cacaca;
+    line-height: normal;
+}
+
+    .bc-home-container:hover {
+        background-color: #cacaca;
+    }
+
+.bc-home {
+    margin: .25em;
+}
+
+.bc-list {
+    margin: .25em;
+}
+
+    .bc-list .bc-list-item {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        color: #003DA5;
+    }
+
+
+
+/*************************************************/
+/* This is the FOOTER Section of the page        */
+/*************************************************/
+
+footer {
+    /*-ms-flex-negative: 0;*/
+    flex-shrink: 0;
+    /*background-color: #08172b;*/
+    background-color: #003DA5;
+    z-index: 0;
+    position: relative;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    /*color: #d8e4f3;*/
+    color: #ffff;
+    font-family: "Fira Sans Bold","Helvetica Neue",Helvetica,Roboto,Arial,sans-serif
+    font-size: 0.6875rem;
+    line-height: 1.364;
+    letter-spacing: 0.06875rem
+}
+
+@media print, screen and (min-width:55.9375em) {
+    footer:after {
+        content: "";
+        background: url("../images/bg-ucr-footer.jpg") 50%;
+        background-size: cover;
+        opacity: 0.15;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute
+    }
+}
+
+
+footer .footer-container {
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column
+}
+
+    footer .footer-container .footer-content-area {
+        -webkit-box-flex: 1;
+        -ms-flex: 1 0 auto;
+        flex: 1 0 auto
+    }
+
+footer .footer-search {
+    padding: 18px 7px 14px 7px;
+    border-bottom: 1px solid #454f5a;
+    margin-bottom: 7px
+}
+
+    footer .footer-search button.footer-search-button {
+        display: block;
+        min-width: 195px;
+        width: 100%;
+        max-width: 600px;
+        background-color: transparent;
+        -webkit-box-shadow: 0 0 5px grey;
+        box-shadow: 0 0 5px grey;
+        border: 1px solid lightgrey;
+        color: #fefefe;
+        margin: 0 auto;
+        padding: 0.5rem;
+        text-align: left;
+        line-height: 1.5rem
+    }
+
+       /* footer .footer-search button.footer-search-button:before {
+            display: inline-block;
+            font-family: "Material Design Icons";
+            font-size: 1.5rem;
+            text-rendering: auto;
+            line-height: 0.5rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: #fefefe;
+            content: "\F349";
+            text-align: center;
+            vertical-align: middle;
+            padding-right: 5px
+        }*/
+
+footer .footer-columns {
+    padding-top: 15px;
+    min-height: 100px
+}
+
+    footer .footer-columns .cell {
+        border-right: none;
+        padding-bottom: 15px;
+        margin-bottom: 15px
+    }
+
+@media print, screen and (min-width:55.9375em) {
+    footer .footer-columns .cell {
+        border-right: 1px solid #fefefe
+    }
+
+        footer .footer-columns .cell:last-child {
+            border-right: none
+        }
+}
+
+footer .footer-item {
+    border-bottom: 1px dotted #FFB81C; /* #8193ac;*/
+    margin: 5px 0 5px 0
+}
+
+@media print, screen and (min-width:55.9375em) {
+    footer .footer-item {
+        margin: 7px 0 14px 0
+    }
+}
+
+footer .footer-item h3,
+footer .footer-item p.social-title {
+    /*color: #d8e4f3;*/
+    color: #ffffff;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1.444;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+    margin-bottom: 1.5em;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #FFB81C; /*1px solid #d8e4f3*/
+}
+
+footer .footer-item p {
+    /*color: #d8e4f3;*/
+    color: #ffffff;
+    /* font-family: "Avenir Next W01", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; */
+    font-size: 0.6875rem;
+    line-height: 1.364;
+    letter-spacing: 0.06875rem
+}
+
+footer .footer-item a:after {
+    content: "";
+    padding: inherit
+}
+
+footer .footer-item a:not(.button) {
+    /*color: #8fbcf9;*/
+    color: #ffffff;
+    border-bottom: 1px dotted
+}
+
+    footer .footer-item a:not(.button):focus,
+    footer .footer-item a:not(.button):hover {
+        /*color: #8fbcf9;*/
+        color: #ffe57f;
+    }
+
+    footer .footer-item a:not(.button) img {
+        opacity: .7;
+        border-radius: 1px;
+        left: -1.3125rem;
+        position: relative;
+        border: 1px solid #cacaca
+    }
+
+        footer .footer-item a:not(.button) img:focus,
+        footer .footer-item a:not(.button) img:hover {
+            opacity: .9
+        }
+
+    footer .footer-item a:not(.button).link-alt {
+        border-bottom: none;
+        font-size: 0.625rem;
+        line-height: 1.3;
+        text-transform: uppercase
+    }
+
+    footer .footer-item a:not(.button).no-href-line {
+        border-bottom: none !important;
+    }
+
+footer .footer-item ul {
+    list-style-type: none
+}
+
+    footer .footer-item ul li {
+        text-indent: -1em;
+        font-size: 0.75rem;
+        line-height: 1.2rem
+    }
+
+        footer .footer-item ul li a:after {
+            content: "";
+            display: none
+        }
+
+footer .footer-item .footer-logo {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    text-align: left !important;
+    width: 12.5rem;
+    height: 2.9375rem;
+    background: url("../images/UC_Riverside_Horiz_BluBG.svg")no-repeat;
+}
+
+footer .footer-item .button-group .button,
+footer .footer-item .social-link .button {
+    font-size: 1.495rem;
+    padding: 4px 0 2px 2px;
+    margin-right: 4px;
+    background-color: #798fac;
+    color: #08172b;
+    border-radius: 4px;
+    margin-bottom: 4px
+}
+
+    footer .footer-item .button-group .button:after,
+    footer .footer-item .social-link .button:after {
+        content: ""
+    }
+
+footer .footer-item .social-link {
+    display: inherit
+}
+
+footer .footer-item input {
+    background-color: #0c1c31;
+    color: #fefefe
+}
+
+    footer .footer-item input:focus {
+        outline: none;
+        border: 1px solid grey;
+        -webkit-box-shadow: 0 0 5px grey;
+        box-shadow: 0 0 5px grey;
+        background: #0c1c31
+    }
+
+@media print, screen and (min-width:55.9375em) {
+    footer .ucr-footer-info {
+        border-bottom: none
+    }
+}
+
+footer .ucr-footer-info address {
+    font-style: normal
+}
+
+footer .ucr-footer-info .footer-links {
+    margin: 6px 0 14px 0
+}
+
+    footer .ucr-footer-info .footer-links:before {
+        display: block;
+        content: "";
+        margin-bottom: .5rem;
+        border: 1px solid #FFB81C; /* #d8e4f3;*/
+        width: 2em
+    }
+
+    footer .ucr-footer-info .footer-links li {
+        border-bottom: 1px solid #FFB81C; /* #454f5a;*/
+        margin: 0;
+        /* font-family: "Avenir Next W01", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; */
+        font-size: 0.75rem;
+        line-height: 1.167;
+        letter-spacing: .083em;
+        list-style-type: none
+    }
+
+        footer .ucr-footer-info .footer-links li a {
+            /*color: #d8e4f3;*/
+            color: #fff;
+            border: none;
+            display: block;
+            padding: 0.5rem 0.6875rem
+        }
+
+            footer .ucr-footer-info .footer-links li a:focus,
+            footer .ucr-footer-info .footer-links li a:hover {
+                background-color: rgba(220, 220, 220, 0.15)
+            }
+
+            footer .ucr-footer-info .footer-links li a:after {
+                content: ""
+            }
+
+footer .footer-dept-info address {
+    font-style: normal;
+    padding-bottom: 15px
+}
+
+footer .footer-dept-info a.link-img {
+    display: block;
+    border-bottom: none
+}
+
+footer .footer-dept-info a.link-img-location {
+    text-transform: uppercase
+}
+
+footer .footer-dept-info a.link-img:before {
+    display: inline-block;
+    font: normal normal normal 24px/1 "Material Design Icons";
+    font-size: 1.5rem;
+    vertical-align: middle;
+    text-rendering: auto;
+    line-height: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-left: 4px;
+    content: "\f34e"
+}
+
+footer .footer-dept-info a img {
+    margin-left: 21px
+}
+
+footer .site-legal-footer {
+    /*background-color: #234674;*/
+    /*color: #d8e4f3;*/
+    background-color: #FFB81C;
+    color: #003DA5;
+    /* font-family: "Fira Sans Bold","Helvetica Neue,Helvetica,Roboto,Arial,sans-serif"; */
+    font-size: .75rem;
+    font-weight: bold;
+    letter-spacing: .025rem;
+    /*-ms-flex-negative: 0;*/
+    flex-shrink: 0
+}
+
+    footer .site-legal-footer ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 18px 0
+    }
+
+        footer .site-legal-footer ul li {
+            display: inline;
+        }
+
+            footer .site-legal-footer ul li:before {
+                content: "";
+                padding-right: 5px
+            }
+
+            footer .site-legal-footer ul li:first-child:before {
+                padding-right: 0
+            }
+
+            footer .site-legal-footer ul li:after {
+                content: "";
+                border-right: 1px solid #fefefe;
+                padding-left: 7px
+            }
+
+            footer .site-legal-footer ul li:last-child:after {
+                border: none;
+                padding-left: 0
+            }
+
+            footer .site-legal-footer ul li a {
+                /*color: #d8e4f3*/
+                color: #003DA5;
+            }
+
+                footer .site-legal-footer ul li a:after {
+                    content: "";
+                    padding: inherit
+                }
+
+/*****************************************/
+/* END FOOTER Section of the page        */
+/*****************************************/
+
+
+/******************************************/
+/* Social Icon Buttons  */
+/******************************************/
+.social-link {
+    display: inline-flex;
+    font-size: 2rem;
+}
+
+
+.social-icon-button {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5rem;
+    background: none;
+    margin: .25em;
+
+}
+
+.footer-item > div.social-link a.social-icon-button {
+    color: #FFB81C;
+    border-bottom: none !important;
+}
+
+.footer-item > div.social-link a.social-icon-button:hover {
+    color: #fff;
+}
+
+/******************************************/
+/* END Social Icon Buttons  */
+/******************************************/

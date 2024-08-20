@@ -1,0 +1,48 @@
+/*
+    This is CSS if specific for this site only
+*/
+
+body {
+    font-family: "Fira Sans Regular",Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;
+}
+.main-content {
+    margin: 10px 10px;
+}
+
+.callout.info {
+    background-color: #9acffa;
+    border: 1px solid #08528d;
+    border-left: 5px solid #08528d;;
+    color: #003DA5;
+    margin: 0 10px;
+}
+
+/* table.tbl-hidden {
+    visibility: hidden;
+} */
+table.tbl-show {
+    visibility: show;
+}
+
+.text-red{
+    color: red;
+    font-weight: 600;
+}
+
+.text-green{
+    color: green;
+    font-weight: 400;
+}
+.progress-bar {
+    height: 30px;
+    background-color:forestgreen;
+    width: 0px;
+    text-align: center;
+    border: 2px solid gray;
+    margin-top: 10px;
+    color:white;
+}
+.pb-container {
+    width:100%;
+    background-color: #e0e0e0;
+}
