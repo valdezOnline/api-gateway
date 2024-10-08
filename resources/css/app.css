@@ -149,6 +149,16 @@ main>div#content-container div.primary-content-area a {
     color: rgb(0, 61, 165) !important;
 }
 
+main>div#content-container div.primary-content-area ul.accordion a:hover {
+    text-decoration: none;
+    color: white !important;
+}
+
+main>div#content-container div.primary-content-area li.is-active>a {
+    text-decoration: none;
+    color: white !important;
+}
+
 .flex {
     display: flex;
     justify-content: center;
