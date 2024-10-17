@@ -159,6 +159,11 @@ main>div#content-container div.primary-content-area li.is-active>a {
     color: white !important;
 }
 
+main>div#content-container div.primary-content-area li.tabs-title.is-active>a {
+    text-decoration: none;
+    color: #003da5!important;
+}
+
 .flex {
     display: flex;
     justify-content: center;
