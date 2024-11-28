@@ -75,7 +75,7 @@ class HrEmployeeData
             }
         }
 
-        // Jobs - HOME
+        // Jobs - Primary
         $jobsArr = data_get($data, "$x.jobs");
         $jobsId = '';
         $supervisorNetId = '';
@@ -84,8 +84,8 @@ class HrEmployeeData
         for ($i = 0; $i < count($jobsArr); $i++) {
             if (data_get($data, "$x.jobs.$i.isPrimary") === true) {
                 $jobsId = $i;
-                $supervisorNetId = data_get($data, "$x.jobs.$i.supervisor.netId");
-                $supervisorFullName = data_get($data, "$x.jobs.$i.supervisor.fullName");
+                $supervisorNetId = data_get($data, "$x.jobs.$i.supervisor.netId") ?? '';
+                $supervisorFullName = data_get($data, "$x.jobs.$i.supervisor.fullName") ?? '';
                 $employeeStatus = data_get($data, "$x.jobs.$i.employeeStatus");
             }
         }
@@ -123,8 +123,8 @@ class HrEmployeeData
             },
             jobCode: data_get($data, "$x.jobs.$jobsId.jobCode") ?? '',
             jobCodeDescription: data_get($data, "$x.jobs.$jobsId.jobCodeDescription") ?? '',
-            supervisorNetId: $supervisorNetId,
-            supervisorFullName: $supervisorFullName,
+            supervisorNetId: $supervisorNetId ?? '',
+            supervisorFullName: $supervisorFullName ?? '',
             departmentCode: data_get($data, "$x.jobs.$jobsId.department.code") ?? '',
             departmentCodeDescription: data_get($data, "$x.jobs.$jobsId.department.description") ?? '',
 
@@ -186,8 +186,8 @@ class HrEmployeeData
             for ($i = 0; $i < count($jobsArr); $i++) {
                 if (data_get($data, "$x.jobs.$i.isPrimary") === true) {
                     $jobsId = $i;
-                    $supervisorNetId = data_get($data, "$x.jobs.$i.supervisor.netId");
-                    $supervisorFullName = data_get($data, "$x.jobs.$i.supervisor.fullName");
+                    $supervisorNetId = data_get($data, "$x.jobs.$i.supervisor.netId") ?? '';
+                    $supervisorFullName = data_get($data, "$x.jobs.$i.supervisor.fullName") ?? '';
                     $employeeStatus = data_get($data, "$x.jobs.$i.employeeStatus");
                 }
             }
@@ -223,8 +223,8 @@ class HrEmployeeData
                 },
                 jobCode: data_get($data, "$x.jobs.$jobsId.jobCode") ?? '',
                 jobCodeDescription: data_get($data, "$x.jobs.$jobsId.jobCodeDescription") ?? '',
-                supervisorNetId: $supervisorNetId,
-                supervisorFullName: $supervisorFullName,
+                supervisorNetId: $supervisorNetId ?? '',
+                supervisorFullName: $supervisorFullName ?? '',
                 departmentCode: data_get($data, "$x.jobs.$jobsId.department.code") ?? '',
                 departmentCodeDescription: data_get($data, "$x.jobs.$jobsId.department.description") ?? '',
             );

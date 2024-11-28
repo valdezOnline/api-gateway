@@ -60,13 +60,13 @@ class HrEmployeeDetailService
     {
         try {
 
-            //return Cache::remember("hrEmployee_$netId", now()->addMinutes($this->singleDataMinutes), function () use ($netId) {
-            // Setup end-point url
-            $url = "{$this->baseUrl}/api/hr-api/v2/employeeDetails?netId=$netId";
+            return Cache::remember("hrEmployee_$netId", now()->addMinutes($this->singleDataMinutes), function () use ($netId) {
+                // Setup end-point url
+                $url = "{$this->baseUrl}/api/hr-api/v2/employeeDetails?netId=$netId";
 
-            return $this->getResponse($url);
+                return $this->getResponse($url);
 
-            //});
+            });
 
         } catch (\ErrorException $errorException) {
             //throw $th;
@@ -76,41 +76,41 @@ class HrEmployeeDetailService
     public function hrEmployeeDetails(Request $request)
     {
         try {
-            $qryStrings = $request->netId;
-            // return Cache::remember("hrEmployee_details_$qryStrings", now()->addMinutes($this->multiDataMinutes), function () use ($request) {
-            // Get ALL the netId parameters                
-            $qryStrings = $request->netId;
-            $qryParams = '';
-            foreach (explode(';', $qryStrings) as $value) {
-                # code...
-                $qryParams .= "&netId=$value";
-            }
-            $qryParams = Str::replaceFirst('&', '?', $qryParams);
-            //dd($qryParams);
+            $qryStrings = $request->netIds;
+            return Cache::remember("hrEmployee_details_$qryStrings", now()->addMinutes($this->multiDataMinutes), function () use ($request) {
+                // Get ALL the netId parameters                
+                $qryStrings = $request->netIds;
+                $qryParams = '';
+                foreach (explode('+', $qryStrings) as $value) {
+                    # code...
+                    $qryParams .= "&netId=$value";
+                }
+                $qryParams = Str::replaceFirst('&', '?', $qryParams);
+                //dd($qryParams);
 
-            // Setup end-point url
-            $url = "{$this->baseUrl}/api/hr-api/v2/employeeDetails$qryParams";
-            // return $this->getResponse($url);
-            $resp = Http::acceptJson()
-                ->withHeaders([
-                    'Authorization' => $this->key,
-                ])->get($url);
+                // Setup end-point url
+                $url = "{$this->baseUrl}/api/hr-api/v2/employeeDetails$qryParams";
+                // return $this->getResponse($url);
+                $resp = Http::acceptJson()
+                    ->withHeaders([
+                        'Authorization' => $this->key,
+                    ])->get($url);
 
-            //Check if successful
-            if ($resp->successful()) {
-                // Raw Data
-                // return $this->ok('Success', $resp->json('response.results'));
+                //Check if successful
+                if ($resp->successful()) {
+                    // Raw Data
+                    // return $this->ok('Success', $resp->json('response.results'));
 
-                // UcrPersonData
-                $data = (array) $resp->json('response.results');
-                // return $this->ok('Success', count($data));
+                    // UcrPersonData
+                    $data = (array) $resp->json('response.results');
+                    // return $this->ok('Success', count($data));
 
-                return $this->ok('Success', HrEmployeeData::fromCollection($data));
-            }
+                    return $this->ok('Success', HrEmployeeData::fromCollection($data));
+                }
 
-            return $this->error($resp->json('response'), 404);
+                return $this->error($resp->json('response'), 404);
 
-            // });
+            });
 
         } catch (\ErrorException $errorException) {
             // throw $errorException;

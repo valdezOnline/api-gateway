@@ -15,12 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Application::factory(3)->create();
+        \App\Models\Application::factory(4)->create();
         \App\Models\Application::factory()->create([
             'name' => 'ul-apps',
-            'user_id' => 1,            
+            'user_id' => 1,
             'apikey' => Crypt::encrypt('my-super-secret-key'),
-            'status' => fake()->randomElement([0,1]),
+            'status' => fake()->randomElement([0, 1]),
             'remember_token' => Str::random(10),
         ]);
 

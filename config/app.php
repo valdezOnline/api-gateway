@@ -197,6 +197,7 @@ return [
         App\Providers\UcrPersonServiceProvider::class,
         App\Providers\SisActiveStudentServiceProvider::class,
         App\Providers\HrEmployeeDetailServiceProvider::class,
+        App\Providers\ExLibrisAlmaDataServiceProvider::class,
     ],
 
     /*

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class SisActiveStudentController extends Controller
 {
     use ApiResponses;
-    public function index(SisActiveStudentService $sisActiveStudentService, Request $request)
+    public function activeStudent(SisActiveStudentService $sisActiveStudentService, Request $request)
     {
         return $sisActiveStudentService->sisActiveStudent($request->stringId);
     }

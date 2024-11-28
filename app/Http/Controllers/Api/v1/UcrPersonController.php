@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class UcrPersonController extends Controller
 {
     use ApiResponses;
-    public function index(UcrPersonService $ucrPersonService, Request $request)
+    public function person(UcrPersonService $ucrPersonService, Request $request)
     {
         return $ucrPersonService->ucrPerson($request->stringId);
     }

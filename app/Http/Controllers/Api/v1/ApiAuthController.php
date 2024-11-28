@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ApiAuthController extends Controller
@@ -24,12 +25,21 @@ class ApiAuthController extends Controller
 
         try {
             // Get the application data
-            $application = Application::firstWhere('name', $request->get('application'));
+            $application = Application::where('name', $request->get('application'))
+                ->where('status', 1)
+                ->first();
+
+
+            // Check if application exists
+            if (empty($application)) {
+                return $this->error('Invalid application.', 401);
+            }
+
+            // Create the session user
+            Session::put('apiInvoker', $application->name);
 
             // Prepare the data
             $data = [
-                // $msg,
-                // 'stored-encrypted-key' => $application->apikey,
                 'name' => $application->name,
                 'token' => $application->createToken(
                     'Application access token for ' . $application->name,

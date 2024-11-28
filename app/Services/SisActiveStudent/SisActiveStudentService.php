@@ -33,8 +33,7 @@ class SisActiveStudentService
             if ($resp->successful()) {
                 // return $this->ok($url);
                 $data = $resp->json();
-                return $this->ok('Success', SisActiveStudentData::fromArray($data));
-                // return $this->ok('Success', $resp->json(), count($data));
+                return $this->ok('Success', $resp->json());
             }
 
             return $this->error($resp->json(), 404);
