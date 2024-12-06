@@ -11,12 +11,4 @@ class FileLoad extends Model
 
     protected $guarded = [];
 
-    // protected $fillable = [
-    //     'fileName',
-    //     'filePath',
-    //     'fileSize',
-    //     'fileType',
-    //     'createdBy',
-    //     'direction',
-    // ];
 }

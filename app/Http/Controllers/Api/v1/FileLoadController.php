@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\CaptureFileUpload;
+use App\Jobs\ProcessFileUpload;
 use App\Models\FileLoad;
+use App\Models\UcrCardData;
 use App\Traits\ApiResponses;
 use Exception;
 use Illuminate\Http\Request;
@@ -36,7 +38,7 @@ class FileLoadController extends Controller
         try {
             //code...
             $allowedFileExtension = ['csv', 'xslx', 'xml', 'json'];
-            $fileUploaded = [];
+            // $fileUploaded = [];
 
             // validate extension
             $fileExtension = $request->file('file')->getClientOriginalExtension();
@@ -73,20 +75,9 @@ class FileLoadController extends Controller
             return $this->error($errorException->getMessage(), 404);
         }
 
-        // TEST
-        // FileLoad::Create(attributes: [
-        //     'filePath' => $fileLoad['filePath'],
-        //     'fileName' => $fileLoad['fileName'],
-        //     'fileType' => $fileLoad['fileType'],
-        //     'fileSize' => $fileLoad['fileSize'],
-        //     'createdBy' => $fileLoad['createdBy'],
-        //     'direction' => 'upload',
-        // ]);
-
-        // dd($fileLoad);
-
         // Dispatch the job to capture the file uploaded.
         CaptureFileUpload::dispatch($fileLoad);
+        ProcessFileUpload::dispatch($fileLoad);
         return $this->ok('Success', $fileLoad);
     }
 
@@ -144,4 +135,6 @@ class FileLoadController extends Controller
         // dd($invoker->name);
         return $invoker->name;
     }
+
+
 }

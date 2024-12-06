@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('fileType');
             $table->string('createdBy');
             $table->string('direction')->nullable();
-            $table->int('status')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
     }

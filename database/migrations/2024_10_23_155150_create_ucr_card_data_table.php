@@ -12,23 +12,23 @@ return new class extends Migration {
     {
         Schema::create('ucr_card_data', function (Blueprint $table) {
             $table->id();
-            $table->string('net_id');
-            $table->string('ssn');
-            $table->string('student_id');
-            $table->string('iso');
-            $table->string('lib_num');
-            $table->string('status1');
-            $table->string('status2');
-            $table->string('class');
-            $table->string('yr_in_school');
-            $table->string('stud_fac');
-            $table->string('prox_int');
-            $table->string('prox_ext');
-            $table->date('issued');
-            $table->date('edit_date');
-            $table->date('photo_date');
-            $table->date('imported');
-            $table->string('load_status');
+            $table->string('net_id')->default('');
+            $table->string('ssn')->default('');
+            $table->string('student_id')->default('');
+            $table->string('iso')->default('');
+            $table->string('lib_num')->default('');
+            $table->string('status1')->default('');
+            // $table->string('status2')->default('');
+            $table->string('class')->default('');
+            $table->string('yr_in_school')->default('');
+            $table->string('stud_fac')->default('');
+            $table->string('prox_int')->default('');
+            $table->string('prox_ext')->default('');
+            $table->string('issued')->default('');
+            $table->string('edit_date')->default('');
+            $table->string('photo_date')->default('');
+            $table->string('imported')->default('');
+            $table->string('load_status')->default('');
             $table->timestamps();
         });
     }
