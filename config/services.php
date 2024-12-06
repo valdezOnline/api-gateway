@@ -51,4 +51,11 @@ return [
         'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
         'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
     ],
+
+    'exLibris' => [
+        'key' => env("EXLIBRIS_RW_API_KEY"),
+        'baseUrl' => env("EXLIBRIS_API_BASEURL"),
+        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
+        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+    ]
 ];

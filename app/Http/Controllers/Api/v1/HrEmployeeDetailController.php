@@ -13,7 +13,7 @@ class HrEmployeeDetailController extends Controller
     //
     use ApiResponses;
 
-    public function index(HrEmployeeDetailService $hrEmployeeDetailService, Request $request)
+    public function hrEmployee(HrEmployeeDetailService $hrEmployeeDetailService, Request $request)
     {
         return $hrEmployeeDetailService->HrEmployeeDetail($request->netId);
     }

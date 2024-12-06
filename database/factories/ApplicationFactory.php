@@ -26,11 +26,11 @@ class ApplicationFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake() -> unique()->randomElement(['alma','libcal','libguide','primo',]),
-            'user_id' => User::factory(),            
+            'name' => fake()->unique()->randomElement(['alma', 'libcal', 'libguide', 'primo', 'its-idms']),
+            'user_id' => User::factory(),
             // 'apikey' => static::$apikey ??= Hash::make('my-super-secret-key'),
             'apikey' => Crypt::encrypt('my-other-super-secret-key'),
-            'status' => fake()->randomElement([0,1]),
+            'status' => fake()->randomElement([0, 1]),
             'remember_token' => Str::random(20),
         ];
     }
@@ -40,7 +40,7 @@ class ApplicationFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

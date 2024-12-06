@@ -22,7 +22,8 @@ class Application extends Model
     protected $fillable = [
         'name',
         'user_id',
-        'apikey',        
+        'status',
+        'apikey',
     ];
 
     /**

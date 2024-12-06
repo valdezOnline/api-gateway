@@ -14,19 +14,19 @@ class SisActiveStudentResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
-    {
+    // public function toArray(Request $request): array
+    // {
 
-        return [
-            'type' => 'sisActiveStudent',
-            'studentId' => $this->principalId,
-            'netId' => $this->principalName,
-            'attributes' => [
-                'firstName' => $this->firstName,
-                'middleName' => $this->middleName,
-                'lastName' => $this->lastName,
-            ]
-        ];
-    }
+    //     return [
+    //         'type' => 'sisActiveStudent',
+    //         'studentId' => $this->principalId,
+    //         'netId' => $this->principalName,
+    //         'attributes' => [
+    //             'firstName' => $this->firstName,
+    //             'middleName' => $this->middleName,
+    //             'lastName' => $this->lastName,
+    //         ]
+    //     ];
+    // }
 
 }

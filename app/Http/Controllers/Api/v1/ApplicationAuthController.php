@@ -9,6 +9,7 @@ use App\Http\Requests\Api\v1\LoginUserRequest;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Session;
 
 class ApplicationAuthController extends Controller
 {
@@ -29,21 +30,28 @@ class ApplicationAuthController extends Controller
     "status": 200
     }
     */
-    public function login(LoginUserRequest $request) {
+    public function login(LoginUserRequest $request)
+    {
         $request->validated($request->all());
 
-        // Get the user
-        $user = User::firstWhere('netid', $request->netid);
+        // Get the user with API access        
+        $user = User::where('netid', $request->netid)
+            ->where('hasApiAccess', 1)
+            ->first();
 
         // Check if user exists
-        if (empty($user)){
+        if (empty($user)) {
             return $this->error('Invalid credentials', 401);
         }
 
         // Check if password matches
-        if(!Hash::check($request->password, $user->password)){
+        if (!Hash::check($request->password, $user->password)) {
             return $this->error('Invalid credentials', 401);
-        }            
+        }
+
+        // Create the session user
+        Session::put('apiInvoker', $user->name);
+
 
         // Successfully Authenticated
         return $this->ok(
@@ -53,9 +61,10 @@ class ApplicationAuthController extends Controller
                     'User access token for ' . $user->netid,
                     ['*'],
                     // Abilities::getAbilities($user),
-                    now()->addDays(1))->plainTextToken
+                    now()->addDays(1)
+                )->plainTextToken
             ]
-            );
+        );
     }
 
     /**
@@ -66,7 +75,8 @@ class ApplicationAuthController extends Controller
      * @group Authentication
      * @response 200 {}
      */
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $request->user()->currentAccessToken()->delete();
 
         return $this->ok('Logged out successfully.');
