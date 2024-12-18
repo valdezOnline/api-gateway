@@ -26,9 +26,10 @@ class PatronData
         public readonly string $addressCountry,
         public readonly string $email,
         public readonly string $phone,
-        // public readonly 
+
         public readonly string $identifierNetId,
         public readonly string $identifierBarcode,
+        public readonly string $identifierNetIdEmail,
 
         // public readonly string $createdBy,
         // public readonly string $createdDate,
@@ -45,54 +46,22 @@ class PatronData
         /// Contact Info Section
         // Preferred Address Only
         $addressArr = data_get($data, 'contact_info.address');
-        $addressArrId = 0;
-        // dd($addressArr);
-        if ($addressArr !== null) {
-            for ($i = 0; $i < count($addressArr); $i++) {
-                if (data_get($data, "contact_info.address.$i.preferred") == true) {
-                    $addressArrId = $i;
-                }
-            }
-        }
+        $addressArrId = self::getPreferredContactInfoIndex($addressArr);
 
         // Preferred Email Only
         $emailArr = data_get($data, 'contact_info.email');
-        $emailArrId = 0;
-        if ($emailArr !== null) {
-            for ($i = 0; $i < count($emailArr); $i++) {
-                if (data_get($data, "contact_info.email.$i.preferred") == true) {
-                    $emailArrId = $i;
-                }
-            }
-        }
+        $emailArrId = self::getPreferredContactInfoIndex($emailArr);
 
         // Preferred Phone Only
         $phoneArr = data_get($data, 'contact_info.phone');
-        $phoneArrId = 0;
-        if ($phoneArr !== null) {
-            for ($i = 0; $i < count($phoneArr); $i++) {
-                if (data_get($data, "contact_info.phone.$i.preferred") == true) {
-                    $phoneArrId = $i;
-                }
-            }
-        }
+        $phoneArrId = self::getPreferredContactInfoIndex($phoneArr);
 
-        // NetId and Barcode Only
+        // NetId , NetIdEmail and Barcode Only
         $identifierArr = data_get($data, 'user_identifier');
-        $identifierArrBarcodeId = 0;
-        $identifierArrNetId = 0;
-        if ($identifierArr !== null) {
-            for ($i = 0; $i < count($identifierArr); $i++) {
-                if (data_get($data, "user_identifier.$i.id_type.value") == 'BARCODE') {
-                    $identifierArrBarcodeId = $i;
-                }
-                if (data_get($data, "user_identifier.$i.id_type.desc") == 'NetID') {
-                    $identifierArrNetId = $i;
-                }
-            }
-        }
 
-        // dd("Barcode ArrId = $identifierArrBarcodeId", "NetId ArrId = $identifierArrNetId", );
+        $identifierArrBarcodeId = self::getIdentifierIndex($identifierArr, 'Barcode');
+        $identifierArrNetId = self::getIdentifierIndex($identifierArr, 'NetID');
+        $identifierArrNetIdEmail = self::getIdentifierIndex($identifierArr, 'Additional ID 3');
 
         return new self(
             recordType: data_get($data, 'record_type.value') ?? '',
@@ -118,14 +87,35 @@ class PatronData
             phone: data_get($data, "contact_info.phone.$phoneArrId.phone_number") ?? '',
             identifierNetId: data_get($data, "user_identifier.$identifierArrNetId.value") ?? '',
             identifierBarcode: data_get($data, "user_identifier.$identifierArrBarcodeId.value") ?? '',
+            identifierNetIdEmail: data_get($data, "user_identifier.$identifierArrNetIdEmail.value") ?? '',
         );
     }
 
     public static function fromCollection(array $data)
     {
+
         $patronCollection = new Collection();
         // dd($data);
         for ($i = 0; $i < count($data); $i++) {
+            /// Contact Info Section
+            // Preferred Address Only            
+            $addressArr = data_get($data[$i], "contact_info.address");
+            $addressArrId = self::getPreferredContactInfoIndex($addressArr);
+
+            // Preferred Email Only
+            $emailArr = data_get($data[$i], "contact_info.email");
+            $emailArrId = self::getPreferredContactInfoIndex($emailArr);
+
+            // Preferred Phone Only
+            $phoneArr = data_get($data[$i], "contact_info.phone");
+            $phoneArrId = self::getPreferredContactInfoIndex($phoneArr);
+
+            // NetId , NetIdEmail and Barcode Only
+            $identifierArr = data_get($data[$i], "user_identifier");
+
+            $identifierArrBarcodeId = self::getIdentifierIndex($identifierArr, 'Barcode');
+            $identifierArrNetId = self::getIdentifierIndex($identifierArr, 'NetID');
+            $identifierArrNetIdEmail = self::getIdentifierIndex($identifierArr, 'Additional ID 3');
             $self = new self(
                 recordType: data_get($data, "$i.record_type.value") ?? '',
                 primaryId: data_get($data, "$i.primary_id") ?? '',
@@ -139,22 +129,62 @@ class PatronData
                 status: data_get($data, "$i.status.value") ?? '',
                 expiryDate: data_get($data, "$i.expiry_date") ?? '',
 
-                addressLine1: data_get($data, "$i.contact_info.address.$i.line1") ?? '',
-                addressLine2: data_get($data, "$i.contact_info.address.$i.line2") ?? '',
-                addressCity: data_get($data, "$i.contact_info.address.$i.city") ?? '',
-                addressStateProvince: data_get($data, "$i.contact_info.address.$i.state_province") ?? '',
-                addressPostalCode: data_get($data, "$i.contact_info.address.$i.postal_code") ?? '',
-                addressCountry: data_get($data, "$i.contact_info.address.$i.country.value") ?? '',
+                addressLine1: data_get($data, "$i.contact_info.address.$addressArrId.line1") ?? '',
+                addressLine2: data_get($data, "$i.contact_info.address.$addressArrId.line2") ?? '',
+                addressCity: data_get($data, "$i.contact_info.address.$addressArrId.city") ?? '',
+                addressStateProvince: data_get($data, "$i.contact_info.address.$addressArrId.state_province") ?? '',
+                addressPostalCode: data_get($data, "$i.contact_info.address.$addressArrId.postal_code") ?? '',
+                addressCountry: data_get($data, "$i.contact_info.address.$addressArrId.country.value") ?? '',
 
-                email: data_get($data, "$i.contact_info.email.$i.email_address") ?? '',
-                phone: data_get($data, "$i.contact_info.phone.$i.phone_number") ?? '',
-                identifierNetId: data_get($data, "$i.user_identifier.$i.value") ?? '',
-                identifierBarcode: data_get($data, "$i.user_identifier.$i.value") ?? '',
+                email: data_get($data, "$i.contact_info.email.$emailArrId.email_address") ?? '',
+                phone: data_get($data, "$i.contact_info.phone.$phoneArrId.phone_number") ?? '',
+                identifierNetId: data_get($data, "$i.user_identifier.$identifierArrNetId.value") ?? '',
+                identifierBarcode: data_get($data, "$i.user_identifier.$identifierArrBarcodeId.value") ?? '',
+                identifierNetIdEmail: data_get($data, "$i.user_identifier.$identifierArrNetIdEmail.value") ?? '',
             );
             $patronCollection->push($self);
         }
 
         return $patronCollection;
     }
+
+    private static function getPreferredContactInfoIndex(array $contactTypeArr)
+    {
+        // Preferred Address Only
+        if ($contactTypeArr !== null) {
+            for ($i = 0; $i < count($contactTypeArr); $i++) {
+                if (data_get($contactTypeArr, "$i.preferred") == true) {
+                    return $i;
+                }
+            }
+        }
+    }
+
+    private static function getIdentifierIndex(array $identifierArr, string $identifierDesc)
+    {
+        // Identifier Value
+        if ($identifierArr !== null) {
+            for ($i = 0; $i < count($identifierArr); $i++) {
+                if (data_get($identifierArr, "$i.id_type.desc") == $identifierDesc) {
+                    return $i;
+                }
+            }
+        }
+
+        // if ($identifierArr !== null) {
+        //     for ($i = 0; $i < count($identifierArr); $i++) {
+        //         if (data_get($data, "user_identifier.$i.id_type.value") == 'BARCODE') {
+        //             $identifierArrBarcodeId = $i;
+        //         }
+        //         if (data_get($data, "user_identifier.$i.id_type.desc") == 'NetID') {
+        //             $identifierArrNetId = $i;
+        //         }
+        //         if (data_get($data, "user_identifier.$i.id_type.desc") == 'Additional ID 3') {
+        //             $identifierArrNetIdEmail = $i;
+        //         }
+        //     }
+        // }
+    }
+
 }
 

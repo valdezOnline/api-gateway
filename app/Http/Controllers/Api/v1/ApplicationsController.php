@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\Api\v1\StoreApplicationRequest;
 use App\Http\Requests\Api\v1\UpdateApplicationRequest;
 use App\Http\Resources\v1\ApplicationResource;
 use App\Models\Application;
 use App\Http\Filters\v1\ApplicationFilter;
+use Crypt;
+use Illuminate\Support\Str;
 
 class ApplicationsController extends Controller
 {
@@ -33,7 +36,18 @@ class ApplicationsController extends Controller
      */
     public function store(StoreApplicationRequest $request)
     {
-        //
+        // dd($request->all());
+        $rememberToken = Str::random(100);
+        return new ApplicationResource(Application::Create(
+            [
+                'name' => $request->name,
+                'description' => $request->description,
+                'created_by' => $request->createdBy,
+                'apikey' => Crypt::encrypt($request->apikey),
+                'status' => $request->status,
+                'remember_token' => $rememberToken,
+            ]
+        ));
     }
 
     /**
@@ -42,6 +56,7 @@ class ApplicationsController extends Controller
     public function show(Application $application)
     {
         //
+        return new ApplicationResource($application);
     }
 
     /**
@@ -57,7 +72,12 @@ class ApplicationsController extends Controller
      */
     public function update(UpdateApplicationRequest $request, Application $application)
     {
-        //
+        //PATCH
+
+        $application->update($request->mappedAttributes());
+
+        return new ApplicationResource($application);
+
     }
 
     /**

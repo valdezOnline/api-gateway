@@ -16,19 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         \App\Models\Application::factory(4)->create();
-        \App\Models\Application::factory()->create([
-            'name' => 'ul-apps',
-            'user_id' => 1,
-            'apikey' => Crypt::encrypt('my-super-secret-key'),
-            'status' => fake()->randomElement([0, 1]),
-            'remember_token' => Str::random(10),
-        ]);
 
         \App\Models\User::factory()->create([
-            'netid' => 'joelval',
+            'user_name' => 'joelval',
             'first_name' => 'Joel',
             'last_name' => 'Valdez',
-            'email' => 'joelval@ucr.edu',
+            'email' => 'joel.valdez@ucr.edu',
             'email_verified_at' => now(),
             'password' => Hash::make('P@55w0rd'),
             'hasApiAccess' => 1,

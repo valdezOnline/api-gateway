@@ -27,11 +27,10 @@ class ApplicationFactory extends Factory
     {
         return [
             'name' => fake()->unique()->randomElement(['alma', 'libcal', 'libguide', 'primo', 'its-idms']),
-            'user_id' => User::factory(),
-            // 'apikey' => static::$apikey ??= Hash::make('my-super-secret-key'),
-            'apikey' => Crypt::encrypt('my-other-super-secret-key'),
+            'description' => fake()->randomElement(['Application for me', 'Application for them', 'Some Appliction', 'Our Application']),
+            'apikey' => Crypt::encrypt('my-0TH3R-super-53CR3T-key'),
             'status' => fake()->randomElement([0, 1]),
-            'remember_token' => Str::random(20),
+            'created_by' => fake()->userName(),
         ];
     }
 

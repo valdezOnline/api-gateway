@@ -23,7 +23,7 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'netid' => 'required',
+            'user_name' => 'required',
             'password' => 'required',
         ];
     }

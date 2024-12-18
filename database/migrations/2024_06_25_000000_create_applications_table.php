@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,11 +12,11 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();            
-            $table->string('user_id');
-            $table->text('apikey');            
+            $table->string('name')->unique();
+            $table->string('description');
+            $table->text('apikey');
             $table->boolean('status')->default(true);
-            $table->rememberToken();
+            $table->string('created_by');
             $table->timestamps();
         });
     }

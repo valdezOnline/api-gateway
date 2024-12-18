@@ -6,6 +6,7 @@ use App\Services\ExLibrisAlma\DataTransferObjects\PatronData;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Request;
 use Str;
 
 
@@ -88,14 +89,14 @@ class ExLibrisAlmaPatronDataService
         }
     }
 
-    public function Search(string $stringSearch)
+    public function Search()
     {
-        // dd($stringSearch);
+        // dd(request()->getQueryString());
+        $qryParams = request()->getQueryString();
         try {
             $url = "{$this->baseUrl}/almaws/v1/users";
-
             $resp = Http::accept('application/json')
-                ->get($url, "{$stringSearch}&apikey=$this->key");
+                ->get($url, "{$qryParams}&expand=full&apikey=$this->key");
 
 
             //Check if successful

@@ -18,14 +18,7 @@ class User extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'netid',
-        'first_name',
-        'last_name',
-        'email',
-
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -47,7 +40,8 @@ class User extends Model
         'password' => 'hashed',
     ];
 
-    public function scopeFilter(Builder $builder, QueryFilter $filters) {
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
         return $filters->apply($builder);
     }
 }

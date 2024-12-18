@@ -22,11 +22,15 @@ class StoreApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'data' => 'required|array',
-            'data.attributes' => 'required|array',
-            'data.attributes.name' => 'required|string',
-            'data.attributes.apikey' => 'required|string',
-            'data.attributes.status' => 'required|boolean',
+            // 'type' => 'application',
+            // 'id' => $this->id,
+            'attributes' => [
+                'name' => 'required|string',
+                'description' => 'required|string',
+                'created_by' => 'required|string',
+                'apikey' => 'required|string',
+                'status' => 'required|boolean',
+            ]
         ];
     }
 }

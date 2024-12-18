@@ -4,6 +4,7 @@ namespace App\Http\Resources\v1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Crypt;
 
 class ApplicationResource extends JsonResource
 {
@@ -16,12 +17,14 @@ class ApplicationResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-            'type'=> 'application',
+            'type' => 'application',
             'id' => $this->id,
             'attributes' => [
                 'name' => $this->name,
-                'status' => $this->status, 
-                'apikey' => $this->apikey,
+                'description' => $this->description,
+                'createdBy' => $this->created_by,
+                'status' => $this->status,
+                'apikey' => Crypt::decrypt($this->apikey),
             ],
         ];
     }
