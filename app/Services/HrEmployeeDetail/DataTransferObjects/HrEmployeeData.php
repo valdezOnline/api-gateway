@@ -48,11 +48,14 @@ class HrEmployeeData
                 $nameId = $i;
             }
         }
-        // PhoneNumbers - HOME
+        // PhoneNumbers - Preferred
         $phonesArr = data_get($data, "$x.phoneNumbers");
         $phoneId = '';
         for ($i = 0; $i < count($phonesArr); $i++) {
-            if (data_get($data, "$x.phoneNumbers.$i.type") === 'HOME') {
+            // if (data_get($data, "$x.phoneNumbers.$i.type") === 'HOME') {
+            //     $phoneId = $i;
+            // }
+            if (data_get($data, "$x.phoneNumbers.$i.isPreferredPhone") === true) {
                 $phoneId = $i;
             }
         }
@@ -150,11 +153,14 @@ class HrEmployeeData
                 }
             }
             // dd($nameId);
-            // PhoneNumbers - HOME
+            // PhoneNumbers - Preferred
             $phonesArr = data_get($data, "$x.phoneNumbers");
             $phoneId = '';
             for ($i = 0; $i < count($phonesArr); $i++) {
-                if (data_get($data, "$x.phoneNumbers.$i.type") === 'HOME') {
+                // if (data_get($data, "$x.phoneNumbers.$i.type") === 'HOME') {
+                //     $phoneId = $i;
+                // }
+                if (data_get($data, "$x.phoneNumbers.$i.isPreferredPhone") === true) {
                     $phoneId = $i;
                 }
             }

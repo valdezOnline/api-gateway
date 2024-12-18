@@ -23,6 +23,15 @@ class StoreUserRequest extends FormRequest
     {
         return [
             //
+            'attributes' => [
+                'netid' => 'required|string',
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
+                'email' => 'required|string',
+                'hasApiAccess' => 'required|boolean',
+                'password' => 'required|string',
+
+            ]
         ];
     }
 }

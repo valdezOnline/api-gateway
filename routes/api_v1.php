@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\v1\ApplicationAuthController;
+use App\Http\Controllers\Api\v1\UserAuthController;
 use App\Http\Controllers\Api\v1\ApplicationsController;
 use App\Http\Controllers\Api\v1\ExLibrisAlmaController;
 use App\Http\Controllers\Api\v1\HrEmployeeDetailController;
@@ -32,16 +32,17 @@ Route::middleware(EnsureApiKeyIsValid::class)->group(function () {
 Route::middleware('auth:sanctum')->post('/exit', [ApiAuthController::class, 'exit']);
 
 // API User Login
-Route::post('/login', [ApplicationAuthController::class, 'login']);
+Route::post('/login', [UserAuthController::class, 'login']);
 
 // Applications Request
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [ApplicationAuthController::class, 'logout']);
+    Route::post('/logout', [UserAuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::apiResource('applications', ApplicationsController::class);
-    // Route::post('/upload-file',[FileUploadController::class,'store']);
+    Route::apiResource('applications', ApplicationsController::class)->except(['store', 'update', 'delete']);
+    Route::post('applications', [ApplicationsController::class, 'store']);
+    Route::patch('applications/{application}', [ApplicationsController::class, 'update']);
     Route::post('/exit', [ApiAuthController::class, 'exit']);
 });
 
@@ -62,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // ExLibris Alma API Requests
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/alma-user/patron/{stringId}', [ExLibrisAlmaController::class, 'patron']);
-    Route::get('/alma-user/patron-search/{stringSearch}', [ExLibrisAlmaController::class, 'search']);
+    Route::get('/alma-user/patron-search', [ExLibrisAlmaController::class, 'search']);
     Route::get('/alma-user/fees/{stringId}', [ExLibrisAlmaController::class, 'fees']);
     Route::get('/alma-user/fees/{stringId}/{feeId}');
     Route::get('/alma-user/fees/{stringId}/{status}');

@@ -26,7 +26,7 @@ class ApiAuthController extends Controller
         try {
             // Get the application data
             $application = Application::where('name', $request->get('application'))
-                ->where('status', 1)
+                ->where('status', '=', 1)
                 ->first();
 
 
