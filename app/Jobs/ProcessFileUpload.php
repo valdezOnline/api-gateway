@@ -40,7 +40,7 @@ class ProcessFileUpload implements ShouldQueue
         // IDMS_Library (ucr_card_data)
         if (Str::contains($nameOfFile, 'IDMS_Library')) {
             // Process the UCR card data
-            $heading = true;
+            $withHeader = false;
             $pathOfFile = storage_path("app/public/uploads/$nameOfFile");
 
             $inputFile = fopen($pathOfFile, "r");
@@ -49,8 +49,8 @@ class ProcessFileUpload implements ShouldQueue
 
             while (($record = fgetcsv($inputFile, 3000, ",")) !== false) {
                 # code...
-                if (!$heading) {
-                    $cardData = array(
+                if (!$withHeader) {
+                    $cardData = [
                         "net_id" => $record['0'],
                         "ssn" => $record['1'],
                         "student_id" => $record['2'],
@@ -62,15 +62,16 @@ class ProcessFileUpload implements ShouldQueue
                         "stud_fac" => $record['8'],
                         "prox_int" => $record['9'],
                         "prox_ext" => $record['10'],
-                        "issued" => $record['11'],
-                        "edit_date" => $record['12'],
-                        "photo_date" => $record['13'],
-                        "imported" => $record['14'],
-                        "load_status" => $record['15']
-                    );
+                        "prox_status" => $record['11'],
+                        "issued" => Str::length($record['12']) === 0 ? null : date_create_from_format('m/d/Y', $record['12']),
+                        "edit_date" => Str::length($record['13']) === 0 ? null : date_create_from_format('m/d/Y', $record['13']),
+                        "photo_date" => Str::length($record['14']) === 0 ? null : date_create_from_format('m/d/Y', $record['14']),
+                        "imported" => Str::length($record['15']) === 0 ? null : date_create_from_format('m/d/Y', $record['15']),
+                        "load_status" => $record['16']
+                    ];
                     UcrCardData::create($cardData);
                 }
-                $heading = false;
+                $withHeader = false;
             }
             fclose($inputFile);
         }

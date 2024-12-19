@@ -19,10 +19,11 @@ class UserResource extends JsonResource
             'type' => 'user',
             'id' => $this->id,
             'attributes' => [
-                'netid' => $this->netid,
+                'userName' => $this->user_name,
                 'email' => $this->email,
                 'firstName' => $this->first_name,
                 'lastName' => $this->last_name,
+                'createdBy' => $this->created_by,
                 $this->mergeWhen($request->routeIs('users.*'), [
                     'emailVerifiedAt' => $this->email_verified_at,
                     'hasApiAccess' => $this->hasApiAccess,

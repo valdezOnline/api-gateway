@@ -24,11 +24,12 @@ return new class extends Migration {
             $table->string('stud_fac')->default('');
             $table->string('prox_int')->default('');
             $table->string('prox_ext')->default('');
-            $table->string('issued')->default('');
-            $table->string('edit_date')->default('');
-            $table->string('photo_date')->default('');
-            $table->string('imported')->default('');
-            $table->string('load_status')->default('');
+            $table->string('prox_status')->default('');
+            $table->date('issued')->nullable()->default(null);
+            $table->date('edit_date')->nullable()->default(null);
+            $table->date('photo_date')->nullable()->default(null);
+            $table->date('imported')->nullable()->default(null);
+            $table->string('load_status')->nullable()->default('');
             $table->timestamps();
         });
     }
