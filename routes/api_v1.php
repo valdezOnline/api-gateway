@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\SisActiveStudentController;
 use App\Http\Controllers\Api\v1\ApiAuthController;
 use App\Http\Controllers\Api\v1\UcrPersonController;
 use App\Http\Controllers\Api\v1\FileLoadController;
+use App\Http\Controllers\Api\v1\UsersController;
 use App\Http\Middleware\EnsureApiKeyIsValid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+    Route::apiResource('users', UsersController::class)->except(['store', 'update', 'delete']);
     Route::apiResource('applications', ApplicationsController::class)->except(['store', 'update', 'delete']);
     Route::post('applications', [ApplicationsController::class, 'store']);
     Route::patch('applications/{application}', [ApplicationsController::class, 'update']);
