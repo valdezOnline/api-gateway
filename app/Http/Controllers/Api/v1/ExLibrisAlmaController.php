@@ -26,7 +26,7 @@ class ExLibrisAlmaController extends Controller
     public function search(ExLibrisAlmaPatronDataService $exLibrisAlmaPatronDataService, Request $request)
     {
         // return $this->ok('inside controller - stringSearch value = ' . $request->stringSearch);
-        return $exLibrisAlmaPatronDataService->Search($request->stringSearch);
+        return $exLibrisAlmaPatronDataService->Search();
     }
 
 }
