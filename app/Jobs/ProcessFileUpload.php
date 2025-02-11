@@ -69,7 +69,7 @@ class ProcessFileUpload implements ShouldQueue
                         "imported" => Str::length($record['15']) === 0 ? null : date_create_from_format('m/d/Y', $record['15']),
                         "load_status" => $record['16']
                     ];
-                    UcrCardData::create($cardData);
+                    UcrCardData::updateOrCreate($cardData);
                 }
                 $withHeader = false;
             }

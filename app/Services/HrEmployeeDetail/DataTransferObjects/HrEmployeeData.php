@@ -122,7 +122,7 @@ class HrEmployeeData
             employeeStatus:
             match ($employeeStatus) {
                 'A' => 'Active',
-                default => 'InActive',
+                default => 'Other',
             },
             jobCode: data_get($data, "$x.jobs.$jobsId.jobCode") ?? '',
             jobCodeDescription: data_get($data, "$x.jobs.$jobsId.jobCodeDescription") ?? '',
@@ -225,7 +225,7 @@ class HrEmployeeData
                 employeeStatus:
                 match ($employeeStatus) {
                     'A' => 'Active',
-                    default => 'InActive',
+                    default => 'Other',
                 },
                 jobCode: data_get($data, "$x.jobs.$jobsId.jobCode") ?? '',
                 jobCodeDescription: data_get($data, "$x.jobs.$jobsId.jobCodeDescription") ?? '',
