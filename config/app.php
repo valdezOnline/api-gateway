@@ -194,6 +194,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\UcrPersonServiceProvider::class,
+        App\Providers\SisActiveStudentServiceProvider::class,
+        App\Providers\HrEmployeeDetailServiceProvider::class,
+        App\Providers\ExLibrisAlmaDataServiceProvider::class,
     ],
 
     /*
