@@ -23,6 +23,14 @@ class ExLibrisAlmaController extends Controller
         return $exLibrisAlmaPatronDataService->Patron($request->stringId);
     }
 
+    public function guestLogin(ExLibrisAlmaPatronDataService $exLibrisAlmaPatronDataService, Request $request)
+    {
+        // return dd('inside controller');
+        // dd($request->all());
+        // dd($request->stringCreds);
+        return $exLibrisAlmaPatronDataService->GuestLogin($request->stringCreds);
+    }
+
     public function search(ExLibrisAlmaPatronDataService $exLibrisAlmaPatronDataService, Request $request)
     {
         // return $this->ok('inside controller - stringSearch value = ' . $request->stringSearch);

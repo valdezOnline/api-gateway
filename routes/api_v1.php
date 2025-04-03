@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // ExLibris Alma API Requests
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/alma-user/patron/guestLogin/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
     Route::get('/alma-user/patron/{stringId}', [ExLibrisAlmaController::class, 'patron']);
     Route::get('/alma-user/patron-search', [ExLibrisAlmaController::class, 'search']);
     Route::get('/alma-user/fees/{stringId}', [ExLibrisAlmaController::class, 'fees']);

@@ -215,4 +215,15 @@ return [
         // 'SearchSource'   =>  App\Search\SearchSource::class
     ])->toArray(),
 
+    /*
+   |--------------------------------------------------------------------------
+   | Custom ENV Configurations
+   |--------------------------------------------------------------------------
+   |
+   | This section is where we define ALL of the custom ENV configurations
+   | that the application will be using.
+   |
+   */
+
+    'app_encryption_key' => env('APP_ENCRYPTION_KEY', 'my-encryption-key'),
 ];

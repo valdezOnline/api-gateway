@@ -2,6 +2,7 @@
 
 namespace App\Services\ExLibrisAlma;
 
+use App\Helpers\EncryptionHelper;
 use App\Services\ExLibrisAlma\DataTransferObjects\PatronData;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\Cache;
@@ -89,6 +90,40 @@ class ExLibrisAlmaPatronDataService
         }
     }
 
+    public function GuestLogin(string $stringCreds)
+    {
+        try {
+            // Decrypt the creds
+            // $decryptedCreds = decrypt($stringCreds);
+            $decryptedCreds = EncryptionHelper::decrypt($stringCreds);
+
+            // return $this->ok('Test-Success', $decryptedCreds);
+            // dd($decryptedCreds);
+
+            // Split the decrypted string
+            // NOTE: the separator 'x0x0x' is what the library-apps used as a separator. Please do not change it.
+            $primaryId = Str::before($decryptedCreds, 'x0x0x');
+            $password = Str::after($decryptedCreds, 'x0x0x');
+            // // dd($primaryId, $password);
+
+            $url = "{$this->baseUrl}/almaws/v1/users/{$primaryId}?password={$password}&apikey=$this->key";
+            $resp = Http::accept('application/json')
+                ->post($url);
+
+            // // dd($resp->status());
+            // //Check if successful
+            return match ($resp->status()) {
+                204 => $this->ok('Success', 'Guest Login Successful'),
+                default => $this->error('Invalid Login Credentials', $resp->status()),
+            };
+
+        } catch (\ErrorException $errorException) {
+            //throw $th;
+            return $this->error($errorException->getMessage(), 500);
+        }
+    }
+
+
     public function Search()
     {
         // dd(request()->getQueryString());
@@ -119,6 +154,7 @@ class ExLibrisAlmaPatronDataService
             return $this->error($errorException->getMessage(), 500);
         }
     }
+
 
 
 }
