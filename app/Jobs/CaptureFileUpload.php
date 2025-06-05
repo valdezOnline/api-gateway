@@ -20,7 +20,7 @@ class CaptureFileUpload implements ShouldQueue
     public function __construct($fileInfo)
     {
         //
-        // dd($fileInfo);
+        // dd('Inside CaptureFileUpload: ' . $fileInfo);
         $this->uploadedFile = $fileInfo;
     }
 
@@ -29,6 +29,7 @@ class CaptureFileUpload implements ShouldQueue
      */
     public function handle(): void
     {
+        // dd('Inside CaptureFileUpload: Prior to creating the record');
         // Record the uploaded file 
         FileLoad::Create([
             'filePath' => $this->uploadedFile['filePath'],
@@ -37,6 +38,9 @@ class CaptureFileUpload implements ShouldQueue
             'fileSize' => $this->uploadedFile['fileSize'],
             'createdBy' => $this->uploadedFile['createdBy'],
             'direction' => 'upload',
+            'status' => 'pending',
         ]);
+
+        // dd('Inside CaptureFileUpload: After creating the record');
     }
 }

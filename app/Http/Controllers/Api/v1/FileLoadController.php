@@ -77,7 +77,7 @@ class FileLoadController extends Controller
 
         // Dispatch the job to capture the file uploaded.
         CaptureFileUpload::dispatch($fileLoad);
-        ProcessFileUpload::dispatch($fileLoad);
+        // ProcessFileUpload::dispatch($fileLoad);
         return $this->ok('Success', $fileLoad);
     }
 
