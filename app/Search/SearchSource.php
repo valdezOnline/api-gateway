@@ -22,9 +22,9 @@ class SearchSource
 
             $instance = new $class($query, $limit);
 
-            //$results = Cache::remember('search_' . $source . '_' . $query, 60 * 60, function () use ($instance) {
+            $results = Cache::remember('search_' . $source . '_' . $query, 60 * 60, function () use ($instance) {
                 return $instance->results();
-            //});
+            });
 
             return $results;
 

@@ -13,8 +13,9 @@ class SearchController extends Controller
         $query = $request->input('q');
         $source = $request->input('s');
         $format = $request->input('format');
+        $limit = $request->input('limit', 4);
 
-        $results = SearchSource::search($query, $source);
+        $results = SearchSource::search($query, $source, $limit);
 
         if ($format == 'rss') {
             return response()->make($results->serializeRss(), 200, [
