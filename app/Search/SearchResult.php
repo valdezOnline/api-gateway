@@ -52,9 +52,7 @@ class SearchResult
 <description/>";
 
       foreach ($this->results as $result) {
-          $result['title'] = urlencode($result['title']);
-          $result['contents'] = urlencode($result['contents']);
-
+          $result['url'] = urlencode($result['url']);
         $output .= "
 <item>
 <title>{$result['title']}</title>
