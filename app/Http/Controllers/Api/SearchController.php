@@ -17,7 +17,9 @@ class SearchController extends Controller
         $results = SearchSource::search($query, $source);
 
         if ($format == 'rss') {
-            return $results->serializeRss();
+            return response()->make($results->serializeRss(), 200, [
+                'Content-Type' => 'application/rss+xml',
+            ]);
         }
 
         return response()->json($results->serializeJson());
