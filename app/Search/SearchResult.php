@@ -42,4 +42,19 @@ class SearchResult
       'error' => $this->error,
     ];
   }
+
+  public function serializeRss() {
+      $output = "<rss version=\"2.0\"><channel><title/><link/>description/>";
+
+      foreach ($this->results as $result) {
+        $output .= "
+<item>
+<title>{$result['title']}</title>
+<link>{$result['url']}</link>
+<description>{$result['contents']}</description>
+</item>";
+      }
+
+      return $output;
+  }
 }

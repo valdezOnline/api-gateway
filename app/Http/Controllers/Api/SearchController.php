@@ -12,8 +12,13 @@ class SearchController extends Controller
     {
         $query = $request->input('q');
         $source = $request->input('s');
+        $format = $request->input('format');
 
         $results = SearchSource::search($query, $source);
+
+        if ($format == 'rss') {
+            return response()->json($results->serializeRss());
+        }
 
         return response()->json($results->serializeJson());
     }
