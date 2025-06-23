@@ -47,6 +47,10 @@ class SearchResult
       $output = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><rss version=\"2.0\"><channel><title></title><link/><description></description>";
 
       foreach ($this->results as $result) {
+          $result['title'] = urlencode($result['title']);
+          $result['contents'] = urlencode($result['contents']);
+          $result['url'] = urlencode($result['url']);
+
         $output .= "
 <item>
 <title>{$result['title']}</title>
