@@ -44,7 +44,7 @@ class SearchResult
   }
 
   public function serializeRss() {
-      $output = "<rss version=\"2.0\"><channel><title/><link/>description/>";
+      $output = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><rss version=\"2.0\"><channel><title></title><link/><description></description>";
 
       foreach ($this->results as $result) {
         $output .= "
@@ -54,6 +54,8 @@ class SearchResult
 <description>{$result['contents']}</description>
 </item>";
       }
+
+      $output .= "</channel></rss>";
 
       return $output;
   }
