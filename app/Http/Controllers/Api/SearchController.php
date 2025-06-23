@@ -18,7 +18,7 @@ class SearchController extends Controller
 
         if ($format == 'rss') {
             return response()->make($results->serializeRss(), 200, [
-                'Content-Type' => 'application/rss+xml',
+                'Content-Type' => 'application/xml',
             ]);
         }
 
