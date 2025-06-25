@@ -10,6 +10,7 @@ use App\Search\Sources\Databases;
 use App\Search\Sources\LibraryWebsite;
 use App\Search\Sources\LibGuides;
 use Exception;
+use Illuminate\Support\Str;
 
 class SearchResult
 {
@@ -53,7 +54,7 @@ class SearchResult
 
       foreach ($this->results as $result) {
           $result['url'] = htmlspecialchars($result['url']);
-          $result['title'] = htmlspecialchars($result['title']);
+          $result['title'] = Str::limit(htmlspecialchars($result['title']), 250, '...');
           $result['contents'] = htmlspecialchars(strip_tags($result['contents']));
         $output .= "
 <item>
