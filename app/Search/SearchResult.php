@@ -53,7 +53,8 @@ class SearchResult
 
       foreach ($this->results as $result) {
           $result['url'] = htmlspecialchars($result['url']);
-          $result['contents'] = strip_tags($result['contents']);
+          $result['title'] = htmlspecialchars($result['title']);
+          $result['contents'] = htmlspecialchars(strip_tags($result['contents']));
         $output .= "
 <item>
 <title>{$result['title']}</title>
