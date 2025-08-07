@@ -4,7 +4,7 @@ This documentation covers the ExLibris Alma integration services in the [`app/Se
 
 ## Overview
 
-The ExLibris Alma services provide integration with the ExLibris Alma library management system, offering patron data management, fee tracking, and authentication capabilities.
+The ExLibris Alma services provide integration with the ExLibris Alma library management system via an API, offering patron data management, fee tracking, and guest authentication capabilities.
 
 ## Core Services
 

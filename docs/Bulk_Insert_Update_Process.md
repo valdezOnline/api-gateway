@@ -65,7 +65,7 @@ protected $guarded = [];
 ### Processing UCR Card Data Initial Files
 ```php
 $fileInfo = [
-    'fileName' => 'UCR_CARD_DATA_INITIAL.csv',
+    'fileName' => 'UCR_CARD_DATA_FULL.csv',
     'filePath' => storage_path('app/public/uploads/UCR_CARD_DATA_INITIAL.csv'),
     'fileType' => 'csv',
     'fileSize' => filesize($path),
@@ -79,8 +79,8 @@ $job->handle();
 ### Processing IDMS Library Files (Existing)
 ```php
 $fileInfo = [
-    'fileName' => 'IDMS_Library_data.csv',
-    'filePath' => storage_path('app/public/uploads/IDMS_Library_data.csv'),
+    'fileName' => 'IDMS_Library_ALL_yyyyMMdd-hhmmss.csv',
+    'filePath' => storage_path('app/public/uploads/IDMS_Library_ALL_yyyyMMdd-hhmmss.csv'),
     'fileType' => 'csv',
     'fileSize' => filesize($path),
     'createdBy' => 'system'
@@ -104,7 +104,7 @@ php artisan test tests/Unit/ProcessFileUploadTest.php
 ```
 
 ## Files Modified
-1. **app/Jobs/ProcessFileUpload.php** - Main job file with bulk insert functionality
+1. **app/Jobs/ProcessFileUpload.php** - Main job file with bulk insert or update functionality
 2. **tests/Unit/ProcessFileUploadTest.php** - Unit tests for verification
 3. **demo_bulk_insert.php** - Demonstration script
 
