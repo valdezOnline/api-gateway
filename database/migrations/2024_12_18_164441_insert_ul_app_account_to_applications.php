@@ -17,8 +17,8 @@ return new class extends Migration {
                 'description' => 'Library Application Portal',
                 'apikey' => Crypt::encrypt(Str::uuid()->toString()),
                 'status' => true,
-                'created_by' => 'joelval'
-                // 'created_at' => now()
+                'created_by' => 'joelval',
+                'created_at' => now()
             ]
         );
     }

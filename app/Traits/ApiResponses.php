@@ -15,24 +15,39 @@ trait ApiResponses
         if (is_array($data)) {
             return response()->json([
                 'message' => $message,
-                'status' => $statusCode,
+                'status' => 'success',
                 'data' => $data,
                 'count' => count($data),
             ], $statusCode);
         } else {
             return response()->json([
                 'message' => $message,
-                'status' => $statusCode,
+                'status' => 'success',
                 'data' => $data,
             ], $statusCode);
         }
     }
 
-    protected function error($message, $statusCode, )
+    protected function error($message, $statusCode)
     {
         return response()->json([
             'message' => $message,
-            'status' => $statusCode,
+            'status' => 'error',
+        ], $statusCode);
+    }
+
+    // Add convenience methods for consistency
+    protected function successResponse($message, $data = [], $statusCode = 200)
+    {
+        return $this->success($message, $data, $statusCode);
+    }
+
+    protected function errorResponse($message, $data = [], $statusCode = 400)
+    {
+        return response()->json([
+            'message' => $message,
+            'status' => 'error',
+            'data' => $data,
         ], $statusCode);
     }
 }
