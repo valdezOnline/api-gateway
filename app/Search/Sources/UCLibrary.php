@@ -17,9 +17,12 @@ class UCLibrary implements SearchSourceInterface
 
   protected $query;
 
-  public function __construct($query)
+  protected $limit;
+
+  public function __construct($query, $limit = 4)
   {
     $this->query = $query;
+    $this->limit = $limit;
 
     $this->searchResults = new SearchResult([
       'source' => 'UC Library Search',
@@ -28,7 +31,7 @@ class UCLibrary implements SearchSourceInterface
 
   public function results(): SearchResult
   {
-    $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=Everything&limit=5&q=any,contains," . urlencode($this->query) . "&apikey=$this->apiKey";
+    $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=Everything&limit={$this->limit}&q=any,contains," . urlencode($this->query) . "&apikey=$this->apiKey";
 
     $json = Http::acceptJson()
       ->get($url)
@@ -39,11 +42,12 @@ class UCLibrary implements SearchSourceInterface
     $index = 0;
 
     foreach ($json['docs'] as $element) {
+        ray($element);
       $docId = $element['pnx']['control']['recordid'][0] ?? '';
       $title = $element['pnx']['display']['title'][0] ?? '';
       $source = $element['pnx']['display']['source'][0] ?? '';
       $type = $element['pnx']['display']['type'][0] ?? '';
-      $contents = $element['pnx']['display']['contents'][0] ?? '';
+      $contents = $element['pnx']['display']['description'][0] ?? '';
       $link = 'https://search.library.ucr.edu/discovery/fulldisplay?docid=' . $docId . '&context=PC&vid=01CDL_RIV_INST:UCR&search_scope=Everything&lang=en';
 
       $results[] = [
@@ -54,7 +58,7 @@ class UCLibrary implements SearchSourceInterface
         'contents' => Str::limit($contents, 150, '...'),
       ];
 
-      if ($index++ > 2) {
+      if ($index++ > $this->limit) {
         break;
       }
     }

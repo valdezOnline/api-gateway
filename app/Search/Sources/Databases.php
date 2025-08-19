@@ -13,7 +13,7 @@ class Databases implements SearchSourceInterface
 
   protected $query;
 
-  public function __construct($query)
+  public function __construct($query, $limit = 5)
   {
     $this->query = $query;
 

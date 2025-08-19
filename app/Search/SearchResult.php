@@ -10,6 +10,7 @@ use App\Search\Sources\Databases;
 use App\Search\Sources\LibraryWebsite;
 use App\Search\Sources\LibGuides;
 use Exception;
+use Illuminate\Support\Str;
 
 class SearchResult
 {
@@ -41,5 +42,32 @@ class SearchResult
       'allResultsLink' => $this->allResultsLink,
       'error' => $this->error,
     ];
+  }
+
+  public function serializeRss() {
+      $output = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<rss version=\"2.0\">
+<channel>
+<title>Output RSS</title>
+<link>https://library.ucr.edu</link>
+<description/>";
+
+      foreach ($this->results as $result) {
+          $result['url'] = htmlspecialchars($result['url']);
+          $result['title'] = Str::limit(htmlspecialchars($result['title']), 250, '...');
+          $result['contents'] = htmlspecialchars(strip_tags($result['contents']));
+        $output .= "
+<item>
+<title>{$result['title']}</title>
+<link>{$result['url']}</link>
+<description>{$result['contents']}</description>
+</item>";
+      }
+
+      $output .= "
+</channel>
+</rss>";
+
+      return $output;
   }
 }
