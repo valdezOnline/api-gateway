@@ -78,6 +78,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Main list endpoint with query parameters
     Route::get('/ucr-card-data/list', [UcrCardDataController::class, 'list']);
 
+    // Multiple parameter search endpoint
+    Route::post('/ucr-card-data/search-multiple', [UcrCardDataController::class, 'searchMultiple']);
+
     // Specific search endpoints (alternative approach)
     Route::get('/ucr-card-data/net-id/{netId}', [UcrCardDataController::class, 'searchByNetId']);
     Route::get('/ucr-card-data/ssn/{ssn}', [UcrCardDataController::class, 'searchBySsn']);
