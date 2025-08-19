@@ -143,27 +143,6 @@ button#search-button {
     text-transform: uppercase;
 }
 
-
-main>div#content-container div.primary-content-area a {
-    text-decoration: none;
-    color: rgb(0, 61, 165) !important;
-}
-
-main>div#content-container div.primary-content-area ul.accordion a:hover {
-    text-decoration: none;
-    color: white !important;
-}
-
-main>div#content-container div.primary-content-area li.is-active>a {
-    text-decoration: none;
-    color: white !important;
-}
-
-main>div#content-container div.primary-content-area li.tabs-title.is-active>a {
-    text-decoration: none;
-    color: #003da5!important;
-}
-
 .flex {
     display: flex;
     justify-content: center;

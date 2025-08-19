@@ -22,6 +22,8 @@ class ApiAuthController extends Controller
     {
         // Validate entries
         $request->validated($request->all());
+        // return dd($request->all());
+
 
         try {
             // Get the application data
@@ -48,6 +50,7 @@ class ApiAuthController extends Controller
                 )->plainTextToken
             ];
 
+            // dd($data);
             return $this->ok('Authenticated', $data);
 
         } catch (NotFoundHttpException $notFoundHttpException) {
@@ -59,7 +62,10 @@ class ApiAuthController extends Controller
     }
     public function exit(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $token = $request->user()->currentAccessToken();
+        if ($token) {
+            $token->delete();
+        }
 
         return $this->ok('Successful Exit.');
     }

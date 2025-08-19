@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\CaptureFileUpload;
+use App\Jobs\MergeCardData;
 use App\Jobs\ProcessFileUpload;
+use App\Jobs\VerifyFileUpload;
 use App\Models\FileLoad;
 use App\Models\UcrCardData;
 use App\Traits\ApiResponses;
@@ -30,25 +32,22 @@ class FileLoadController extends Controller
 
         // Check if has a file
         if (!$request->hasFile('file')) {
-            # code...
             // return response()->json(['upload_file_not_found'], 400);
             return $this->error('Upload File Not Found', 400);
         }
 
         try {
-            //code...
+            // Allowed file extensions
             $allowedFileExtension = ['csv', 'xslx', 'xml', 'json'];
             // $fileUploaded = [];
 
             // validate extension
             $fileExtension = $request->file('file')->getClientOriginalExtension();
 
-            $check = in_array(Str::lower($fileExtension), haystack: $allowedFileExtension);
+            $allowedFile = in_array(Str::lower($fileExtension), haystack: $allowedFileExtension);
 
-            if ($check) {
-                # code...
+            if ($allowedFile) {
                 // return response()->json(['file_extension_is_valid'], 200);
-                // $fileName = date('Ymdhis') . '_' . $request->file('file')->getClientOriginalName();
                 $fileName = $request->file('file')->getClientOriginalName();
                 $filePath = $request->file('file')->storePubliclyAs('public/uploads', $fileName);
 
@@ -66,7 +65,6 @@ class FileLoadController extends Controller
                     'createdBy' => $this->getApiInvoker(),
                 ];
 
-
             } else {
                 return $this->error('Invalid File Format', statusCode: 422);
                 // return response()->json(['invalid_file_format'], 422);
@@ -77,7 +75,13 @@ class FileLoadController extends Controller
 
         // Dispatch the job to capture the file uploaded.
         CaptureFileUpload::dispatch($fileLoad);
-        // ProcessFileUpload::dispatch($fileLoad);
+
+        // Dispatch the job to process the file uploaded.
+        ProcessFileUpload::dispatch($fileLoad);
+
+        // Dispatch the job to merge the staging and actual tables after the file was processed correctly.
+        //MergeCardData::dispatch();
+
         return $this->ok('Success', $fileLoad);
     }
 

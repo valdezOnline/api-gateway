@@ -11,4 +11,11 @@ class UcrCardDataStaging extends Model
 
     protected $table = 'ucr_card_data_staging';
     protected $guarded = [];
+
+    protected $casts = [
+        'issued' => 'datetime',
+        'edit_date' => 'datetime',
+        'photo_date' => 'datetime',
+        'imported' => 'datetime',
+    ];
 }

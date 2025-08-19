@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 
 class SearchSource
 {
-    public function search($query, $source) : SearchResult
+    public function search($query, $source, $limit = 4) : SearchResult
     {
         try {
             $class = 'App\\Search\\Sources\\' . $source;
@@ -20,7 +20,7 @@ class SearchSource
                 throw new Exception('Search query is empty');
             }
 
-            $instance = new $class($query);
+            $instance = new $class($query, $limit);
 
             $results = Cache::remember('search_' . $source . '_' . $query, 60 * 60, function () use ($instance) {
                 return $instance->results();

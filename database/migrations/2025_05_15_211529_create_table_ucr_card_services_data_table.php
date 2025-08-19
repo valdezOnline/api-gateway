@@ -28,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_ucr_card_services_data');
+        Schema::dropIfExists('ucr_card_services_data');
     }
 };
