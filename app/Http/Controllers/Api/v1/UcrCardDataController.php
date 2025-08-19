@@ -194,13 +194,126 @@ class UcrCardDataController extends Controller
             if ($records->isEmpty()) {
                 return $this->errorResponse('No records found for the date range: ' . $startDate . ' to ' . $endDate, [], 404);
             }
+            $groupedResults = [
+                'total_found' => $records->count(),
+                'records' => $records,
+                'date_range' => [
+                    'start' => $startDate,
+                    'end' => $endDate
+                ]
+            ];
 
-            return $this->successResponse('UCR card data retrieved successfully for date range', $records);
+            return $this->successResponse('UCR card data retrieved successfully for date range', $groupedResults);
 
         } catch (ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while searching by date range', ['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Search by multiple parameters (bulk search endpoint)
+     */
+    public function searchMultiple(Request $request)
+    {
+        try {
+            $request->validate([
+                'net_ids' => 'array',
+                'net_ids.*' => 'string',
+                'ssns' => 'array',
+                'ssns.*' => 'string',
+                'student_ids' => 'array',
+                'student_ids.*' => 'string',
+                'isos' => 'array',
+                'isos.*' => 'string',
+            ]);
+
+            $query = UcrCardDataActual::query();
+            $hasSearchCriteria = false;
+
+            // Build the query with OR conditions for different parameter types
+            $query->where(function ($subQuery) use ($request, &$hasSearchCriteria) {
+                $conditions = [];
+
+                if ($request->has('net_ids') && is_array($request->input('net_ids'))) {
+                    $netIds = array_filter($request->input('net_ids')); // Remove empty values
+                    if (!empty($netIds)) {
+                        $conditions[] = function ($q) use ($netIds) {
+                            $q->whereIn('net_id', $netIds);
+                        };
+                        $hasSearchCriteria = true;
+                    }
+                }
+
+                if ($request->has('ssns') && is_array($request->input('ssns'))) {
+                    $ssns = array_filter($request->input('ssns')); // Remove empty values
+                    if (!empty($ssns)) {
+                        $conditions[] = function ($q) use ($ssns) {
+                            $q->whereIn('ssn', $ssns);
+                        };
+                        $hasSearchCriteria = true;
+                    }
+                }
+
+                if ($request->has('student_ids') && is_array($request->input('student_ids'))) {
+                    $studentIds = array_filter($request->input('student_ids')); // Remove empty values
+                    if (!empty($studentIds)) {
+                        $conditions[] = function ($q) use ($studentIds) {
+                            $q->whereIn('student_id', $studentIds);
+                        };
+                        $hasSearchCriteria = true;
+                    }
+                }
+
+                if ($request->has('isos') && is_array($request->input('isos'))) {
+                    $isos = array_filter($request->input('isos')); // Remove empty values
+                    if (!empty($isos)) {
+                        $conditions[] = function ($q) use ($isos) {
+                            $q->whereIn('iso', $isos);
+                        };
+                        $hasSearchCriteria = true;
+                    }
+                }
+
+                // Apply all conditions with OR logic
+                foreach ($conditions as $index => $condition) {
+                    if ($index === 0) {
+                        $condition($subQuery);
+                    } else {
+                        $subQuery->orWhere($condition);
+                    }
+                }
+            });
+
+            if (!$hasSearchCriteria) {
+                return $this->errorResponse('At least one search parameter must be provided', [], 400);
+            }
+
+            $records = $query->get();
+
+            if ($records->isEmpty()) {
+                return $this->errorResponse('No records found for the provided search parameters', [], 404);
+            }
+
+            // Group results by search parameter type for easier consumption
+            $groupedResults = [
+                'total_found' => $records->count(),
+                'records' => $records,
+                'search_summary' => [
+                    'net_ids_searched' => $request->input('net_ids', []),
+                    'ssns_searched' => $request->input('ssns', []),
+                    'student_ids_searched' => $request->input('student_ids', []),
+                    'isos_searched' => $request->input('isos', []),
+                ]
+            ];
+
+            return $this->successResponse('UCR card data retrieved successfully for multiple search parameters', $groupedResults);
+
+        } catch (ValidationException $e) {
+            return $this->errorResponse('Validation failed', $e->errors(), 422);
+        } catch (\Exception $e) {
+            return $this->errorResponse('An error occurred while performing multiple parameter search', ['error' => $e->getMessage()], 500);
         }
     }
 }
