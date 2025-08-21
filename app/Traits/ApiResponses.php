@@ -15,14 +15,14 @@ trait ApiResponses
         if (is_array($data)) {
             return response()->json([
                 'message' => $message,
-                'status' => 'success',
+                'status' => $statusCode,
                 'data' => $data,
                 'count' => count($data),
             ], $statusCode);
         } else {
             return response()->json([
                 'message' => $message,
-                'status' => 'success',
+                'status' => $statusCode,
                 'data' => $data,
             ], $statusCode);
         }
@@ -32,7 +32,7 @@ trait ApiResponses
     {
         return response()->json([
             'message' => $message,
-            'status' => 'error',
+            'status' => $statusCode
         ], $statusCode);
     }
 
@@ -46,7 +46,7 @@ trait ApiResponses
     {
         return response()->json([
             'message' => $message,
-            'status' => 'error',
+            'status' => $statusCode,
             'data' => $data,
         ], $statusCode);
     }
