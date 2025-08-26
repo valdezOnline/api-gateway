@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // ExLibris Alma API Requests
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/alma-user/patron/guestLogin/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
+    Route::post('/alma-user/patron/guest-login/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
     Route::get('/alma-user/patron/{stringId}', [ExLibrisAlmaController::class, 'patron']);
     Route::get('/alma-user/patron-search', [ExLibrisAlmaController::class, 'search']);
     Route::get('/alma-user/fees/{stringId}', [ExLibrisAlmaController::class, 'fees']);
@@ -86,5 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/ucr-card-data/ssn/{ssn}', [UcrCardDataController::class, 'searchBySsn']);
     Route::get('/ucr-card-data/student-id/{studentId}', [UcrCardDataController::class, 'searchByStudentId']);
     Route::get('/ucr-card-data/iso/{iso}', [UcrCardDataController::class, 'searchByIso']);
+    Route::get('/ucr-card-data/library-number/{libraryNumber}', [UcrCardDataController::class, 'searchByLibraryNumber']);
+    Route::get('/ucr-card-data/barcode/{barcode}', [UcrCardDataController::class, 'searchByLibraryNumber']);
     Route::post('/ucr-card-data/date-range', [UcrCardDataController::class, 'searchByDateRange']);
 });
