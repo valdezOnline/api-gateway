@@ -176,6 +176,25 @@ class UcrCardDataController extends Controller
     }
 
     /**
+     * Search by Library Number specifically (alternative endpoint)
+     */
+    public function searchByLibraryNumber(Request $request, $libraryNumber)
+    {
+        try {
+            $record = UcrCardDataActual::where('lib_num', $libraryNumber)->first();
+
+            if (!$record) {
+                return $this->errorResponse('No record found for Library Number: ' . $libraryNumber, [], 404);
+            }
+
+            return $this->successResponse('UCR card data retrieved successfully', $record);
+
+        } catch (\Exception $e) {
+            return $this->errorResponse('An error occurred while searching by Library Number', ['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Search by date range specifically (alternative endpoint)
      */
     public function searchByDateRange(Request $request)
