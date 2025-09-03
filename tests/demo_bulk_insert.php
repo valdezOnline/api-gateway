@@ -5,8 +5,8 @@
  * This script shows how to use the newly enhanced ProcessFileUpload job
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/bootstrap/app.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../bootstrap/app.php';
 
 use App\Jobs\ProcessFileUpload;
 use App\Models\UcrCardDataStaging;
