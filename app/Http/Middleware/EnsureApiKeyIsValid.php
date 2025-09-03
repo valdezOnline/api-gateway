@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureApiKeyIsValid
 {
+    use ApiResponses;
+
     /**
      * Handle an incoming request.
      *

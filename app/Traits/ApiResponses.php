@@ -28,11 +28,26 @@ trait ApiResponses
         }
     }
 
-    protected function error($message, $statusCode, )
+    protected function error($message, $statusCode)
+    {
+        return response()->json([
+            'message' => $message,
+            'status' => $statusCode
+        ], $statusCode);
+    }
+
+    // Add convenience methods for consistency
+    protected function successResponse($message, $data = [], $statusCode = 200)
+    {
+        return $this->success($message, $data, $statusCode);
+    }
+
+    protected function errorResponse($message, $data = [], $statusCode = 400)
     {
         return response()->json([
             'message' => $message,
             'status' => $statusCode,
+            'data' => $data,
         ], $statusCode);
     }
 }

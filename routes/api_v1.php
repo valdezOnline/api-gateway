@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\UcrCardDataController;
 use App\Http\Controllers\Api\v1\UserAuthController;
 use App\Http\Controllers\Api\v1\ApplicationsController;
 use App\Http\Controllers\Api\v1\ExLibrisAlmaController;
@@ -65,9 +66,28 @@ Route::middleware('auth:sanctum')->group(function () {
 // ExLibris Alma API Requests
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/alma-user/patron/guestLogin/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
+    Route::post('/alma-user/patron/guest-login/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
     Route::get('/alma-user/patron/{stringId}', [ExLibrisAlmaController::class, 'patron']);
     Route::get('/alma-user/patron-search', [ExLibrisAlmaController::class, 'search']);
     Route::get('/alma-user/fees/{stringId}', [ExLibrisAlmaController::class, 'fees']);
     Route::get('/alma-user/fees/{stringId}/{feeId}');
     Route::get('/alma-user/fees/{stringId}/{status}');
+});
+
+// UCR Card Data API Requests
+Route::middleware('auth:sanctum')->group(function () {
+    // Main list endpoint with query parameters
+    Route::get('/ucr-card-data/list', [UcrCardDataController::class, 'list']);
+
+    // Multiple parameter search endpoint
+    Route::post('/ucr-card-data/search-multiple', [UcrCardDataController::class, 'searchMultiple']);
+
+    // Specific search endpoints (alternative approach)
+    Route::get('/ucr-card-data/net-id/{netId}', [UcrCardDataController::class, 'searchByNetId']);
+    Route::get('/ucr-card-data/ssn/{ssn}', [UcrCardDataController::class, 'searchBySsn']);
+    Route::get('/ucr-card-data/student-id/{studentId}', [UcrCardDataController::class, 'searchByStudentId']);
+    Route::get('/ucr-card-data/iso/{iso}', [UcrCardDataController::class, 'searchByIso']);
+    Route::get('/ucr-card-data/library-number/{libraryNumber}', [UcrCardDataController::class, 'searchByLibraryNumber']);
+    Route::get('/ucr-card-data/barcode/{barcode}', [UcrCardDataController::class, 'searchByLibraryNumber']);
+    Route::post('/ucr-card-data/date-range', [UcrCardDataController::class, 'searchByDateRange']);
 });
