@@ -236,6 +236,7 @@ class ProcessFileUpload implements ShouldQueue
      */
     private function processUcrCardDataInitialFile($nameOfFile): void
     {
+
         $pathOfFile = storage_path("app/public/uploads/$nameOfFile");
 
         // Verify the file exists before processing
@@ -262,23 +263,31 @@ class ProcessFileUpload implements ShouldQueue
         Log::info("Starting to process UCR Card Data Initial/Full file: $nameOfFile ");
 
         // Truncate the current Table for a clean initial / full import
+        // Start processing the file
+        Log::info("About to truncate UCR Card Data Staging table for clean import");
         UcrCardDataStaging::truncate();
+        Log::info("Truncate completed. Starting to read records from the file.");
 
         while (($record = fgetcsv($inputFile, 3000, ",")) !== false) {
 
+            // Skip empty rows first there were ocassions the upload process generated empty rows and caused issues.
+            if (empty(array_filter($record))) {
+                Log::debug("Skipping empty row");
+                continue;
+            }
+
             // Skip header row if it exists
             if ($skipFirstRow) {
+                Log::info("Checking for header row in UCR Card Data file");
                 $skipFirstRow = false;
                 // Check if first row contains headers
                 if (strtolower($record[0]) === 'net_id' || strtolower($record[1]) === 'ssn') {
+                    Log::info("Found header row in UCR Card Data file, skipping it");
                     continue;
                 }
+                Log::debug("First record, first column value = $record[0]");
             }
 
-            // Skip empty rows
-            if (empty(array_filter($record))) {
-                continue;
-            }
 
             $cardData = [
                 "net_id" => trim($record[0] ?? ''),
