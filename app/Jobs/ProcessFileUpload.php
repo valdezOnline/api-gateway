@@ -71,7 +71,7 @@ class ProcessFileUpload implements ShouldQueue
         }
 
         // UCR Card Data Initial/Full file
-        if (Str::contains(Str::lower($nameOfFile), 'ucr_card_data_initial') || Str::contains(Str::lower($nameOfFile), 'ucr_card_data_full')) {
+        if (Str::contains(haystack: Str::lower($nameOfFile), 'ucr_card_data_initial') || Str::contains(Str::lower($nameOfFile), 'ucr_card_data_full')) {
             Log::info("Detected UCR Card Data FULL/Initial file: $nameOfFile");
 
             // Check if this is truly a full file or an update file based on naming
@@ -225,6 +225,10 @@ class ProcessFileUpload implements ShouldQueue
 
         fclose($inputFile);
         Log::info("IDMS Library file processed: $recordCreated created, $recordUpdated updated, $totalProcessed total processed");
+
+        // Dispatch the merge job
+        Log::info("Dispatching MergeCardDataDeltas job to queue");
+        MergeCardDataDeltas::dispatch();
 
         // Update the FileLoad record
         Log::info("Updating FileLoad record with processed status");
