@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\UcrPersonServiceProvider::class,
         App\Providers\SisActiveStudentServiceProvider::class,
+        App\Providers\SisTermStudentServiceProvider::class,
         App\Providers\HrEmployeeDetailServiceProvider::class,
         App\Providers\ExLibrisAlmaDataServiceProvider::class,
     ],

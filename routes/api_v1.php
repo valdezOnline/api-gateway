@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\SisTermStudentController;
 use App\Http\Controllers\Api\v1\UcrCardDataController;
 use App\Http\Controllers\Api\v1\UserAuthController;
 use App\Http\Controllers\Api\v1\ApplicationsController;
@@ -56,6 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sis/active-students/{stringId}', [SisActiveStudentController::class, 'activeStudent']);
     Route::get('/sis/active-students', [SisActiveStudentController::class, 'activeStudents']);
     Route::get('/sis/active-students-count', [SisActiveStudentController::class, 'activeStudentCount']);
+    Route::get('/sis/term-student', [SisTermStudentController::class, 'searchCriteria']);
+
     Route::get('/hr/employee/{netId}', [HrEmployeeDetailController::class, 'hrEmployee']);
     Route::get('/hr/employee-details/{netIds}', [HrEmployeeDetailController::class, 'hrEmployeeDetails']);
     Route::get('/hr/employee-job/{netId}', [HrEmployeeDetailController::class, 'hrEmployeeJob']);
