@@ -118,9 +118,10 @@ class SisTermStudentService
 
                 //Check if successful
                 if ($resp->successful()) {
-                    $data = $resp->json();
+                    $data = (array) $resp->json('data');
                     Log::info('API response successful: ' . json_encode($data));
-                    return $this->ok('Success', SisTermStudentData::fromArray($data));
+                    // return $this->ok('Success', SisTermStudentData::fromArray($data));
+                    return $this->ok('Success', collect($data)->map(fn(array $arrayData) => SisTermStudentData::fromArray($arrayData)));
                 }
 
                 Log::error('API response failed: ' . $resp->status() . ' - ' . json_encode($resp->json()));

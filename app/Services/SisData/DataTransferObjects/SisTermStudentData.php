@@ -57,8 +57,8 @@ class SisTermStudentData
     public static function fromArray(array $data): self
     {
         // The API returns data in a nested structure with 'data' array
-        $studentData = data_get($data, 'data.0', []); // Get first student from data array
-
+        // $studentData = data_get($data, 'data.0', []); // Get first student from data array
+        $studentData = $data;
         return new self(
             id: data_get($studentData, 'id') ?? '',
             studentId: data_get($studentData, 'studentId') ?? '',
