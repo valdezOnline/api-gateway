@@ -2,14 +2,14 @@
 
 namespace App\Services\SisData;
 
-use App\Services\SisData\DataTransferObjects\SisTermStudentData;
+use App\Services\SisData\DataTransferObjects\TermStudentData;
 use App\Traits\ApiResponses;
 use Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class SisTermStudentService
+class TermStudentService
 {
     use ApiResponses;
 
@@ -19,30 +19,6 @@ class SisTermStudentService
         private readonly string $singleDataMinutes,
         private readonly string $multiDataMinutes,
     ) {
-    }
-
-    protected function getResponse($url)
-    {
-        try {
-            // return $this->ok($url);
-            $resp = Http::acceptJson()
-                ->withHeaders([
-                    'Authorization' => $this->key,
-                ])->get($url);
-
-            //Check if successful
-            if ($resp->successful()) {
-                // return $this->ok($url);
-                $data = $resp->json();
-                return $this->ok('Success', $resp->json());
-            }
-
-            return $this->error($resp->json(), 404);
-
-        } catch (\ErrorException $errorException) {
-            //throw $th;
-            return $this->error($errorException->getMessage(), 500);
-        }
     }
 
     /**
@@ -105,7 +81,7 @@ class SisTermStudentService
         Log::info('URL encoded criteria: ' . $urlEncodedCriteria);
 
         try {
-            return Cache::remember("sisTermStudent_$stringCriteria", now()->addMinutes($this->singleDataMinutes), function () use ($urlEncodedCriteria) {
+            return Cache::remember("termStudent_$stringCriteria", now()->addMinutes($this->singleDataMinutes), function () use ($urlEncodedCriteria) {
                 // Setup end-point url
                 $url = "{$this->baseUrl}/api/sis-data-api/v1/ethos/x-students?criteria=$urlEncodedCriteria";
 
@@ -120,8 +96,7 @@ class SisTermStudentService
                 if ($resp->successful()) {
                     $data = (array) $resp->json('data');
                     Log::info('API response successful: ' . json_encode($data));
-                    // return $this->ok('Success', SisTermStudentData::fromArray($data));
-                    return $this->ok('Success', collect($data)->map(fn(array $arrayData) => SisTermStudentData::fromArray($arrayData)));
+                    return $this->ok('Success', collect($data)->map(fn(array $arrayData) => TermStudentData::fromArray($arrayData)));
                 }
 
                 Log::error('API response failed: ' . $resp->status() . ' - ' . json_encode($resp->json()));

@@ -59,7 +59,7 @@ return [
         'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
     ],
 
-    'sisTermStudent' => [
+    'sisData' => [
         'key' => env("UCRGW_API_KEY"),
         'baseUrl' => env("UCRGW_API_BASEURL"),
         'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),

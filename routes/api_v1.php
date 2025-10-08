@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\Api\v1\SisTermStudentController;
+use App\Http\Controllers\Api\v1\SisStudentPersonController;
+use App\Http\Controllers\Api\v1\TermStudentController;
 use App\Http\Controllers\Api\v1\UcrCardDataController;
 use App\Http\Controllers\Api\v1\UserAuthController;
 use App\Http\Controllers\Api\v1\ApplicationsController;
 use App\Http\Controllers\Api\v1\ExLibrisAlmaController;
 use App\Http\Controllers\Api\v1\HrEmployeeDetailController;
 use App\Http\Controllers\Api\v1\SisActiveStudentController;
+use App\Http\Controllers\Api\v1\ActiveStudentController;
 use App\Http\Controllers\Api\v1\ApiAuthController;
 use App\Http\Controllers\Api\v1\UcrPersonController;
 use App\Http\Controllers\Api\v1\FileLoadController;
@@ -55,9 +57,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/ucr-person/{stringId}', [UcrPersonController::class, 'person']);
     Route::get('/ucr-person/{searchField}/{searchTerm}', [UcrPersonController::class, 'personSearch']);
     Route::get('/sis/active-students/{stringId}', [SisActiveStudentController::class, 'activeStudent']);
-    Route::get('/sis/active-students', [SisActiveStudentController::class, 'activeStudents']);
-    Route::get('/sis/active-students-count', [SisActiveStudentController::class, 'activeStudentCount']);
-    Route::get('/sis/term-student', [SisTermStudentController::class, 'searchCriteria']);
+    Route::get('/sis/active-student/{stringId}', [ActiveStudentController::class, 'activeStudent']);
+    Route::get('/sis/active-students', [ActiveStudentController::class, 'activeStudents']);
+    Route::get('/sis/active-students-count', [ActiveStudentController::class, 'activeStudentCount']);
+    Route::get('/sis/term-student', [TermStudentController::class, 'searchCriteria']);
+    Route::get('/sis/student-person/{stringId}', [SisStudentPersonController::class, 'searchStudentPerson']);
 
     Route::get('/hr/employee/{netId}', [HrEmployeeDetailController::class, 'hrEmployee']);
     Route::get('/hr/employee-details/{netIds}', [HrEmployeeDetailController::class, 'hrEmployeeDetails']);

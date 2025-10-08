@@ -2,7 +2,7 @@
 
 namespace App\Services\SisData\DataTransferObjects;
 
-class SisTermStudentData
+class TermStudentData
 {
     public function __construct(
         public readonly string $id,// StudentId-TermCode

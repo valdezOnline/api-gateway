@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Services\SisData\SisTermStudentService;
+use App\Services\SisData\TermStudentService;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 
-class SisTermStudentController extends Controller
+class TermStudentController extends Controller
 {
 
     use ApiResponses;
@@ -23,7 +23,7 @@ class SisTermStudentController extends Controller
      * {"studentId": "8####", "term": {"isCurrentTerm": "Y"}, "enrolledThisTerm": "Y"}
      * @param  = string; $stringCriteria
      */
-    public function searchCriteria(SisTermStudentService $sisTermStudentService, Request $request)
+    public function searchCriteria(TermStudentService $termStudentService, Request $request)
     {
         Log::info('searchCriteriaController called with request: ' . json_encode($request->all()));
 
@@ -38,7 +38,7 @@ class SisTermStudentController extends Controller
             ], 400);
         }
 
-        return $sisTermStudentService->SearchCriteria($queryString);
+        return $termStudentService->SearchCriteria($queryString);
     }
 
 }
