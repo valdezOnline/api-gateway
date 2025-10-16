@@ -2,111 +2,304 @@
 
 namespace App\Services\SisData\DataTransferObjects;
 
-class TermStudentData
+use App\Services\SisData\DataTransferObjects\BaseDataTransferObject;
+
+class TermStudentData extends BaseDataTransferObject
 {
     public function __construct(
-        public readonly string $id,// StudentId-TermCode
-        public readonly string $studentId,
-        public readonly string $userName, //netId,
-        public readonly string $enrolledThisTerm,
-        public readonly string $hasGraduated,
-        public readonly string $effectiveTermCode,
-        public readonly string $effectiveTermDescription,
-        public readonly string $levelCode,
-        public readonly string $levelDescription,
-        public readonly string $lastTermAttendedCode,
-        public readonly string $lastTermAttendedDescription,
-        public readonly string $expectedGraduationDate,
-        public readonly string $expectedGraduationTermCode,
-        public readonly string $expectedGraduationTermDescription,
-        public readonly string $expectedGraduationAcademicYear,
-        public readonly string $classificationCode,
-        public readonly string $classificationDescription,
-        public readonly string $typeCode,
-        public readonly string $typeDescription,
-        public readonly string $creditHoursMax,
-        public readonly string $creditHoursCurrent,
-        public readonly string $creditHoursCompleted,
-        public readonly string $gpaLevelHoursEarned,
-        public readonly string $gpaLevelHoursAttempted,
-        public readonly string $gpaLevelQualityPoints,
-        public readonly string $gpaLevelGpa,
-        public readonly string $entryTermCode,
-        public readonly string $entryTermDescription,
-        public readonly string $personId,
-        public readonly string $firstName,
-        public readonly string $lastName,
-        public readonly string $termCode,
-        public readonly string $termDescription,
-        public readonly string $termStartDate,
-        public readonly string $termEndDate,
-        public readonly string $isCurrentTerm,
-        public readonly string $primaryCollegeCode,
-        public readonly string $primaryCollegeDescription,
-        public readonly string $primaryMajorCode,
-        public readonly string $primaryMajorDescription,
-        public readonly string $primaryDegreeCode,
-        public readonly string $primaryDegreeDescription,
-        public readonly string $primaryProgramCode,
-        public readonly string $primaryDepartmentCode,
-        public readonly string $primaryDepartmentDescription,
-        public readonly string $statusCode,
-        public readonly string $statusDescription,
+        public readonly ?string $id,// StudentId-TermCode
+        public readonly ?string $studentId,
+        public readonly ?string $userName, //netId,
+        public readonly ?string $enrolledThisTerm,
+        public readonly ?string $hasGraduated,
+        public readonly ?string $effectiveTermCode,
+        public readonly ?string $effectiveTermDescription,
+        public readonly ?string $levelCode,
+        public readonly ?string $levelDescription,
+        public readonly ?string $lastTermAttendedCode,
+        public readonly ?string $lastTermAttendedDescription,
+        public readonly ?string $expectedGraduationDate,
+        public readonly ?string $expectedGraduationTermCode,
+        public readonly ?string $expectedGraduationTermDescription,
+        public readonly ?string $expectedGraduationAcademicYear,
+        public readonly ?string $classificationCode,
+        public readonly ?string $classificationDescription,
+        public readonly ?string $typeCode,
+        public readonly ?string $typeDescription,
+        public readonly ?string $creditHoursMax,
+        public readonly ?string $creditHoursCurrent,
+        public readonly ?string $creditHoursCompleted,
+        public readonly ?string $gpaLevelHoursEarned,
+        public readonly ?string $gpaLevelHoursAttempted,
+        public readonly ?string $gpaLevelQualityPoints,
+        public readonly ?string $gpaLevelGpa,
+        public readonly ?string $entryTermCode,
+        public readonly ?string $entryTermDescription,
+        public readonly ?string $personId,
+        public readonly ?string $firstName,
+        public readonly ?string $lastName,
+        public readonly ?string $termCode,
+        public readonly ?string $termDescription,
+        public readonly ?string $termStartDate,
+        public readonly ?string $termEndDate,
+        public readonly ?string $isCurrentTerm,
+        public readonly ?string $primaryCollegeCode,
+        public readonly ?string $primaryCollegeDescription,
+        public readonly ?string $primaryMajorCode,
+        public readonly ?string $primaryMajorDescription,
+        public readonly ?string $primaryDegreeCode,
+        public readonly ?string $primaryDegreeDescription,
+        public readonly ?string $primaryProgramCode,
+        public readonly ?string $primaryDepartmentCode,
+        public readonly ?string $primaryDepartmentDescription,
+        public readonly ?string $statusCode,
+        public readonly ?string $statusDescription,
     ) {
     }
-    public static function fromArray(array $data): self
+
+    /**
+     * Check if the term data has the minimum required information
+     */
+    public function isValid(): bool
     {
-        // The API returns data in a nested structure with 'data' array
-        // $studentData = data_get($data, 'data.0', []); // Get first student from data array
-        $studentData = $data;
+        return !empty($this->studentId) && !empty($this->termCode);
+    }
+
+    /**
+     * Check if student is currently enrolled
+     */
+    public function isEnrolled(): bool
+    {
+        return strtolower($this->enrolledThisTerm ?? '') === 'y' ||
+            strtolower($this->enrolledThisTerm ?? '') === 'yes' ||
+            strtolower($this->enrolledThisTerm ?? '') === 'true';
+    }
+
+    /**
+     * Check if student has graduated
+     */
+    public function hasGraduated(): bool
+    {
+        return strtolower($this->hasGraduated ?? '') === 'y' ||
+            strtolower($this->hasGraduated ?? '') === 'yes' ||
+            strtolower($this->hasGraduated ?? '') === 'true';
+    }
+
+    /**
+     * Check if this is current term
+     */
+    public function isCurrentTerm(): bool
+    {
+        return strtolower($this->isCurrentTerm ?? '') === 'y' ||
+            strtolower($this->isCurrentTerm ?? '') === 'yes' ||
+            strtolower($this->isCurrentTerm ?? '') === 'true';
+    }
+
+    /**
+     * Get student ID with fallback to empty string
+     */
+    public function getStudentIdOrEmpty(): string
+    {
+        return $this->studentId ?? '';
+    }
+
+    /**
+     * Get full name by combining first and last name
+     */
+    public function getFullName(): string
+    {
+        $parts = array_filter([$this->firstName, $this->lastName]);
+        return implode(' ', $parts);
+    }
+
+    /**
+     * Get GPA as float
+     */
+    public function getGpaAsFloat(): ?float
+    {
+        $gpa = $this->gpaLevelGpa;
+        return is_numeric($gpa) ? (float) $gpa : null;
+    }
+
+    /**
+     * Get credit hours as integers
+     */
+    public function getCreditHoursAsInts(): array
+    {
+        return [
+            'max' => is_numeric($this->creditHoursMax) ? (int) $this->creditHoursMax : 0,
+            'current' => is_numeric($this->creditHoursCurrent) ? (int) $this->creditHoursCurrent : 0,
+            'completed' => is_numeric($this->creditHoursCompleted) ? (int) $this->creditHoursCompleted : 0,
+        ];
+    }
+
+    /**
+     * Convert to array with proper null handling
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'studentId' => $this->studentId,
+            'userName' => $this->userName,
+            'enrolledThisTerm' => $this->enrolledThisTerm,
+            'hasGraduated' => $this->hasGraduated,
+            'effectiveTermCode' => $this->effectiveTermCode,
+            'effectiveTermDescription' => $this->effectiveTermDescription,
+            'levelCode' => $this->levelCode,
+            'levelDescription' => $this->levelDescription,
+            'lastTermAttendedCode' => $this->lastTermAttendedCode,
+            'lastTermAttendedDescription' => $this->lastTermAttendedDescription,
+            'expectedGraduationDate' => $this->expectedGraduationDate,
+            'expectedGraduationTermCode' => $this->expectedGraduationTermCode,
+            'expectedGraduationTermDescription' => $this->expectedGraduationTermDescription,
+            'expectedGraduationAcademicYear' => $this->expectedGraduationAcademicYear,
+            'classificationCode' => $this->classificationCode,
+            'classificationDescription' => $this->classificationDescription,
+            'typeCode' => $this->typeCode,
+            'typeDescription' => $this->typeDescription,
+            'creditHoursMax' => $this->creditHoursMax,
+            'creditHoursCurrent' => $this->creditHoursCurrent,
+            'creditHoursCompleted' => $this->creditHoursCompleted,
+            'gpaLevelHoursEarned' => $this->gpaLevelHoursEarned,
+            'gpaLevelHoursAttempted' => $this->gpaLevelHoursAttempted,
+            'gpaLevelQualityPoints' => $this->gpaLevelQualityPoints,
+            'gpaLevelGpa' => $this->gpaLevelGpa,
+            'entryTermCode' => $this->entryTermCode,
+            'entryTermDescription' => $this->entryTermDescription,
+            'personId' => $this->personId,
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'fullName' => $this->getFullName(),
+            'termCode' => $this->termCode,
+            'termDescription' => $this->termDescription,
+            'termStartDate' => $this->termStartDate,
+            'termEndDate' => $this->termEndDate,
+            'isCurrentTerm' => $this->isCurrentTerm,
+            'primaryCollegeCode' => $this->primaryCollegeCode,
+            'primaryCollegeDescription' => $this->primaryCollegeDescription,
+            'primaryMajorCode' => $this->primaryMajorCode,
+            'primaryMajorDescription' => $this->primaryMajorDescription,
+            'primaryDegreeCode' => $this->primaryDegreeCode,
+            'primaryDegreeDescription' => $this->primaryDegreeDescription,
+            'primaryProgramCode' => $this->primaryProgramCode,
+            'primaryDepartmentCode' => $this->primaryDepartmentCode,
+            'primaryDepartmentDescription' => $this->primaryDepartmentDescription,
+            'statusCode' => $this->statusCode,
+            'statusDescription' => $this->statusDescription,
+            // Helper values
+            'isValid' => $this->isValid(),
+            'isEnrolled' => $this->isEnrolled(),
+            'hasGraduatedBool' => $this->hasGraduated(),
+            'isCurrentTermBool' => $this->isCurrentTerm(),
+            'gpaFloat' => $this->getGpaAsFloat(),
+            'creditHours' => $this->getCreditHoursAsInts(),
+        ];
+    }
+
+    public static function fromArray(array $data): static
+    {
+        // Handle case where data is null or empty
+        if (empty($data)) {
+            return new self(
+                id: null,
+                studentId: null,
+                userName: null,
+                enrolledThisTerm: null,
+                hasGraduated: null,
+                effectiveTermCode: null,
+                effectiveTermDescription: null,
+                levelCode: null,
+                levelDescription: null,
+                lastTermAttendedCode: null,
+                lastTermAttendedDescription: null,
+                expectedGraduationDate: null,
+                expectedGraduationTermCode: null,
+                expectedGraduationTermDescription: null,
+                expectedGraduationAcademicYear: null,
+                classificationCode: null,
+                classificationDescription: null,
+                typeCode: null,
+                typeDescription: null,
+                creditHoursMax: null,
+                creditHoursCurrent: null,
+                creditHoursCompleted: null,
+                gpaLevelHoursEarned: null,
+                gpaLevelHoursAttempted: null,
+                gpaLevelQualityPoints: null,
+                gpaLevelGpa: null,
+                entryTermCode: null,
+                entryTermDescription: null,
+                personId: null,
+                firstName: null,
+                lastName: null,
+                termCode: null,
+                termDescription: null,
+                termStartDate: null,
+                termEndDate: null,
+                isCurrentTerm: null,
+                primaryCollegeCode: null,
+                primaryCollegeDescription: null,
+                primaryMajorCode: null,
+                primaryMajorDescription: null,
+                primaryDegreeCode: null,
+                primaryDegreeDescription: null,
+                primaryProgramCode: null,
+                primaryDepartmentCode: null,
+                primaryDepartmentDescription: null,
+                statusCode: null,
+                statusDescription: null
+            );
+        }
+
         return new self(
-            id: data_get($studentData, 'id') ?? '',
-            studentId: data_get($studentData, 'studentId') ?? '',
-            userName: data_get($studentData, 'userName') ?? '',
-            enrolledThisTerm: data_get($studentData, 'enrolledThisTerm') ?? '',
-            hasGraduated: data_get($studentData, 'hasGraduated') ?? '',
-            effectiveTermCode: data_get($studentData, 'effectiveTerm.code') ?? '',
-            effectiveTermDescription: data_get($studentData, 'effectiveTerm.description') ?? '',
-            levelCode: data_get($studentData, 'level.code') ?? '',
-            levelDescription: data_get($studentData, 'level.description') ?? '',
-            lastTermAttendedCode: data_get($studentData, 'lastTermAttended.code') ?? '',
-            lastTermAttendedDescription: data_get($studentData, 'lastTermAttended.description') ?? '',
-            expectedGraduationDate: data_get($studentData, 'expectedGraduation.date') ?? '',
-            expectedGraduationTermCode: data_get($studentData, 'expectedGraduation.term.code') ?? '',
-            expectedGraduationTermDescription: data_get($studentData, 'expectedGraduation.term.description') ?? '',
-            expectedGraduationAcademicYear: data_get($studentData, 'expectedGraduation.academicYear') ?? '',
-            classificationCode: data_get($studentData, 'classification.code') ?? '',
-            classificationDescription: data_get($studentData, 'classification.description') ?? '',
-            typeCode: data_get($studentData, 'type.code') ?? '',
-            typeDescription: data_get($studentData, 'type.description') ?? '',
-            creditHoursMax: (string) (data_get($studentData, 'creditHours.max') ?? ''),
-            creditHoursCurrent: (string) (data_get($studentData, 'creditHours.current') ?? ''),
-            creditHoursCompleted: (string) (data_get($studentData, 'gpa.level.hoursEarned') ?? ''),
-            gpaLevelHoursEarned: (string) (data_get($studentData, 'gpa.level.hoursEarned') ?? ''),
-            gpaLevelHoursAttempted: (string) (data_get($studentData, 'gpa.level.hoursAttempted') ?? ''),
-            gpaLevelQualityPoints: (string) (data_get($studentData, 'gpa.level.qualityPoints') ?? ''),
-            gpaLevelGpa: (string) (data_get($studentData, 'gpa.level.gpa') ?? ''),
-            entryTermCode: data_get($studentData, 'entry.term.code') ?? '',
-            entryTermDescription: data_get($studentData, 'entry.term.description') ?? '',
-            personId: data_get($studentData, 'person.id') ?? '',
-            firstName: data_get($studentData, 'name.firstName') ?? '',
-            lastName: data_get($studentData, 'name.lastName') ?? '',
-            termCode: data_get($studentData, 'term.code') ?? '',
-            termDescription: data_get($studentData, 'term.description') ?? '',
-            termStartDate: data_get($studentData, 'term.startDate') ?? '',
-            termEndDate: data_get($studentData, 'term.endDate') ?? '',
-            isCurrentTerm: data_get($studentData, 'term.isCurrentTerm') ?? '',
-            primaryCollegeCode: data_get($studentData, 'primary.college.code') ?? '',
-            primaryCollegeDescription: data_get($studentData, 'primary.college.description') ?? '',
-            primaryMajorCode: data_get($studentData, 'primary.major.code') ?? '',
-            primaryMajorDescription: data_get($studentData, 'primary.major.description') ?? '',
-            primaryDegreeCode: data_get($studentData, 'primary.degree.code') ?? '',
-            primaryDegreeDescription: data_get($studentData, 'primary.degree.description') ?? '',
-            primaryProgramCode: data_get($studentData, 'primary.program.code') ?? '',
-            primaryDepartmentCode: data_get($studentData, 'primary.department.code') ?? '',
-            primaryDepartmentDescription: data_get($studentData, 'primary.department.description') ?? '',
-            statusCode: data_get($studentData, 'status.code') ?? '',
-            statusDescription: data_get($studentData, 'status.description') ?? '',
+            id: self::getNonEmptyStringOrNull($data, 'id'),
+            studentId: self::getNonEmptyStringOrNull($data, 'studentId'),
+            userName: self::getNonEmptyStringOrNull($data, 'userName'),
+            enrolledThisTerm: self::getNonEmptyStringOrNull($data, 'enrolledThisTerm'),
+            hasGraduated: self::getNonEmptyStringOrNull($data, 'hasGraduated'),
+            effectiveTermCode: self::getNonEmptyStringOrNull($data, 'effectiveTerm.code'),
+            effectiveTermDescription: self::getNonEmptyStringOrNull($data, 'effectiveTerm.description'),
+            levelCode: self::getNonEmptyStringOrNull($data, 'level.code'),
+            levelDescription: self::getNonEmptyStringOrNull($data, 'level.description'),
+            lastTermAttendedCode: self::getNonEmptyStringOrNull($data, 'lastTermAttended.code'),
+            lastTermAttendedDescription: self::getNonEmptyStringOrNull($data, 'lastTermAttended.description'),
+            expectedGraduationDate: self::getNonEmptyStringOrNull($data, 'expectedGraduation.date'),
+            expectedGraduationTermCode: self::getNonEmptyStringOrNull($data, 'expectedGraduation.term.code'),
+            expectedGraduationTermDescription: self::getNonEmptyStringOrNull($data, 'expectedGraduation.term.description'),
+            expectedGraduationAcademicYear: self::getNonEmptyStringOrNull($data, 'expectedGraduation.academicYear'),
+            classificationCode: self::getNonEmptyStringOrNull($data, 'classification.code'),
+            classificationDescription: self::getNonEmptyStringOrNull($data, 'classification.description'),
+            typeCode: self::getNonEmptyStringOrNull($data, 'type.code'),
+            typeDescription: self::getNonEmptyStringOrNull($data, 'type.description'),
+            creditHoursMax: self::getNumericStringOrNull($data, 'creditHours.max'),
+            creditHoursCurrent: self::getNumericStringOrNull($data, 'creditHours.current'),
+            creditHoursCompleted: self::getNumericStringOrNull($data, 'gpa.level.hoursEarned'),
+            gpaLevelHoursEarned: self::getNumericStringOrNull($data, 'gpa.level.hoursEarned'),
+            gpaLevelHoursAttempted: self::getNumericStringOrNull($data, 'gpa.level.hoursAttempted'),
+            gpaLevelQualityPoints: self::getNumericStringOrNull($data, 'gpa.level.qualityPoints'),
+            gpaLevelGpa: self::getNumericStringOrNull($data, 'gpa.level.gpa'),
+            entryTermCode: self::getNonEmptyStringOrNull($data, 'entry.term.code'),
+            entryTermDescription: self::getNonEmptyStringOrNull($data, 'entry.term.description'),
+            personId: self::getNonEmptyStringOrNull($data, 'person.id'),
+            firstName: self::getNonEmptyStringOrNull($data, 'name.firstName'),
+            lastName: self::getNonEmptyStringOrNull($data, 'name.lastName'),
+            termCode: self::getNonEmptyStringOrNull($data, 'term.code'),
+            termDescription: self::getNonEmptyStringOrNull($data, 'term.description'),
+            termStartDate: self::getNonEmptyStringOrNull($data, 'term.startDate'),
+            termEndDate: self::getNonEmptyStringOrNull($data, 'term.endDate'),
+            isCurrentTerm: self::getNonEmptyStringOrNull($data, 'term.isCurrentTerm'),
+            primaryCollegeCode: self::getNonEmptyStringOrNull($data, 'primary.college.code'),
+            primaryCollegeDescription: self::getNonEmptyStringOrNull($data, 'primary.college.description'),
+            primaryMajorCode: self::getNonEmptyStringOrNull($data, 'primary.major.code'),
+            primaryMajorDescription: self::getNonEmptyStringOrNull($data, 'primary.major.description'),
+            primaryDegreeCode: self::getNonEmptyStringOrNull($data, 'primary.degree.code'),
+            primaryDegreeDescription: self::getNonEmptyStringOrNull($data, 'primary.degree.description'),
+            primaryProgramCode: self::getNonEmptyStringOrNull($data, 'primary.program.code'),
+            primaryDepartmentCode: self::getNonEmptyStringOrNull($data, 'primary.department.code'),
+            primaryDepartmentDescription: self::getNonEmptyStringOrNull($data, 'primary.department.description'),
+            statusCode: self::getNonEmptyStringOrNull($data, 'status.code'),
+            statusDescription: self::getNonEmptyStringOrNull($data, 'status.description'),
         );
     }
 }
