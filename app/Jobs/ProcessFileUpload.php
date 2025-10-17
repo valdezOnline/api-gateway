@@ -71,7 +71,7 @@ class ProcessFileUpload implements ShouldQueue
         }
 
         // UCR Card Data Initial/Full file
-        if (Str::contains(haystack: Str::lower($nameOfFile), 'ucr_card_data_initial') || Str::contains(Str::lower($nameOfFile), 'ucr_card_data_full')) {
+        if (Str::contains(Str::lower($nameOfFile), 'ucr_card_data_initial') || Str::contains(Str::lower($nameOfFile), 'ucr_card_data_full')) {
             Log::info("Detected UCR Card Data FULL/Initial file: $nameOfFile");
 
             // Check if this is truly a full file or an update file based on naming
