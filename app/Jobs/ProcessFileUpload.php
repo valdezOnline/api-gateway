@@ -226,6 +226,10 @@ class ProcessFileUpload implements ShouldQueue
         fclose($inputFile);
         Log::info("IDMS Library file processed: $recordCreated created, $recordUpdated updated, $totalProcessed total processed");
 
+        // Dispatch the merge job
+        Log::info("Dispatching MergeCardDataDeltas job to queue");
+        MergeCardDataDeltas::dispatch();
+
         // Update the FileLoad record
         Log::info("Updating FileLoad record with processed status");
         $this->updateFileLoadRecord($this->fileLoad['fileName'], $this->fileLoad['filePath'], $totalProcessed, $recordCreated, $recordUpdated);
