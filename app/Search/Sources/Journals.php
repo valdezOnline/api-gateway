@@ -7,7 +7,7 @@ use App\Search\SearchSourceInterface;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class UCLibrary implements SearchSourceInterface
+class Journals implements SearchSourceInterface
 {
   protected SearchResult $results;
 
@@ -25,13 +25,13 @@ class UCLibrary implements SearchSourceInterface
     $this->limit = $limit;
 
     $this->searchResults = new SearchResult([
-      'source' => 'UC Library Search',
+      'source' => 'Journals',
     ]);
   }
 
   public function results(): SearchResult
   {
-    $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=Everything&tab=Everything&limit={$this->limit}&q=any,contains," . urlencode($this->query) . "&pcAvailability=true&apikey=$this->apiKey";
+    $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=MyInstitution&tab=jsearch_slot&limit={$this->limit}&q=any,contains," . urlencode($this->query) . "&journals=any," . urlencode($this->query) . "&pcAvailability=true&apikey=$this->apiKey";
 
     $json = Http::acceptJson()
       ->get($url)
@@ -42,7 +42,6 @@ class UCLibrary implements SearchSourceInterface
     $index = 0;
 
     foreach ($json['docs'] as $element) {
-        ray($element);
       $docId = $element['pnx']['control']['recordid'][0] ?? '';
       $title = $element['pnx']['display']['title'][0] ?? '';
       $source = $element['pnx']['display']['source'][0] ?? '';
@@ -64,8 +63,8 @@ class UCLibrary implements SearchSourceInterface
     }
 
     $this->searchResults->results = $results;
-    $this->searchResults->total = $json['info']['totalResultsPC'];
-    $this->searchResults->allResultsLink = "https://search.library.ucr.edu/discovery/search?query=any,contains," . urlencode($this->query) . "&tab=Everything&search_scope=Everything&vid=01CDL_RIV_INST:UCR&lang=en&offset=0";
+    $this->searchResults->total = $json['info']['total'];
+    $this->searchResults->allResultsLink = "https://search.library.ucr.edu/discovery/search?query=any,contains," . urlencode($this->query) . "&tab=jsearch_slot&search_scope=MyInstitution&vid=01CDL_RIV_INST:UCR&lang=en&offset=0";
 
     return $this->searchResults;
   }

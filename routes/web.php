@@ -20,3 +20,7 @@ Route::get('/test', function (Request $request) {
 Route::get('/welcome', function (Request $request) {
     return view('welcome');
 });
+
+Route::get('/search-test', function () {
+    return view('search-result-box');
+});
