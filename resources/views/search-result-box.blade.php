@@ -6,56 +6,66 @@
     <title>Search Test</title>
     @vite(['resources/css/app.css'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .search-form input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-form input[type="text"]:focus {
+            outline: none;
+            border-color: #003DA5;
+        }
+        .search-form button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #003DA5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-form button:hover {
+            background: #002d7a;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .results-grid .search-block {
+            width: 100%;
+            margin: 0;
+        }
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body class="antialiased">
 <h1>Search Test Page</h1>
-<p>Query: <strong x-data="{ q: new URLSearchParams(location.search).get('q') }" x-text="q"></strong></p>
-<hr>
 
-<!-- Calisphere -->
-<div class="search-block" x-data="{
-  source: 'Calisphere',
-  query: new URLSearchParams(location.search).get('q'),
-  results: [],
-  count: 0,
-  allResultsLink: '',
-  loading: true,
-  error: ''
-}" x-init="
-fetch('/api/search?q=' + query + '&s=' + source)
-.then(res => res.json())
-.then(res => {
-  results = res.results;
-  count = res.total;
-  allResultsLink = res.allResultsLink;
-  loading = false;
-  error = res.error;
-})">
-<div class="search-source-header">
-  <div class="source-title" x-text="source">&nbsp</div>
-  <a class="all-results-link" :href="allResultsLink" x-show="count > 0">See all <span x-text="count">&nbsp;</span>
-    results</a>
-</div>
-<div class="search-results">
-  <p class="source-heading">Calisphere is your gateway to digital collections from California's great libraries, archives, and museums. Discover over 2,100,000 images, texts, and recordings.</p>
-  <template x-for="result in results">
-    <div class="search-result">
-      <a class="search-link" x-text="result.title" :href="result.url">&nbsp;</a>
-      <div class="result-details">
-        <span class="pill" x-text="result.type">&nbsp;</span><br/>
-        Collection: <a x-text="result.collection_name" :href="result.collection_url">&nbsp;</a>
-      </div>
-    </div>
-  </template>
+<form class="search-form" x-data="{ query: new URLSearchParams(location.search).get('q') || '' }" @submit.prevent="if(query.trim()) window.location.href = '?q=' + encodeURIComponent(query.trim())">
+    <input type="text" x-model="query" placeholder="Enter your search query..." autofocus>
+    <button type="submit">Search</button>
+</form>
 
-  <div class="loading" x-show="loading">
-    Loading results...
-  </div>
-  <div class="search-error" x-show="error">
-    Error loading results: <span x-text="error"></span>
-  </div>
-</div>
-</div>
+<p x-data="{ q: new URLSearchParams(location.search).get('q') }" x-show="q">Showing results for: <strong x-text="q"></strong></p>
+<hr x-data="{ q: new URLSearchParams(location.search).get('q') }" x-show="q">
+
+<div class="results-grid">
 
 <!-- LibGuides-->
 <div class="search-block" x-data="{
@@ -323,6 +333,8 @@ fetch('/api/search?q=' + query + '&s=' + source)
   </div>
 </div>
 </div>
+
+</div><!-- end results-grid -->
 
 </body>
 </html>
