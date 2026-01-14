@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//API Entry Point 
+//API Entry Point
 Route::middleware(EnsureApiKeyIsValid::class)->group(function () {
     Route::post('/entry', [ApiAuthController::class, 'entry']);
 });
@@ -79,6 +79,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/alma-user/fees/{stringId}', [ExLibrisAlmaController::class, 'fees']);
     Route::get('/alma-user/fees/{stringId}/{feeId}');
     Route::get('/alma-user/fees/{stringId}/{status}');
+    Route::get('/alma-user/loans/{stringId}', [ExLibrisAlmaController::class, 'loans']);
+    Route::get('/alma-user/loans/{stringId}/{loanId}');
+    Route::post('/alma-user/loans/renew/{stringId}/{loanId}');
 });
 
 // UCR Card Data API Requests
