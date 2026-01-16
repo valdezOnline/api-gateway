@@ -31,7 +31,7 @@ class Journals implements SearchSourceInterface
 
   public function results(): SearchResult
   {
-    $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=MyInstitution&tab=jsearch_slot&limit={$this->limit}&q=any,contains," . urlencode($this->query) . "&newspapersSearch=true&journals=any," . urlencode($this->query) . "&pcAvailability=true&apikey=$this->apiKey";
+    $url = "$this->apiUrl?vid=01CDL_RIV_INST:UCR&scope=MyInstitution&tab=jsearch_slot&limit={$this->limit}&q=any,contains," . urlencode($this->query) . "journals=any," . urlencode($this->query) . "&pcAvailability=true&apikey=$this->apiKey";
 
     $json = Http::acceptJson()
       ->get($url)
