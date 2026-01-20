@@ -64,7 +64,7 @@ class Journals implements SearchSourceInterface
 
     $this->searchResults->results = $results;
     $this->searchResults->total = $json['info']['total'];
-    $this->searchResults->allResultsLink = "https://search.library.ucr.edu/discovery/search?query=any,contains," . urlencode($this->query) . "&tab=jsearch_slot&search_scope=MyInstitution&vid=01CDL_RIV_INST:UCR&lang=en&offset=0";
+    $this->searchResults->allResultsLink = "https://search.library.ucr.edu/discovery/jsearch?query=any,contains," . urlencode($this->query) . "&tab=jsearch_slot&search_scope=MyInstitution&vid=01CDL_RIV_INST:UCR&lang=en&offset=0";
 
     return $this->searchResults;
   }
