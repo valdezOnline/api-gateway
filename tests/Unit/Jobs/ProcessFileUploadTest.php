@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Mockery;
+use PHPUnitrameworkattributestest;
 
 class ProcessFileUploadTest extends TestCase
 {
@@ -47,8 +48,7 @@ class ProcessFileUploadTest extends TestCase
         Mockery::close();
         parent::tearDown();
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_idms_library_file_successfully()
     {
         // Arrange: Create a test IDMS Library CSV file
@@ -82,8 +82,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertEquals('987654321', $secondRecord->ssn);
         $this->assertEquals('U4', $secondRecord->yr_in_school);
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_ucr_card_data_initial_file_successfully()
     {
         // Arrange: Create a test UCR Card Data Initial file
@@ -118,8 +117,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertNotNull($actualRecord);
         $this->assertEquals('111111111', $actualRecord->ssn);
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_ucr_card_data_full_file_successfully()
     {
         // Arrange: Create existing data in actual table
@@ -170,8 +168,7 @@ class ProcessFileUploadTest extends TestCase
         $oldRecord = UcrCardDataActual::where('net_id', 'existing001')->first();
         $this->assertNull($oldRecord);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_file_not_found_gracefully()
     {
         // Arrange: File info for non-existent file
@@ -188,8 +185,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertEquals(0, UcrCardDataStaging::count());
         $this->assertEquals(0, UcrCardDataActual::count());
     }
-
-    /** @test */
+    #[Test]
     public function it_skips_header_rows_in_csv_files()
     {
         // Arrange: Create CSV with header row
@@ -214,8 +210,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertEquals('header001', $record->net_id);
         $this->assertNotEquals('net_id', $record->net_id); // Ensure header wasn't processed
     }
-
-    /** @test */
+    #[Test]
     public function it_skips_empty_rows_in_csv_files()
     {
         // Arrange: Create CSV with empty rows
@@ -241,8 +236,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertDatabaseHas('ucr_card_data_staging', ['net_id' => 'empty001']);
         $this->assertDatabaseHas('ucr_card_data_staging', ['net_id' => 'empty002']);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_date_parsing_correctly()
     {
         // Arrange: Create CSV with various date formats
@@ -269,8 +263,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertEquals('2024-07-10', $record->photo_date->format('Y-m-d'));
         $this->assertEquals('2024-07-20', $record->imported->format('Y-m-d'));
     }
-
-    /** @test */
+    #[Test]
     public function it_updates_file_load_record_after_processing()
     {
         // Arrange: Create initial FileLoad record
@@ -309,8 +302,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertStringContainsString('Processed 1 records', $fileLoadRecord->notes);
         $this->assertStringContainsString('Records created: 1', $fileLoadRecord->notes);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_bulk_operations_efficiently()
     {
         // Arrange: Create a larger CSV file to test bulk operations
@@ -346,8 +338,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertNotNull($lastRecord);
         $this->assertEquals('5001111111', $lastRecord->ssn);
     }
-
-    /** @test */
+    #[Test]
     public function it_identifies_true_full_files_correctly()
     {
         // Test different file naming patterns to ensure proper identification
@@ -386,8 +377,7 @@ class ProcessFileUploadTest extends TestCase
             }
         }
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_existing_records_in_idms_library_processing()
     {
         // Arrange: Create existing record in staging
@@ -436,8 +426,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertEquals('New Status', $newRecord->status1);
         $this->assertEquals('created', $newRecord->load_status);
     }
-
-    /** @test */
+    #[Test]
     public function it_trims_whitespace_from_csv_fields()
     {
         // Arrange: Create CSV with whitespace in fields
@@ -464,8 +453,7 @@ class ProcessFileUploadTest extends TestCase
         $this->assertEquals('Test Student', $record->status1);
         $this->assertEquals('U', $record->class);
     }
-
-    /** @test */
+    #[Test]
     public function it_logs_processing_progress()
     {
         // This test verifies that appropriate log messages are generated

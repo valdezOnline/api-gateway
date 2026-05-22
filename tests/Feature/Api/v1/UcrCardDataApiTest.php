@@ -53,6 +53,7 @@ class UcrCardDataApiTest extends TestCase
             ])
             ->assertJson([
                 'status' => 'success',
+                'status_code' => 200,
                 'data' => [
                     'total_found' => 2,
                     'search_summary' => [
@@ -89,6 +90,7 @@ class UcrCardDataApiTest extends TestCase
             ])
             ->assertJson([
                 'status' => 'success',
+                'status_code' => 200,
                 'data' => [
                     'total_found' => 2,
                     'date_range' => [
@@ -117,6 +119,7 @@ class UcrCardDataApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'status' => 'success',
+                'status_code' => 200,
                 'data' => [
                     'total_found' => 2,
                     'search_summary' => [
@@ -137,6 +140,7 @@ class UcrCardDataApiTest extends TestCase
         $response->assertStatus(400)
             ->assertJson([
                 'status' => 'error',
+                'status_code' => 400,
                 'message' => 'At least one search parameter must be provided'
             ]);
     }
@@ -153,6 +157,7 @@ class UcrCardDataApiTest extends TestCase
         $response->assertStatus(422)
             ->assertJson([
                 'status' => 'error',
+                'status_code' => 422,
                 'message' => 'Validation failed'
             ]);
     }
@@ -170,6 +175,7 @@ class UcrCardDataApiTest extends TestCase
         $response->assertStatus(422)
             ->assertJson([
                 'status' => 'error',
+                'status_code' => 422,
                 'message' => 'Validation failed'
             ]);
     }

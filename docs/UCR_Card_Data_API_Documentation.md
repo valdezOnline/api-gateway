@@ -18,6 +18,16 @@ Authorization: Bearer {your_token}
 /api/v1/ucr-card-data/
 ```
 
+## Response Envelope
+
+All API responses use a consistent envelope:
+
+- `message` (string): Human-readable outcome message.
+- `status` (string): Semantic status. One of `success` or `error`.
+- `status_code` (integer): Numeric HTTP-style status code mirrored in the payload.
+- `data` (object|array): Response payload.
+- `count` (integer, optional): Included when `data` is an array.
+
 ## Endpoints
 
 ### 1. List All Records (with Optional Search Parameters)
@@ -60,6 +70,7 @@ GET /api/v1/ucr-card-data/list?per_page=100
 {
     "message": "UCR card data retrieved successfully",
     "status": "success",
+    "status_code": 200,
     "data": [
         {
             "id": 1,
@@ -194,6 +205,7 @@ Content-Type: application/json
 {
     "message": "Error description",
     "status": "error",
+    "status_code": 400,
     "data": {}
 }
 ```
@@ -204,6 +216,7 @@ Content-Type: application/json
 {
     "message": "Validation failed",
     "status": "error",
+    "status_code": 422,
     "data": {
         "start_date": ["The start date field is required."],
         "end_date": ["The end date must be after or equal to start date."]

@@ -23,8 +23,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         UcrCardDataStaging::truncate();
         UcrCardDataActual::truncate();
     }
-
-    /** @test */
+    #[Test]
     public function it_can_be_dispatched_to_queue()
     {
         // Arrange: Fake the queue
@@ -36,8 +35,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         // Assert: Job was pushed to queue
         Queue::assertPushed(MergeCardDataDeltas::class);
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_full_data_merge_workflow_successfully()
     {
         // Arrange: Create a realistic dataset mimicking a real-world scenario
@@ -198,8 +196,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         $this->assertEquals('Transfer Student', $newRecord2->status1);
         $this->assertEquals('U2', $newRecord2->yr_in_school);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_large_dataset_processing_efficiently()
     {
         // Arrange: Create a large dataset to test performance and batch processing
@@ -308,8 +305,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         // Performance assertion (should complete within reasonable time)
         $this->assertLessThan(30, $processingTime, 'Large dataset processing should complete within 30 seconds');
     }
-
-    /** @test */
+    #[Test]
     public function it_maintains_data_integrity_during_concurrent_operations()
     {
         // Arrange: Create initial data
@@ -368,8 +364,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         $duplicates = UcrCardDataActual::where('net_id', 'concurrent001')->count();
         $this->assertEquals(1, $duplicates);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_edge_cases_and_data_anomalies()
     {
         // Arrange: Create edge case scenarios
@@ -481,8 +476,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         $this->assertEquals('', $edge3->status1);
         $this->assertEquals('', $edge3->class);
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_real_world_data_patterns()
     {
         // Arrange: Create data that mimics real-world patterns from university card systems
@@ -639,8 +633,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         $this->assertEquals('G', $intl->class);
         $this->assertEquals('000000000', $intl->ssn);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_job_timeout_gracefully()
     {
         // This test verifies that the job has appropriate timeout settings
@@ -649,8 +642,7 @@ class MergeCardDataDeltasFeatureTest extends TestCase
         // Assert: Verify timeout is set appropriately
         $this->assertEquals(3600, $job->timeout); // 1 hour timeout
     }
-
-    /** @test */
+    #[Test]
     public function it_logs_comprehensive_processing_information()
     {
         // Arrange: Create test data

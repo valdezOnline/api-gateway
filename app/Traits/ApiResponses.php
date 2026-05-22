@@ -11,29 +11,12 @@ trait ApiResponses
 
     protected function success($message, $data = [], $statusCode = 200)
     {
-        // dd(count($data));
-        if (is_array($data)) {
-            return response()->json([
-                'message' => $message,
-                'status' => $statusCode,
-                'data' => $data,
-                'count' => count($data),
-            ], $statusCode);
-        } else {
-            return response()->json([
-                'message' => $message,
-                'status' => $statusCode,
-                'data' => $data,
-            ], $statusCode);
-        }
+        return response()->json($this->buildPayload($message, $data, $statusCode), $statusCode);
     }
 
     protected function error($message, $statusCode)
     {
-        return response()->json([
-            'message' => $message,
-            'status' => $statusCode
-        ], $statusCode);
+        return response()->json($this->buildPayload($message, [], $statusCode), $statusCode);
     }
 
     // Add convenience methods for consistency
@@ -44,10 +27,24 @@ trait ApiResponses
 
     protected function errorResponse($message, $data = [], $statusCode = 400)
     {
-        return response()->json([
+        return response()->json($this->buildPayload($message, $data, $statusCode), $statusCode);
+    }
+
+    private function buildPayload($message, $data, $statusCode)
+    {
+        $status = $statusCode >= 400 ? 'error' : 'success';
+
+        $payload = [
             'message' => $message,
-            'status' => $statusCode,
+            'status' => $status,
+            'status_code' => $statusCode,
             'data' => $data,
-        ], $statusCode);
+        ];
+
+        if (is_array($data)) {
+            $payload['count'] = count($data);
+        }
+
+        return $payload;
     }
 }

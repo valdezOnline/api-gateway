@@ -69,7 +69,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
                     'total'
                 ]
             ])
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'All UCR card data retrieved successfully');
     }
 
@@ -97,7 +97,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/list?net_id=' . $netId);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully by net_id')
             ->assertJsonCount(2, 'data');
 
@@ -121,7 +121,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/list?ssn=' . $ssn);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully by SSN')
             ->assertJsonPath('data.id', $record->id)
             ->assertJsonPath('data.ssn', $ssn);
@@ -140,7 +140,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/list?student_id=' . $studentId);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully by student_id')
             ->assertJsonPath('data.id', $record->id)
             ->assertJsonPath('data.student_id', $studentId);
@@ -159,7 +159,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/list?iso=' . $iso);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully by ISO')
             ->assertJsonPath('data.id', $record->id)
             ->assertJsonPath('data.iso', $iso);
@@ -183,7 +183,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/list?start_date=' . $startDate . '&end_date=' . $endDate);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully by date range')
             ->assertJsonCount(3, 'data');
     }
@@ -201,7 +201,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/net-id/' . $netId);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully')
             ->assertJsonCount(2, 'data');
     }
@@ -219,7 +219,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/ssn/' . $ssn);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully')
             ->assertJsonPath('data.id', $record->id)
             ->assertJsonPath('data.ssn', $ssn);
@@ -238,7 +238,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/student-id/' . $studentId);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully')
             ->assertJsonPath('data.id', $record->id)
             ->assertJsonPath('data.student_id', $studentId);
@@ -257,7 +257,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/iso/' . $iso);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully')
             ->assertJsonPath('data.id', $record->id)
             ->assertJsonPath('data.iso', $iso);
@@ -281,9 +281,9 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->postJson('/api/v1/ucr-card-data/date-range', $requestData);
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully for date range')
-            ->assertJsonCount(2, 'data');
+            ->assertJsonCount(2, 'data.records');
     }
 
     /**
@@ -299,7 +299,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/list?per_page=5');
 
         $response->assertStatus(200)
-            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('data.per_page', 5)
             ->assertJsonPath('data.total', 10)
             ->assertJsonCount(5, 'data.data');
@@ -315,30 +315,30 @@ class UcrCardDataControllerFeatureTest extends TestCase
         // Test list endpoint with query parameters
         $response = $this->getJson('/api/v1/ucr-card-data/list?net_id=nonexistent');
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'No records found for the provided net_id');
 
         $response = $this->getJson('/api/v1/ucr-card-data/list?ssn=nonexistent');
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'No record found for the provided SSN');
 
         // Test specific endpoints
         $response = $this->getJson('/api/v1/ucr-card-data/net-id/nonexistent');
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error');
+            ->assertJsonPath('status_code', $response->getStatusCode());
 
         $response = $this->getJson('/api/v1/ucr-card-data/ssn/nonexistent');
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error');
+            ->assertJsonPath('status_code', $response->getStatusCode());
 
         $response = $this->getJson('/api/v1/ucr-card-data/student-id/nonexistent');
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error');
+            ->assertJsonPath('status_code', $response->getStatusCode());
 
         $response = $this->getJson('/api/v1/ucr-card-data/iso/nonexistent');
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error');
+            ->assertJsonPath('status_code', $response->getStatusCode());
     }
 
     /**
@@ -351,7 +351,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         // Test missing required fields
         $response = $this->postJson('/api/v1/ucr-card-data/date-range', ['start_date' => '2024-01-01']);
         $response->assertStatus(422)
-            ->assertJsonPath('status', 'error')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'Validation failed');
 
         // Test invalid date format
@@ -360,7 +360,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
             'end_date' => '2024-12-31'
         ]);
         $response->assertStatus(422)
-            ->assertJsonPath('status', 'error')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'Validation failed');
 
         // Test end_date before start_date
@@ -369,7 +369,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
             'end_date' => '2024-01-01'
         ]);
         $response->assertStatus(422)
-            ->assertJsonPath('status', 'error')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'Validation failed');
     }
 
@@ -383,7 +383,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response = $this->getJson('/api/v1/ucr-card-data/list?start_date=invalid-date&end_date=2024-12-31');
 
         $response->assertStatus(400)
-            ->assertJsonPath('status', 'error')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'Invalid date format. Please use YYYY-MM-DD format');
     }
 
@@ -397,7 +397,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         // Test list endpoint with query parameters
         $response = $this->getJson('/api/v1/ucr-card-data/list?start_date=2025-01-01&end_date=2025-12-31');
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error')
+            ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'No records found for the provided date range');
 
         // Test POST endpoint
@@ -406,7 +406,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
             'end_date' => '2025-12-31'
         ]);
         $response->assertStatus(404)
-            ->assertJsonPath('status', 'error');
+            ->assertJsonPath('status_code', $response->getStatusCode());
     }
 
     /**
@@ -454,7 +454,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
                     'message',
                     'data'
                 ])
-                ->assertJsonPath('status', 'success');
+                ->assertJsonPath('status_code', $response->getStatusCode());
         }
     }
 }

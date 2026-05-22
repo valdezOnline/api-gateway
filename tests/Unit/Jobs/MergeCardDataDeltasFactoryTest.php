@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Mockery;
+use PHPUnitrameworkattributestest;
 
 class MergeCardDataDeltasFactoryTest extends TestCase
 {
@@ -28,8 +29,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
         Mockery::close();
         parent::tearDown();
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_student_lifecycle_changes_using_factories()
     {
         // Arrange: Create an undergraduate student in actual table
@@ -71,8 +71,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
         $this->assertEquals('G', $updatedStudent->class);
         $this->assertEquals('G1', $updatedStudent->yr_in_school);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_faculty_card_replacements_using_factories()
     {
         // Arrange: Create faculty member with existing card
@@ -112,8 +111,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
         $this->assertEquals('99999', $updatedFaculty->prox_int);
         $this->assertEquals('88888', $updatedFaculty->prox_ext);
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_bulk_new_students_using_factories()
     {
         // Arrange: Create multiple new students in staging
@@ -140,8 +138,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
             $this->assertEquals($student->status1, $actualRecord->status1);
         }
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_mixed_operations_with_factories()
     {
         // Arrange: Create existing records in actual table
@@ -197,8 +194,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
             $this->assertNotNull($actualRecord);
         }
     }
-
-    /** @test */
+    #[Test]
     public function it_respects_timestamp_precedence_with_factories()
     {
         // Arrange: Create newer record in actual table
@@ -232,8 +228,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
         $record = UcrCardDataActual::where('net_id', 'test001')->first();
         $this->assertEquals('Newer Status', $record->status1);
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_international_students_correctly()
     {
         // Arrange: Create international student records
@@ -261,8 +256,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
         $ssnCount = UcrCardDataActual::where('ssn', '000000000')->count();
         $this->assertEquals(3, $ssnCount);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_status_transitions_realistically()
     {
         // Arrange: Create various realistic status transitions
@@ -327,8 +321,7 @@ class MergeCardDataDeltasFactoryTest extends TestCase
         $this->assertEquals('Retired Faculty', $retiredRecord->status1);
         $this->assertEquals('I', $retiredRecord->prox_status);
     }
-
-    /** @test */
+    #[Test]
     public function it_preserves_data_integrity_during_complex_updates()
     {
         // Arrange: Create complex scenario with overlapping identifiers

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use Mockery;
+use PHPUnitrameworkattributestest;
 use Carbon\Carbon;
 
 class MergeCardDataDeltasTest extends TestCase
@@ -30,8 +31,7 @@ class MergeCardDataDeltasTest extends TestCase
         Mockery::close();
         parent::tearDown();
     }
-
-    /** @test */
+    #[Test]
     public function it_completes_successfully_when_no_records_need_processing()
     {
         // Arrange: Log expectations
@@ -59,8 +59,7 @@ class MergeCardDataDeltasTest extends TestCase
         $this->assertEquals(0, UcrCardDataStaging::count());
         $this->assertEquals(0, UcrCardDataActual::count());
     }
-
-    /** @test */
+    #[Test]
     public function it_inserts_new_records_from_staging_to_actual()
     {
         // Arrange: Create new records in staging
@@ -120,8 +119,7 @@ class MergeCardDataDeltasTest extends TestCase
         $this->assertEquals('222222222', $actualRecord2->ssn);
         $this->assertEquals('G1', $actualRecord2->yr_in_school);
     }
-
-    /** @test */
+    #[Test]
     public function it_updates_existing_records_in_actual_table()
     {
         // Arrange: Create an existing record in actual table
@@ -180,8 +178,7 @@ class MergeCardDataDeltasTest extends TestCase
         $this->assertEquals('44444', $updatedRecord->prox_int);
         $this->assertEquals('A', $updatedRecord->prox_status);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_mixed_insert_and_update_operations()
     {
         // Arrange: Create existing record in actual table
@@ -262,8 +259,7 @@ class MergeCardDataDeltasTest extends TestCase
         $this->assertEquals('555555555', $insertedRecord->ssn);
         $this->assertEquals('New Student', $insertedRecord->status1);
     }
-
-    /** @test */
+    #[Test]
     public function it_skips_records_with_older_timestamps()
     {
         // Arrange: Create newer record in actual table
@@ -319,8 +315,7 @@ class MergeCardDataDeltasTest extends TestCase
         $this->assertEquals('Newer Status', $record->status1); // Should remain unchanged
         $this->assertEquals('G', $record->class); // Should remain unchanged
     }
-
-    /** @test */
+    #[Test]
     public function it_analyzes_table_deltas_correctly()
     {
         // Arrange: Create test data
@@ -379,8 +374,7 @@ class MergeCardDataDeltasTest extends TestCase
         $this->assertArrayHasKey('updated_records', $deltaAnalysis['merge_candidates']);
         $this->assertArrayHasKey('total_to_process', $deltaAnalysis['merge_candidates']);
     }
-
-    /** @test */
+    #[Test]
     public function it_prepares_record_data_correctly()
     {
         // Arrange: Create a staging record
@@ -444,8 +438,7 @@ class MergeCardDataDeltasTest extends TestCase
         $this->assertEquals('Active Student', $preparedData['status1']);
         $this->assertEquals('created', $preparedData['load_status']);
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_database_transaction_rollback_on_error()
     {
         // This test verifies the job handles exceptions gracefully
@@ -474,8 +467,7 @@ class MergeCardDataDeltasTest extends TestCase
         // If we get here, the job completed without throwing an exception
         $this->assertEquals(1, UcrCardDataActual::count());
     }
-
-    /** @test */
+    #[Test]
     public function it_processes_records_in_batches()
     {
         // Arrange: Create multiple staging records
@@ -514,8 +506,7 @@ class MergeCardDataDeltasTest extends TestCase
             $this->assertEquals(str_pad($i, 9, '0', STR_PAD_LEFT), $record->ssn);
         }
     }
-
-    /** @test */
+    #[Test]
     public function it_handles_null_and_empty_timestamps_correctly()
     {
         // Arrange: Create records with null timestamps
