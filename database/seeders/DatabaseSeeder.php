@@ -6,7 +6,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Crypt;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +15,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         \App\Models\Application::factory(4)->create();
+
+        $this->call(ApiServiceProviderSeeder::class);
 
         \App\Models\User::factory()->create([
             'user_name' => 'joelval',

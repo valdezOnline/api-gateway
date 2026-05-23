@@ -44,4 +44,19 @@ class User extends Authenticatable
     {
         return $filters->apply($builder);
     }
+
+    public function apiServiceProviders()
+    {
+        return $this->belongsToMany(ApiServiceProvider::class, 'user_api_service_provider')
+            ->withPivot(['enabled', 'assigned_by_user_id'])
+            ->withTimestamps();
+    }
+
+    public function hasEnabledServiceAccess(string $serviceKey): bool
+    {
+        return $this->apiServiceProviders()
+            ->where('service_key', $serviceKey)
+            ->wherePivot('enabled', true)
+            ->exists();
+    }
 }

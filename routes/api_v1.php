@@ -10,8 +10,11 @@ use App\Http\Controllers\Api\v1\HrEmployeeDetailController;
 use App\Http\Controllers\Api\v1\SisActiveStudentController;
 use App\Http\Controllers\Api\v1\ActiveStudentController;
 use App\Http\Controllers\Api\v1\ApiAuthController;
+use App\Http\Controllers\Api\v1\ApiServiceProvidersController;
+use App\Http\Controllers\Api\v1\ApplicationServiceProviderAccessController;
 use App\Http\Controllers\Api\v1\UcrPersonController;
 use App\Http\Controllers\Api\v1\FileLoadController;
+use App\Http\Controllers\Api\v1\UserServiceProviderAccessController;
 use App\Http\Controllers\Api\v1\UsersController;
 use App\Http\Middleware\EnsureApiKeyIsValid;
 use Illuminate\Http\Request;
@@ -49,29 +52,47 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('applications', ApplicationsController::class)->except(['store', 'update', 'delete']);
     Route::post('applications', [ApplicationsController::class, 'store']);
     Route::patch('applications/{application}', [ApplicationsController::class, 'update']);
+    Route::get('/service-providers', [ApiServiceProvidersController::class, 'index']);
+
+    Route::get('/applications/{application}/service-providers', [ApplicationServiceProviderAccessController::class, 'index']);
+    Route::put('/applications/{application}/service-providers/{apiServiceProvider}', [ApplicationServiceProviderAccessController::class, 'upsert']);
+    Route::delete('/applications/{application}/service-providers/{apiServiceProvider}', [ApplicationServiceProviderAccessController::class, 'destroy']);
+
+    Route::get('/users/{user}/service-providers', [UserServiceProviderAccessController::class, 'index']);
+    Route::put('/users/{user}/service-providers/{apiServiceProvider}', [UserServiceProviderAccessController::class, 'upsert']);
+    Route::delete('/users/{user}/service-providers/{apiServiceProvider}', [UserServiceProviderAccessController::class, 'destroy']);
+
     Route::post('/exit', [ApiAuthController::class, 'exit']);
 });
 
 // UCRGW API Requests
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'service.access:ucr_person'])->group(function () {
     Route::get('/ucr-person/{stringId}', [UcrPersonController::class, 'person']);
     Route::get('/ucr-person/{searchField}/{searchTerm}', [UcrPersonController::class, 'personSearch']);
+});
+
+Route::middleware(['auth:sanctum', 'service.access:sis_active_student'])->group(function () {
     Route::get('/sis/active-students/{stringId}', [SisActiveStudentController::class, 'activeStudent']);
     Route::get('/sis/active-student/{stringId}', [ActiveStudentController::class, 'activeStudent']);
     Route::get('/sis/active-students', [ActiveStudentController::class, 'activeStudents']);
     Route::get('/sis/active-students-count', [ActiveStudentController::class, 'activeStudentCount']);
     Route::get('/sis/term-student', [TermStudentController::class, 'searchCriteria']);
     Route::get('/sis/student-person/{stringId}', [SisStudentPersonController::class, 'searchStudentPerson']);
+});
 
+Route::middleware(['auth:sanctum', 'service.access:hr_employee_detail'])->group(function () {
     Route::get('/hr/employee/{netId}', [HrEmployeeDetailController::class, 'hrEmployee']);
     Route::get('/hr/employee-details/{netIds}', [HrEmployeeDetailController::class, 'hrEmployeeDetails']);
     Route::get('/hr/employee-job/{netId}', [HrEmployeeDetailController::class, 'hrEmployeeJob']);
+});
+
+Route::middleware(['auth:sanctum', 'service.access:file_load'])->group(function () {
     Route::post('/file-upload', [FileLoadController::class, 'upload']);
     Route::get('/file-download/{fileName}', [FileLoadController::class, 'download']);
 });
 
 // ExLibris Alma API Requests
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'service.access:exlibris_alma'])->group(function () {
     Route::post('/alma-user/patron/guestLogin/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
     Route::post('/alma-user/patron/guest-login/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
     Route::get('/alma-user/patron/{stringId}', [ExLibrisAlmaController::class, 'patron']);
@@ -85,7 +106,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // UCR Card Data API Requests
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'service.access:ucr_card_data'])->group(function () {
     // Main list endpoint with query parameters
     Route::get('/ucr-card-data/list', [UcrCardDataController::class, 'list']);
 
