@@ -1,0 +1,31 @@
+services:
+  app:
+    image: devenv/techstack-php:local
+    container_name: app-library-api
+    working_dir: /workspace/app-library-api
+    command: sh -lc "php artisan serve --host=0.0.0.0 --port=8022"
+    ports:
+      - "18022:8022"
+    volumes:
+      - ./:/workspace/app-library-api
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:18022
+      DB_CONNECTION: mysql
+      DB_HOST: db-mysql
+      DB_PORT: "3306"
+      DB_DATABASE: library_public_api
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+    networks:
+      - techstack
+      - db
+
+networks:
+  techstack:
+    external: true
+    name: techstack-devenv_default
+  db:
+    external: true
+    name: db-devenv_default
