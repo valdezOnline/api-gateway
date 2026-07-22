@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\IdmsData\Traits;
+namespace App\Services\IdmsCardData\Traits;
 
 trait NullDataHandling
 {

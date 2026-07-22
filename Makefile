@@ -77,16 +77,11 @@ npm-install:
 npm-update:
 	docker exec -it app-library-api-vite sh -lc "cd $(APP_DIR) && npm update"
 
-alias-artisan:
-	@printf '%s\n' 'artisan() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php artisan "$$@"; }'
-
-alias-php:
-	@printf '%s\n' 'php() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
-	@printf '%s\n' 'ph() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
-
 aliases:
-	@$(MAKE) --no-print-directory alias-artisan
-	@$(MAKE) --no-print-directory alias-php
+	@printf '%s\n' 'artisan() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php artisan "$$@"; }'
+	@printf '%s\n' 'php() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
+	@eval "$(make aliases --no-print-directory)" && echo "Aliases loaded: artisan, php, ph"
+	$(echo "You can now run artisan commands like: artisan migrate" && echo "You can now run php commands like: php -v")
 
 clear-hot:
 	@if [ -f public/hot ]; then \

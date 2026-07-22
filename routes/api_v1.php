@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\v1\ApiAuthController;
 use App\Http\Controllers\Api\v1\UcrPersonController;
 use App\Http\Controllers\Api\v1\FileLoadController;
 use App\Http\Controllers\Api\v1\UsersController;
+use App\Http\Controllers\Api\v1\IdmsCardDataController;
 use App\Http\Middleware\EnsureApiKeyIsValid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/hr/employee-job/{netId}', [HrEmployeeDetailController::class, 'hrEmployeeJob']);
     Route::post('/file-upload', [FileLoadController::class, 'upload']);
     Route::get('/file-download/{fileName}', [FileLoadController::class, 'download']);
+
+    Route::get('/idms/card-data', [IdmsCardDataController::class, 'searchCriteria']);
+    Route::get('/idms/card-data/no-cache', [IdmsCardDataController::class, 'searchCriteriaNoCache']);
+    Route::get('/idms/card-data/all', [IdmsCardDataController::class, 'getAllIdmsCardData']);
 });
 
 // ExLibris Alma API Requests

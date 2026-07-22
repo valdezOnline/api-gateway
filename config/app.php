@@ -195,6 +195,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\UcrPersonServiceProvider::class,
+        App\Providers\IdmsCardDataServiceProvider::class,
         App\Providers\SisActiveStudentServiceProvider::class,
         App\Providers\ActiveStudentServiceProvider::class,
         App\Providers\TermStudentServiceProvider::class,

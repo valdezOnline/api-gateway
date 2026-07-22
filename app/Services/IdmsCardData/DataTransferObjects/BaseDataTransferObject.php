@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\IdmsData\DataTransferObjects;
+namespace App\Services\IdmsCardData\DataTransferObjects;
 
-use App\Services\IdmsData\Traits\NullDataHandling;
+use App\Services\IdmsCardData\Traits\NullDataHandling;
 
 abstract class BaseDataTransferObject
 {

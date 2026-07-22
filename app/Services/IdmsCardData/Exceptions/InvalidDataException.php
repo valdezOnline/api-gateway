@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\IdmsData\Exceptions;
+namespace App\Services\IdmsCardData\Exceptions;
 
 use Exception;
 use Throwable;
