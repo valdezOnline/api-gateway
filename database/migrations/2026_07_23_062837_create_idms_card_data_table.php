@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('library_card_number')->default('');
             $table->string('status1')->default('');
             $table->string('class')->default('');
-            $table->string('yearr_in_school')->default('');
+            $table->string('year_in_school')->default('');
             $table->string('student_fac')->default('');
             $table->string('prox_int')->default('');
             $table->date('issue_date')->nullable()->default(null);
