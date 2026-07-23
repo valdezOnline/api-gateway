@@ -80,8 +80,10 @@ npm-update:
 aliases:
 	@printf '%s\n' 'artisan() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php artisan "$$@"; }'
 	@printf '%s\n' 'php() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
-	@eval "$(make aliases --no-print-directory)" && echo "Aliases loaded: artisan, php, ph"
-	$(echo "You can now run artisan commands like: artisan migrate" && echo "You can now run php commands like: php -v")
+	@printf '%s\n' 'tail() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) tail "$$@"; }'
+
+	eval "$(make aliases)" && echo "Aliases loaded: artisan, php, tail"
+	$(echo "You can now run artisan commands like: artisan migrate" && echo "You can now run php commands like: php -v" && echo "You can now run tail commands like: tail -n 100 storage/logs/laravel.log"	)
 
 clear-hot:
 	@if [ -f public/hot ]; then \

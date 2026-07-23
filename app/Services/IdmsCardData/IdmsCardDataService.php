@@ -33,7 +33,7 @@ class IdmsCardDataService
      */
     public function SearchCriteria(string $queryString)
     {
-        
+
         Log::info('SearchCriteria called with query string: ' . $queryString);
 
         $stringCriteria = '';
@@ -43,7 +43,7 @@ class IdmsCardDataService
         parse_str($queryString, $params);
 
         if (empty($params)) {
-            return $this->error('No valid search criteria found. Please provide either netId or studentId or UcrId (employeId).', 400);
+            return $this->error('No valid search criteria found. Please provide either netId or studentId or UcrId (employeeId).', 400);
         }
 
         // Check if No Cache is requested
@@ -56,27 +56,29 @@ class IdmsCardDataService
         if (isset($params['netId']) && !empty($params['netId'])) {
             $netId = $params['netId'];
             $stringCriteria = '{"netId": "' . $netId . '"}';
-        // Check for studentId
+            // Check for studentId
         } elseif (isset($params['studentId']) && !empty($params['studentId'])) {
             $studentId = $params['studentId'];
             $stringCriteria = '{"studentId": "' . $studentId . '"}';
-        // Check for employeId (UcrId)
-        } elseif ((isset($params['employeId']) && !empty($params['employeId'])) || (isset($params['employeeId']) && !empty($params['employeeId'])) || (isset($params['ucrId']) && !empty($params['ucrId']))) {
-            $employeId = $params['employeId'] ?? $params['employeeId'] ?? $params['ucrId'];
-            $stringCriteria = '{"UcrId": "' . $employeId . '"}';   
+            // Check for employeId
+        } elseif (isset($params['employeeId']) && !empty($params['employeeId'])) {
+            $employeeId = $params['employeeId'] ?? $params['employeeId'];
+            $stringCriteria = '{"ucrId": "' . $employeeId . '"}';
+            // Check for ucrId
+        } elseif (isset($params['ucrId']) && !empty($params['ucrId'])) {
+            $ucrId = $params['ucrId'];
+            $stringCriteria = '{"ucrId": "' . $ucrId . '"}';
         } else {
-            return $this->error('No valid search criteria found. Please provide either netId or studentId or employeId (UcrId).', 400);             
+            return $this->error('No valid search criteria found. Please provide either netId or studentId or employeId (UcrId).', 400);
         }
-
-        
 
         // Encode the criteria
         $urlEncodedCriteria = urlencode($stringCriteria);
 
         Log::info('Generated criteria: ' . $stringCriteria);
         Log::info('URL encoded criteria: ' . $urlEncodedCriteria);
-        
-        try {                                    
+
+        try {
             // Use caching to store the response for a specified duration
             return Cache::remember("idmsCardData_$stringCriteria", now()->addMinutes($this->singleDataMinutes), function () use ($urlEncodedCriteria) {
                 // Setup end-point url
@@ -91,9 +93,11 @@ class IdmsCardDataService
 
                 //Check if successful
                 if ($resp->successful()) {
+                    $totalCount = $resp->json('totalCount', null);
+                    $totalReturned = $resp->json('totalReturned', null);
                     $records = $this->extractRecords($resp->json());
                     Log::info('API response successful: ' . json_encode($records));
-                    return $this->ok('Success', collect($records)->map(fn(array $arrayData) => IdmsCardData::fromArray($arrayData)));
+                    return $this->successWithTotalRecords($records, $totalCount, $totalReturned);
                 }
 
                 Log::error('API response failed: ' . $resp->status() . ' - ' . json_encode($resp->json()));
@@ -114,12 +118,12 @@ class IdmsCardDataService
      * @param string $queryString
      */
     public function searchCriteriaNoCache(string $queryString)
-    {        
+    {
         Log::info('searchCriteriaNoCache called with query string: ' . $queryString);
 
         $stringCriteria = '';
         $urlEncodedCriteria = '';
-        
+
         // Parse the query string
         parse_str($queryString, $params);
 
@@ -131,20 +135,24 @@ class IdmsCardDataService
         if (isset($params['netId']) && !empty($params['netId'])) {
             $netId = $params['netId'];
             $stringCriteria = '{"netId": "' . $netId . '"}';
-        // Check for studentId
+            // Check for studentId
         } elseif (isset($params['studentId']) && !empty($params['studentId'])) {
             $studentId = $params['studentId'];
             $stringCriteria = '{"studentId": "' . $studentId . '"}';
-        // Check for employeId (UcrId)
-        } elseif ((isset($params['employeId']) && !empty($params['employeId'])) || (isset($params['employeeId']) && !empty($params['employeeId'])) || (isset($params['ucrId']) && !empty($params['ucrId']))) {
-            $employeId = $params['employeId'] ?? $params['employeeId'] ?? $params['ucrId'];
-            $stringCriteria = '{"UcrId": "' . $employeId . '"}';   
+            // Check for employeId
+        } elseif (isset($params['employeeId']) && !empty($params['employeeId'])) {
+            $employeeId = $params['employeeId'] ?? $params['employeeId'];
+            $stringCriteria = '{"ucrId": "' . $employeeId . '"}';
+            // Check for ucrId
+        } elseif (isset($params['ucrId']) && !empty($params['ucrId'])) {
+            $ucrId = $params['ucrId'];
+            $stringCriteria = '{"ucrId": "' . $ucrId . '"}';
         } else {
-            return $this->error('No valid search criteria found. Please provide either netId or studentId or employeId (UcrId).', 400);             
+            return $this->error('No valid search criteria found. Please provide either netId or studentId or employeId (UcrId).', 400);
         }
 
         $urlEncodedCriteria = urlencode($stringCriteria);
-        
+
         try {
             // Setup end-point url
             $url = "{$this->baseUrl}/api/idms-api/v1/idms?criteria=$urlEncodedCriteria";
@@ -158,9 +166,11 @@ class IdmsCardDataService
 
             //Check if successful   
             if ($resp->successful()) {
+                $totalCount = $resp->json('totalCount', null);
+                $totalReturned = $resp->json('totalReturned', null);
                 $records = $this->extractRecords($resp->json());
                 Log::info('API response successful: ' . json_encode($records));
-                return $this->ok('Success', collect($records)->map(fn(array $arrayData) => IdmsCardData::fromArray($arrayData)));
+                return $this->successWithTotalRecords($records, $totalCount, $totalReturned);
             }
 
             Log::error('API response failed: ' . $resp->status() . ' - ' . json_encode($resp->json()));
@@ -170,11 +180,11 @@ class IdmsCardDataService
             Log::error('Exception in searchCriteriaNoCache: ' . $exception->getMessage());
             return $this->error($exception->getMessage(), 500);
         }
-        
-    }   
+
+    }
 
     /**
-     * Summary of GetAllIdmsCardData
+     * Summary of AllIdmsCardData
      * Note: 
      * offset is the number of records to skip.
      * limit is the number of records to return. min is 500 max is 1000.
@@ -185,15 +195,15 @@ class IdmsCardDataService
      * 
      * @param int $offset
      * @param int $limit
-        */
-    public function GetAllIdmsCardData(int $offset, int $limit = 1000)
+     */
+    public function AllIdmsCardData(int $offset, int $limit = 1000)
     {
-        Log::info('GetAllIdmsCardData called with offset: ' . $offset . ' and limit: ' . $limit);
+        Log::info('AllIdmsCardData called with offset: ' . $offset . ' and limit: ' . $limit);
 
         try {
             // Validate limit - cannot be less than 1 and cannot be more than 5000 for performance reasons. If limit is invalid, return an error response.
             if ($limit < 1 || $limit > 5000) {
-                Log::error('Invalid limit value: ' . $limit . '. Limit must be between 1 and 5000.'); 
+                Log::error('Invalid limit value: ' . $limit . '. Limit must be between 1 and 5000.');
                 return $this->error('Invalid limit detected.', 500);
             }
 
@@ -209,16 +219,20 @@ class IdmsCardDataService
 
             //Check if successful   
             if ($resp->successful()) {
+
+                $totalRecords = $resp->json('totalCount', null);
+                $totalRetuned = $resp->json('totalReturned', null);
                 $records = $this->extractRecords($resp->json());
                 Log::info('API response successful: ' . json_encode($records));
-                return $this->ok('Success', collect($records)->map(fn(array $arrayData) => IdmsCardData::fromArray($arrayData)));
+                return $this->successWithTotalRecords($records, $totalRecords, $totalRetuned);
             }
+
 
             Log::error('API response failed: ' . $resp->status() . ' - ' . json_encode($resp->json()));
             return $this->error($resp->json(), $resp->status());
 
         } catch (\Exception $exception) {
-            Log::error('Exception in GetAllIdmsCardData: ' . $exception->getMessage());
+            Log::error('Exception in AllIdmsCardData: ' . $exception->getMessage());
             return $this->error($exception->getMessage(), 500);
         }
     }
@@ -234,6 +248,7 @@ class IdmsCardDataService
                 return $response;
             }
 
+
             foreach (['data', 'response.results', 'results'] as $path) {
                 $records = data_get($response, $path);
 
@@ -246,5 +261,21 @@ class IdmsCardDataService
         }
 
         return [];
+    }
+
+    /**
+     * Build a consistent success response with total record metadata.
+     */
+    private function successWithTotalRecords(array $records, ?int $totalCount, ?int $totalReturned)
+    {
+        $dtoRecords = collect($records)->map(fn(array $arrayData) => IdmsCardData::fromArray($arrayData));
+
+        return response()->json([
+            'message' => 'Success',
+            'status' => 200,
+            'totalCount' => $totalCount,
+            'totalReturned' => $totalReturned,
+            'data' => $dtoRecords,
+        ], 200);
     }
 }

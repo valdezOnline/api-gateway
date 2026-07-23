@@ -68,11 +68,11 @@ class IdmsCardDataController extends Controller
         }
 
         return $this->resolveIdmsCardDataService()->SearchCriteriaNoCache($queryString);
-    }   
+    }
 
-    public function getAllIdmsCardData(Request $request)
+    public function allIdmsCardData(Request $request)
     {
-        Log::info('getAllIdmsCardDataController called with request: ' . json_encode($request->all()));
+        Log::info('AllIdmsCardDataController called with request: ' . json_encode($request->all()));
 
         // Get the raw query string for the service to process
         $queryString = $request->getQueryString();
@@ -88,9 +88,9 @@ class IdmsCardDataController extends Controller
         // Parse the query string to extract offset and limit
         parse_str($queryString, $params);
 
-        $offset = isset($params['offset']) ? (int)$params['offset'] : 0;
-        $limit = isset($params['limit']) ? (int)$params['limit'] : 1000;
+        $offset = isset($params['offset']) ? (int) $params['offset'] : 0;
+        $limit = isset($params['limit']) ? (int) $params['limit'] : 1000;
 
-        return $this->resolveIdmsCardDataService()->GetAllIdmsCardData($offset, $limit);
+        return $this->resolveIdmsCardDataService()->AllIdmsCardData($offset, $limit);
     }
 }

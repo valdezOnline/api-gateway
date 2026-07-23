@@ -72,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/idms/card-data', [IdmsCardDataController::class, 'searchCriteria']);
     Route::get('/idms/card-data/no-cache', [IdmsCardDataController::class, 'searchCriteriaNoCache']);
-    Route::get('/idms/card-data/all', [IdmsCardDataController::class, 'getAllIdmsCardData']);
+    Route::get('/idms/card-data/all', [IdmsCardDataController::class, 'allIdmsCardData']);
 });
 
 // ExLibris Alma API Requests
