@@ -81,9 +81,9 @@ aliases:
 	@printf '%s\n' 'artisan() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php artisan "$$@"; }'
 	@printf '%s\n' 'php() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
 	@printf '%s\n' 'tail() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) tail "$$@"; }'
-
-	eval "$(make aliases)" && echo "Aliases loaded: artisan, php, tail"
-	$(echo "You can now run artisan commands like: artisan migrate" && echo "You can now run php commands like: php -v" && echo "You can now run tail commands like: tail -n 100 storage/logs/laravel.log"	)
+	@printf 'you still need to run the following commands in your shell to make the aliases available:\n'
+	@printf '%s\n' '  source <(make aliases) OR eval "$(make aliases)"'
+	
 
 clear-hot:
 	@if [ -f public/hot ]; then \

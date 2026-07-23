@@ -6,7 +6,6 @@ namespace App\Services\IdmsCardData;
 use App\Services\IdmsCardData\DataTransferObjects\IdmsCardData;
 use App\Traits\ApiResponses;
 use Http;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -187,9 +186,11 @@ class IdmsCardDataService
      * Summary of AllIdmsCardData
      * Note: 
      * offset is the number of records to skip.
-     * limit is the number of records to return. min is 500 max is 1000.
+     * limit is the number of records to return. 
+     * Per ITS min is 500 and max is 1000.
+     * But the service will normalize the limit to be between 1 and 5000.
      * params does not need to be URL encoded.
-     * Example Parameters:
+     * Example Parameters (limit defaults to 1000 if not provided):
      * offset=0&limit=1000
      * offset=5000&limit=1000
      * 
@@ -201,13 +202,61 @@ class IdmsCardDataService
         Log::info('AllIdmsCardData called with offset: ' . $offset . ' and limit: ' . $limit);
 
         try {
-            // Validate limit - cannot be less than 1 and cannot be more than 5000 for performance reasons. If limit is invalid, return an error response.
-            if ($limit < 1 || $limit > 5000) {
-                Log::error('Invalid limit value: ' . $limit . '. Limit must be between 1 and 5000.');
-                return $this->error('Invalid limit detected.', 500);
+            $result = $this->fetchAllIdmsCardDataPage($offset, $limit, true);
+
+            if ($result['success'] === true) {
+                return $this->successWithTotalRecords(
+                    $result['records'],
+                    $result['totalCount'],
+                    $result['totalReturned']
+                );
             }
 
-            // Setup end-point url
+            return $this->error($result['error'], $result['status']);
+
+        } catch (\Exception $exception) {
+            Log::error('Exception in AllIdmsCardData: ' . $exception->getMessage());
+            return $this->error($exception->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Fetch and normalize one page of IDMS card data for internal sync jobs.
+     */
+    public function fetchAllIdmsCardDataPage(int $offset, int $limit = 1000, bool $useCache = false): array
+    {
+        Log::info('fetchAllIdmsCardDataPage called with offset: ' . $offset . ' and limit: ' . $limit . ' and useCache: ' . ($useCache ? 'true' : 'false'));
+
+        if ($limit < 1 || $limit > 5000) {
+            Log::error('Invalid limit value: ' . $limit . '. Limit must be between 1 and 5000.');
+
+            return [
+                'success' => false,
+                'status' => 400,
+                'totalCount' => null,
+                'totalReturned' => null,
+                'records' => [],
+                'raw' => null,
+                'error' => 'Invalid limit detected. Limit must be between 1 and 5000.',
+            ];
+        }
+
+        $cacheKey = sprintf('idmsCardData_all_%d_%d', $offset, $limit);
+        $fetcher = fn() => $this->requestAllIdmsCardDataPage($offset, $limit);
+
+        if ($useCache) {
+            return Cache::remember($cacheKey, now()->addMinutes($this->multiDataMinutes), $fetcher);
+        }
+
+        return $fetcher();
+    }
+
+    /**
+     * Execute upstream request and return normalized payload metadata.
+     */
+    private function requestAllIdmsCardDataPage(int $offset, int $limit): array
+    {
+        try {
             $url = "{$this->baseUrl}/api/idms-api/v1/idms?offset=$offset&limit=$limit";
 
             Log::info('Making request to URL: ' . $url);
@@ -217,23 +266,47 @@ class IdmsCardDataService
                     'Authorization' => $this->key,
                 ])->get($url);
 
-            //Check if successful   
             if ($resp->successful()) {
+                $raw = $resp->json();
+                $totalCount = $resp->json('totalCount', null);
+                $totalReturned = $resp->json('totalReturned', null);
+                $records = $this->extractRecords($raw);
 
-                $totalRecords = $resp->json('totalCount', null);
-                $totalRetuned = $resp->json('totalReturned', null);
-                $records = $this->extractRecords($resp->json());
-                Log::info('API response successful: ' . json_encode($records));
-                return $this->successWithTotalRecords($records, $totalRecords, $totalRetuned);
+                return [
+                    'success' => true,
+                    'status' => 200,
+                    'totalCount' => is_numeric($totalCount) ? (int) $totalCount : null,
+                    'totalReturned' => is_numeric($totalReturned) ? (int) $totalReturned : count($records),
+                    'records' => $records,
+                    'raw' => $raw,
+                    'error' => null,
+                ];
             }
 
+            $errorBody = $resp->json();
+            Log::error('API response failed: ' . $resp->status() . ' - ' . json_encode($errorBody));
 
-            Log::error('API response failed: ' . $resp->status() . ' - ' . json_encode($resp->json()));
-            return $this->error($resp->json(), $resp->status());
-
+            return [
+                'success' => false,
+                'status' => $resp->status(),
+                'totalCount' => null,
+                'totalReturned' => null,
+                'records' => [],
+                'raw' => $errorBody,
+                'error' => $errorBody,
+            ];
         } catch (\Exception $exception) {
-            Log::error('Exception in AllIdmsCardData: ' . $exception->getMessage());
-            return $this->error($exception->getMessage(), 500);
+            Log::error('Exception in requestAllIdmsCardDataPage: ' . $exception->getMessage());
+
+            return [
+                'success' => false,
+                'status' => 500,
+                'totalCount' => null,
+                'totalReturned' => null,
+                'records' => [],
+                'raw' => null,
+                'error' => $exception->getMessage(),
+            ];
         }
     }
 
