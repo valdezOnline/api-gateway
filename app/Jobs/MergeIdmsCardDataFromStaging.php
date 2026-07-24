@@ -40,6 +40,7 @@ class MergeIdmsCardDataFromStaging implements ShouldQueue
 
     public function __construct(
         private readonly ?int $chunkSize = null,
+        private readonly bool $fullSync = false,
     ) {
     }
 
@@ -54,7 +55,16 @@ class MergeIdmsCardDataFromStaging implements ShouldQueue
 
         Log::info('Starting IDMS merge from staging to actual table', [
             'chunk_size' => $chunkSize,
+            'full_sync' => $this->fullSync,
         ]);
+
+        if ($this->fullSync || IdmsCardData::count() === 0) {
+            $result = $this->runFullSyncFromStaging($chunkSize);
+
+            Log::info('Completed IDMS full-sync merge from staging', $result);
+
+            return;
+        }
 
         IdmsCardDataStaging::orderBy('id')->chunkById($chunkSize, function ($stagingRows) use (&$inserted, &$updated, &$unchanged, &$skippedNoMatchKey) {
             $rowsByMatchKey = [];
@@ -137,6 +147,41 @@ class MergeIdmsCardDataFromStaging implements ShouldQueue
             'unchanged' => $unchanged,
             'skipped_no_match_key' => $skippedNoMatchKey,
         ]);
+    }
+
+    private function runFullSyncFromStaging(int $chunkSize): array
+    {
+        $stagingCount = IdmsCardDataStaging::count();
+        $inserted = 0;
+
+        Log::info('Running full-sync mirror from staging to actual table', [
+            'staging_count' => $stagingCount,
+            'chunk_size' => $chunkSize,
+        ]);
+
+        IdmsCardData::truncate();
+
+        IdmsCardDataStaging::orderBy('id')->chunkById($chunkSize, function ($stagingRows) use (&$inserted) {
+            $insertRows = [];
+            $now = now();
+
+            foreach ($stagingRows as $stagingRow) {
+                $insertRows[] = $this->mapStagingToActualRow($stagingRow, $now);
+            }
+
+            if (!empty($insertRows)) {
+                DB::table('idms_card_data')->insert($insertRows);
+                $inserted += count($insertRows);
+            }
+
+            gc_collect_cycles();
+        });
+
+        return [
+            'staging_count' => $stagingCount,
+            'inserted' => $inserted,
+            'actual_count' => IdmsCardData::count(),
+        ];
     }
 
     private function mapStagingToActualRow(IdmsCardDataStaging $row, $timestamp): array

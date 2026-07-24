@@ -15,7 +15,8 @@ class MergeIdmsCardDataCommand extends Command
      */
     protected $signature = 'app:merge-idms-card-data
                             {--queue : Dispatch to queue instead of running synchronously}
-                            {--chunk-size= : DB chunk size (250-10000)}';
+                            {--chunk-size= : DB chunk size (250-10000)}
+                            {--full-sync : Truncate idms_card_data and mirror all rows from staging}';
 
     /**
      * The console command description.
@@ -30,6 +31,7 @@ class MergeIdmsCardDataCommand extends Command
     public function handle(): int
     {
         $chunkSize = $this->optionAsNullableInt('chunk-size');
+        $fullSync = (bool) $this->option('full-sync');
 
         $this->info('IDMS merge process');
         $this->info('==================');
@@ -37,7 +39,7 @@ class MergeIdmsCardDataCommand extends Command
         if ($this->option('queue')) {
             $this->info('Dispatching merge job to queue...');
 
-            $job = new MergeIdmsCardDataFromStaging($chunkSize);
+            $job = new MergeIdmsCardDataFromStaging($chunkSize, $fullSync);
             if (!empty(config('idms_sync.queue'))) {
                 $job->onQueue(config('idms_sync.queue'));
             }
@@ -47,6 +49,7 @@ class MergeIdmsCardDataCommand extends Command
             $this->info('Merge job dispatched successfully.');
             Log::info('MergeIdmsCardDataFromStaging job dispatched', [
                 'chunk_size' => $chunkSize,
+                'full_sync' => $fullSync,
             ]);
 
             return 0;
@@ -56,7 +59,7 @@ class MergeIdmsCardDataCommand extends Command
 
         try {
             $start = microtime(true);
-            $job = new MergeIdmsCardDataFromStaging($chunkSize);
+            $job = new MergeIdmsCardDataFromStaging($chunkSize, $fullSync);
             app()->call([$job, 'handle']);
             $duration = round(microtime(true) - $start, 2);
 
@@ -65,6 +68,7 @@ class MergeIdmsCardDataCommand extends Command
             Log::info('MergeIdmsCardDataFromStaging job executed synchronously', [
                 'duration_seconds' => $duration,
                 'chunk_size' => $chunkSize,
+                'full_sync' => $fullSync,
             ]);
 
             return 0;

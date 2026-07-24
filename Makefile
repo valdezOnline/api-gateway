@@ -81,8 +81,8 @@ aliases:
 	@printf '%s\n' 'artisan() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php artisan "$$@"; }'
 	@printf '%s\n' 'php() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
 	@printf '%s\n' 'tail() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) tail "$$@"; }'
-	@printf 'you still need to run the following commands in your shell to make the aliases available:\n'
-	@printf '%s\n' '  source <(make aliases) OR eval "$(make aliases)"'
+	@printf '%s\n' 'NOTE: You still need to run the following commands in your shell to make the aliases available:\n'
+	@printf '%s\n' '  source <(make aliases) OR  eval "$$(make aliases)"'
 	
 
 clear-hot:
