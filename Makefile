@@ -1,6 +1,36 @@
 SHELL := /bin/sh
 APP_CONTAINER := app-library-api
-APP_DIR := /workspace/app-library-api
+# APP_DIR is the path to the Laravel app inside the container
+APP_DIR := /workspaces/app-library-api
+# WORKING_DIR is the path to the Laravel app on the host machine
+WORKING_DIR := $(shell pwd)
+COMPOSE_FILE := $(WORKING_DIR)/docker-compose.yml
+# Mirror path used when Docker cannot read WORKING_DIR directly (e.g., fuse mounts).
+MIRROR_HOST_PATH ?= $(HOME)/workspace/library-api-linux
+PROBE_IMAGE ?= devenv/techstack-php:local
+USER_UID := $(shell id -u)
+USER_GID := $(shell id -g)
+
+define sync_to_mirror
+mkdir -p "$(MIRROR_HOST_PATH)"; \
+if ! rsync -a --delete --exclude 'node_modules/.vite/' "$(WORKING_DIR)/" "$(MIRROR_HOST_PATH)/"; then \
+	echo "Mirror sync hit permission issues. Repairing mirror ownership and retrying..."; \
+	docker run --rm -v "$(MIRROR_HOST_PATH):/mnt" alpine sh -lc 'chown -R $(USER_UID):$(USER_GID) /mnt' >/dev/null; \
+	rsync -a --delete --exclude 'node_modules/.vite/' "$(WORKING_DIR)/" "$(MIRROR_HOST_PATH)/"; \
+fi
+endef
+
+# If APP_HOST_PATH is set, it wins. Otherwise probe direct mount and fall back to mirror.
+define resolve_host_path
+HOST_PATH="$(APP_HOST_PATH)"; \
+if [ -n "$$HOST_PATH" ]; then \
+	echo "$$HOST_PATH"; \
+elif docker run --rm -v "$(WORKING_DIR):/mnt" $(PROBE_IMAGE) sh -lc 'test -f /mnt/artisan && test -f /mnt/package.json' >/dev/null 2>&1; then \
+	echo "$(WORKING_DIR)"; \
+else \
+	echo "$(MIRROR_HOST_PATH)"; \
+fi
+endef
 
 .PHONY: help up down restart ps logs logs-app logs-vite migrate fresh seed shell app-shell vite-shell composer-install npm-install assets-fix clear-hot aliases alias-artisan alias-php
 
@@ -19,31 +49,51 @@ help:
 	@echo "  make shell           - shell into app container"
 	@echo "  make composer-install- run composer install in app container"
 	@echo "  make npm-install     - run npm install in vite container"
-	@echo "  make aliases         - print shell wrappers for artisan, php (aka ph)"
+	@echo "  make aliases         - print shell wrappers for artisan, php, and ph"
 	@echo "  make clear-hot       - remove stale Vite hot file if present"
 	@echo "  make assets-fix      - clear stale Vite hot file and rebuild assets"
+	@echo "  make health-check    - show active Docker mount source and Vite hot URL"
+	@echo "  make sync            - sync repo to mirror path for Docker fallback"
+	@echo "  make probe-host-path - print the host path Docker compose will use"
+
+probe-host-path:
+	@set -eu; \
+	HOST_PATH="$$($(resolve_host_path))"; \
+	echo "$$HOST_PATH"
+
+sync:
+	@set -eu; \
+	$(sync_to_mirror); \
+	echo "Synced $(WORKING_DIR) -> $(MIRROR_HOST_PATH)"
 
 up:
-	docker compose up -d
+	@set -eu; \
+	HOST_PATH="$$($(resolve_host_path))"; \
+	if [ "$$HOST_PATH" = "$(MIRROR_HOST_PATH)" ] && [ -z "$(APP_HOST_PATH)" ]; then \
+		echo "Direct bind mount is not readable by Docker. Syncing mirror..."; \
+		$(sync_to_mirror); \
+	fi; \
+	echo "Using APP_HOST_PATH=$$HOST_PATH"; \
+	APP_HOST_PATH="$$HOST_PATH" docker compose -f "$(COMPOSE_FILE)" up -d --force-recreate
 
 down:
-	docker compose down
+	docker compose -f "$(COMPOSE_FILE)" down
 
 restart:
-	docker compose down
-	docker compose up -d
+	@$(MAKE) --no-print-directory down
+	@$(MAKE) --no-print-directory up
 
 ps:
-	docker compose ps
+	docker compose -f "$(COMPOSE_FILE)" ps
 
 logs:
-	docker compose logs -f
+	docker compose -f "$(COMPOSE_FILE)" logs -f
 
 logs-app:
-	docker compose logs -f app
+	docker compose -f "$(COMPOSE_FILE)" logs -f app
 
 logs-vite:
-	docker compose logs -f vite
+	docker compose -f "$(COMPOSE_FILE)" logs -f vite
 
 migrate:
 	docker exec -it $(APP_CONTAINER) sh -lc "cd $(APP_DIR) && php artisan migrate --force"
@@ -68,22 +118,20 @@ vite-shell:
 composer-install:
 	docker exec -it $(APP_CONTAINER) sh -lc "cd $(APP_DIR) && composer install"
 
-composer-update:
-	docker exec -it $(APP_CONTAINER) sh -lc "cd $(APP_DIR) && composer update"
-
 npm-install:
 	docker exec -it app-library-api-vite sh -lc "cd $(APP_DIR) && npm install"
 
-npm-update:
-	docker exec -it app-library-api-vite sh -lc "cd $(APP_DIR) && npm update"
-
 aliases:
+	@$(MAKE) --no-print-directory alias-artisan
+	@$(MAKE) --no-print-directory alias-php
+
+alias-artisan:
 	@printf '%s\n' 'artisan() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php artisan "$$@"; }'
+
+alias-php:
 	@printf '%s\n' 'php() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
-	@printf '%s\n' 'tail() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) tail "$$@"; }'
-	@printf '%s\n' 'NOTE: You still need to run the following commands in your shell to make the aliases available:\n'
-	@printf '%s\n' '  source <(make aliases) OR  eval "$$(make aliases)"'
-	
+	@printf '%s\n' 'ph() { docker exec -it -w $(APP_DIR) $(APP_CONTAINER) php "$$@"; }'
+
 
 clear-hot:
 	@if [ -f public/hot ]; then \
@@ -95,3 +143,10 @@ clear-hot:
 
 assets-fix: clear-hot
 	docker exec -it app-library-api-vite sh -lc "cd $(APP_DIR) && npm run build"
+
+health-check:
+	@echo "Container mount source -> $(APP_DIR):"
+	@docker inspect app-library-api --format '{{range .Mounts}}{{if eq .Destination "$(APP_DIR)"}}{{println .Source}}{{end}}{{end}}' 2>/dev/null || echo "app container not found"
+	@echo "Vite hot URL (public/hot):"
+	@docker exec app-library-api sh -lc "if [ ! -f $(APP_DIR)/public/hot ]; then echo 'missing'; elif [ ! -s $(APP_DIR)/public/hot ]; then echo 'empty'; else cat $(APP_DIR)/public/hot; echo; fi" 2>/dev/null || echo "app container not running"
+
