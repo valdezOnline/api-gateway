@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Models\UcrCardDataActual;
+use App\Models\IdmsCardData;
 use App\Traits\ApiResponses;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 
 class UcrCardDataController extends Controller
@@ -19,7 +20,7 @@ class UcrCardDataController extends Controller
     public function list(Request $request)
     {
         try {
-            $query = UcrCardDataActual::query();
+            $query = IdmsCardData::query();
 
             // Check for search parameters
             if ($request->has('net_id')) {
@@ -31,18 +32,18 @@ class UcrCardDataController extends Controller
                     return $this->errorResponse('No records found for the provided net_id', [], 404);
                 }
 
-                return $this->successResponse('UCR card data retrieved successfully by net_id', $records);
+                return $this->successResponse('UCR card data retrieved successfully by net_id', $this->transformCollection($records));
             }
 
             if ($request->has('ssn')) {
                 $ssn = $request->input('ssn');
-                $record = $query->where('ssn', $ssn)->first();
+                $record = $query->where('ucr_id', $ssn)->first();
 
                 if (!$record) {
                     return $this->errorResponse('No record found for the provided SSN', [], 404);
                 }
 
-                return $this->successResponse('UCR card data retrieved successfully by SSN', $record);
+                return $this->successResponse('UCR card data retrieved successfully by SSN', $this->transformRecord($record));
             }
 
             if ($request->has('student_id')) {
@@ -53,7 +54,7 @@ class UcrCardDataController extends Controller
                     return $this->errorResponse('No record found for the provided student_id', [], 404);
                 }
 
-                return $this->successResponse('UCR card data retrieved successfully by student_id', $record);
+                return $this->successResponse('UCR card data retrieved successfully by student_id', $this->transformRecord($record));
             }
 
             if ($request->has('iso')) {
@@ -64,7 +65,7 @@ class UcrCardDataController extends Controller
                     return $this->errorResponse('No record found for the provided ISO', [], 404);
                 }
 
-                return $this->successResponse('UCR card data retrieved successfully by ISO', $record);
+                return $this->successResponse('UCR card data retrieved successfully by ISO', $this->transformRecord($record));
             }
 
             if ($request->has('start_date') && $request->has('end_date')) {
@@ -79,20 +80,21 @@ class UcrCardDataController extends Controller
                     return $this->errorResponse('Invalid date format. Please use YYYY-MM-DD format', [], 400);
                 }
 
-                $records = $query->whereBetween('issued', [$startDate, $endDate])->get();
+                $records = $query->whereBetween('issue_date', [$startDate, $endDate])->get();
 
                 if ($records->isEmpty()) {
                     return $this->errorResponse('No records found for the provided date range', [], 404);
                 }
 
-                return $this->successResponse('UCR card data retrieved successfully by date range', $records);
+                return $this->successResponse('UCR card data retrieved successfully by date range', $this->transformCollection($records));
             }
 
             // Default: return all records with pagination
             $perPage = $request->input('per_page', 50); // Default 50 records per page
             $records = $query->paginate($perPage);
+            $transformedPaginator = $this->transformPaginator($records);
 
-            return $this->successResponse('All UCR card data retrieved successfully', $records);
+            return $this->successResponse('All UCR card data retrieved successfully', $transformedPaginator);
 
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while retrieving UCR card data', ['error' => $e->getMessage()], 500);
@@ -105,13 +107,13 @@ class UcrCardDataController extends Controller
     public function searchByNetId(Request $request, $netId)
     {
         try {
-            $records = UcrCardDataActual::where('net_id', $netId)->get();
+            $records = IdmsCardData::where('net_id', $netId)->get();
 
             if ($records->isEmpty()) {
                 return $this->errorResponse('No records found for net_id: ' . $netId, [], 404);
             }
 
-            return $this->successResponse('UCR card data retrieved successfully', $records);
+            return $this->successResponse('UCR card data retrieved successfully', $this->transformCollection($records));
 
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while searching by net_id', ['error' => $e->getMessage()], 500);
@@ -124,13 +126,13 @@ class UcrCardDataController extends Controller
     public function searchBySsn(Request $request, $ssn)
     {
         try {
-            $record = UcrCardDataActual::where('ssn', $ssn)->first();
+            $record = IdmsCardData::where('ucr_id', $ssn)->first();
 
             if (!$record) {
                 return $this->errorResponse('No record found for SSN: ' . $ssn, [], 404);
             }
 
-            return $this->successResponse('UCR card data retrieved successfully', $record);
+            return $this->successResponse('UCR card data retrieved successfully', $this->transformRecord($record));
 
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while searching by SSN', ['error' => $e->getMessage()], 500);
@@ -143,13 +145,13 @@ class UcrCardDataController extends Controller
     public function searchByStudentId(Request $request, $studentId)
     {
         try {
-            $record = UcrCardDataActual::where('student_id', $studentId)->first();
+            $record = IdmsCardData::where('student_id', $studentId)->first();
 
             if (!$record) {
                 return $this->errorResponse('No record found for student_id: ' . $studentId, [], 404);
             }
 
-            return $this->successResponse('UCR card data retrieved successfully', $record);
+            return $this->successResponse('UCR card data retrieved successfully', $this->transformRecord($record));
 
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while searching by student_id', ['error' => $e->getMessage()], 500);
@@ -162,13 +164,13 @@ class UcrCardDataController extends Controller
     public function searchByIso(Request $request, $iso)
     {
         try {
-            $record = UcrCardDataActual::where('iso', $iso)->first();
+            $record = IdmsCardData::where('iso', $iso)->first();
 
             if (!$record) {
                 return $this->errorResponse('No record found for ISO: ' . $iso, [], 404);
             }
 
-            return $this->successResponse('UCR card data retrieved successfully', $record);
+            return $this->successResponse('UCR card data retrieved successfully', $this->transformRecord($record));
 
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while searching by ISO', ['error' => $e->getMessage()], 500);
@@ -181,13 +183,13 @@ class UcrCardDataController extends Controller
     public function searchByLibraryNumber(Request $request, $libraryNumber)
     {
         try {
-            $record = UcrCardDataActual::where('lib_num', $libraryNumber)->first();
+            $record = IdmsCardData::where('library_card_number', $libraryNumber)->first();
 
             if (!$record) {
                 return $this->errorResponse('No record found for Library Number: ' . $libraryNumber, [], 404);
             }
 
-            return $this->successResponse('UCR card data retrieved successfully', $record);
+            return $this->successResponse('UCR card data retrieved successfully', $this->transformRecord($record));
 
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while searching by Library Number', ['error' => $e->getMessage()], 500);
@@ -208,14 +210,14 @@ class UcrCardDataController extends Controller
             $startDate = $request->input('start_date');
             $endDate = $request->input('end_date');
 
-            $records = UcrCardDataActual::whereBetween('issued', [$startDate, $endDate])->get();
+            $records = IdmsCardData::whereBetween('issue_date', [$startDate, $endDate])->get();
 
             if ($records->isEmpty()) {
                 return $this->errorResponse('No records found for the date range: ' . $startDate . ' to ' . $endDate, [], 404);
             }
             $groupedResults = [
                 'total_found' => $records->count(),
-                'records' => $records,
+                'records' => $this->transformCollection($records),
                 'date_range' => [
                     'start' => $startDate,
                     'end' => $endDate
@@ -248,7 +250,7 @@ class UcrCardDataController extends Controller
                 'isos.*' => 'string',
             ]);
 
-            $query = UcrCardDataActual::query();
+            $query = IdmsCardData::query();
             $hasSearchCriteria = false;
 
             // Build the query with OR conditions for different parameter types
@@ -269,7 +271,7 @@ class UcrCardDataController extends Controller
                     $ssns = array_filter($request->input('ssns')); // Remove empty values
                     if (!empty($ssns)) {
                         $conditions[] = function ($q) use ($ssns) {
-                            $q->whereIn('ssn', $ssns);
+                            $q->whereIn('ucr_id', $ssns);
                         };
                         $hasSearchCriteria = true;
                     }
@@ -318,7 +320,7 @@ class UcrCardDataController extends Controller
             // Group results by search parameter type for easier consumption
             $groupedResults = [
                 'total_found' => $records->count(),
-                'records' => $records,
+                'records' => $this->transformCollection($records),
                 'search_summary' => [
                     'net_ids_searched' => $request->input('net_ids', []),
                     'ssns_searched' => $request->input('ssns', []),
@@ -334,5 +336,63 @@ class UcrCardDataController extends Controller
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred while performing multiple parameter search', ['error' => $e->getMessage()], 500);
         }
+    }
+
+    protected function transformPaginator(LengthAwarePaginator $paginator): LengthAwarePaginator
+    {
+        $transformedItems = $this->transformCollection($paginator->getCollection());
+
+        return new LengthAwarePaginator(
+            $transformedItems,
+            $paginator->total(),
+            $paginator->perPage(),
+            $paginator->currentPage(),
+            [
+                'path' => $paginator->path(),
+                'pageName' => $paginator->getPageName(),
+            ]
+        );
+    }
+
+    protected function transformCollection($collection): array
+    {
+        return collect($collection)
+            ->map(fn($record) => $this->transformRecord($record))
+            ->values()
+            ->all();
+    }
+
+    protected function transformRecord($record): array
+    {
+        if ($record instanceof \Illuminate\Database\Eloquent\Model) {
+            $data = $record->toArray();
+        } elseif (is_array($record)) {
+            $data = $record;
+        } else {
+            $data = [];
+        }
+
+        return [
+            'id' => $data['id'] ?? null,
+            'net_id' => $data['net_id'] ?? null,
+            'ssn' => $data['ucr_id'] ?? null,
+            'student_id' => $data['student_id'] ?? null,
+            'iso' => $data['iso'] ?? null,
+            'lib_num' => $data['library_card_number'] ?? null,
+            'status1' => $data['status1'] ?? null,
+            'class' => $data['class'] ?? null,
+            'yr_in_school' => $data['year_in_school'] ?? null,
+            'stud_fac' => $data['student_fac'] ?? null,
+            'prox_int' => $data['prox_int'] ?? null,
+            'prox_ext' => null,
+            'prox_status' => null,
+            'issued' => $data['issue_date'] ?? null,
+            'edit_date' => $data['edit_date'] ?? null,
+            'photo_date' => $data['photo_date'] ?? null,
+            'imported' => $data['imported_date'] ?? null,
+            'load_status' => $data['load_status'] ?? null,
+            'created_at' => $data['created_at'] ?? null,
+            'updated_at' => $data['updated_at'] ?? null,
+        ];
     }
 }

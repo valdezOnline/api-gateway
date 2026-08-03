@@ -11,18 +11,17 @@ trait ApiResponses
 
     protected function success($message, $data = [], $statusCode = 200)
     {
-        // dd(count($data));
         if (is_array($data)) {
             return response()->json([
                 'message' => $message,
-                'status' => $statusCode,
+                'status' => 'success',
                 'data' => $data,
                 'count' => count($data),
             ], $statusCode);
         } else {
             return response()->json([
                 'message' => $message,
-                'status' => $statusCode,
+                'status' => 'success',
                 'data' => $data,
             ], $statusCode);
         }
@@ -32,7 +31,7 @@ trait ApiResponses
     {
         return response()->json([
             'message' => $message,
-            'status' => $statusCode
+            'status' => 'error'
         ], $statusCode);
     }
 
@@ -46,7 +45,7 @@ trait ApiResponses
     {
         return response()->json([
             'message' => $message,
-            'status' => $statusCode,
+            'status' => 'error',
             'data' => $data,
         ], $statusCode);
     }
