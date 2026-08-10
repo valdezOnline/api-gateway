@@ -200,6 +200,7 @@ return [
         App\Providers\ActiveStudentServiceProvider::class,
         App\Providers\TermStudentServiceProvider::class,
         App\Providers\SisStudentPersonServiceProvider::class,
+        App\Providers\EducationalInstitutionUnitsServiceProvider::class,
         App\Providers\HrEmployeeDetailServiceProvider::class,
         App\Providers\ExLibrisAlmaDataServiceProvider::class,
     ],

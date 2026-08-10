@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\v1\UcrPersonController;
 use App\Http\Controllers\Api\v1\FileLoadController;
 use App\Http\Controllers\Api\v1\UsersController;
 use App\Http\Controllers\Api\v1\IdmsCardDataController;
+use App\Http\Controllers\Api\v1\EducationalInstitutionUnitsController;
 use App\Http\Middleware\EnsureApiKeyIsValid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sis/active-students-count', [ActiveStudentController::class, 'activeStudentCount']);
     Route::get('/sis/term-student', [TermStudentController::class, 'searchCriteria']);
     Route::get('/sis/student-person/{stringId}', [SisStudentPersonController::class, 'searchStudentPerson']);
+    Route::get('/sis/educational-institution-units/department', [EducationalInstitutionUnitsController::class, 'searchByDepartment']);
+    Route::get('/sis/educational-institution-units/college', [EducationalInstitutionUnitsController::class, 'searchByCollege']);
 
     Route::get('/hr/employee/{netId}', [HrEmployeeDetailController::class, 'hrEmployee']);
     Route::get('/hr/employee-details/{netIds}', [HrEmployeeDetailController::class, 'hrEmployeeDetails']);
