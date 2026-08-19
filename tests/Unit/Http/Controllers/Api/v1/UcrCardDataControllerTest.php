@@ -43,7 +43,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals(200, $responseData['status']);
         $this->assertEquals('All UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -63,7 +63,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals(200, $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully by net_id', $responseData['message']);
         $this->assertCount(2, $responseData['data']);
     }
@@ -78,7 +78,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No records found for the provided net_id', $responseData['message']);
     }
 
@@ -95,7 +95,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully by SSN', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -110,7 +110,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No record found for the provided SSN', $responseData['message']);
     }
 
@@ -127,7 +127,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully by student_id', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -142,7 +142,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No record found for the provided student_id', $responseData['message']);
     }
 
@@ -159,7 +159,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully by ISO', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -174,7 +174,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No record found for the provided ISO', $responseData['message']);
     }
 
@@ -199,7 +199,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully by date range', $responseData['message']);
         $this->assertCount(3, $responseData['data']);
     }
@@ -217,7 +217,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Invalid date format. Please use YYYY-MM-DD format', $responseData['message']);
     }
 
@@ -234,7 +234,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No records found for the provided date range', $responseData['message']);
     }
 
@@ -251,7 +251,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertCount(2, $responseData['data']);
     }
@@ -266,7 +266,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No records found for net_id:', $responseData['message']);
     }
 
@@ -283,7 +283,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -298,7 +298,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No record found for SSN:', $responseData['message']);
     }
 
@@ -315,7 +315,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -330,7 +330,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No record found for student_id:', $responseData['message']);
     }
 
@@ -347,7 +347,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -362,7 +362,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No record found for ISO:', $responseData['message']);
     }
 
@@ -382,7 +382,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully for date range', $responseData['message']);
 
         // Check the structured response
@@ -408,7 +408,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -423,7 +423,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
     }
 
@@ -440,7 +440,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
     }
 
@@ -467,7 +467,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertArrayHasKey('data', $responseData);
         // Check pagination structure
         $this->assertArrayHasKey('current_page', $responseData['data']);
@@ -493,7 +493,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully for multiple search parameters', $responseData['message']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
@@ -518,7 +518,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
         $this->assertEquals([$ssn1, $ssn2], $responseData['data']['search_summary']['ssns_searched']);
@@ -541,7 +541,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
         $this->assertEquals([$studentId1, $studentId2], $responseData['data']['search_summary']['student_ids_searched']);
@@ -564,7 +564,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
         $this->assertEquals([$iso1, $iso2], $responseData['data']['search_summary']['isos_searched']);
@@ -595,7 +595,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(4, $responseData['data']['total_found']);
         $this->assertArrayHasKey('search_summary', $responseData['data']);
         $this->assertEquals([$netId], $responseData['data']['search_summary']['net_ids_searched']);
@@ -614,7 +614,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('At least one search parameter must be provided', $responseData['message']);
     }
 
@@ -633,7 +633,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('At least one search parameter must be provided', $responseData['message']);
     }
 
@@ -650,7 +650,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No records found for the provided search parameters', $responseData['message']);
     }
 
@@ -666,7 +666,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No records found for the provided search parameters', $responseData['message']);
     }
 
@@ -682,7 +682,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -703,7 +703,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully for date range', $responseData['message']);
 
         // Check the structured response
@@ -729,7 +729,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No records found for the date range: 2025-01-01 to 2025-12-31', $responseData['message']);
     }
 
@@ -748,7 +748,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
     }
 
     /**
@@ -765,7 +765,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
 
         // Test searchBySsn exception handling
         $ssn = '123456789';
@@ -775,7 +775,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
 
         // Test searchByStudentId exception handling
         $studentId = '862123456';
@@ -785,7 +785,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
 
         // Test searchByIso exception handling
         $iso = '12345';
@@ -795,6 +795,6 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
     }
 }
