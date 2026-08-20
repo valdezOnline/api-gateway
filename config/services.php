@@ -37,8 +37,8 @@ return [
     'exLibris' => [
         'key' => env("EXLIBRIS_RW_API_KEY"),
         'baseUrl' => env("EXLIBRIS_API_BASEURL"),
-        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
-        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+        'singleDataMinutes' => (int) env("SINGLE_DATA_MINUTES", 60),
+        'multiDataMinutes' => (int) env("MULTI_DATA_MINUTES", 1440),
     ],
 
     /**
@@ -51,35 +51,35 @@ return [
     'ucrPerson' => [
         'key' => env("UCRGW_API_KEY"),
         'baseUrl' => env("UCRGW_API_BASEURL"),
-        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
-        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+        'singleDataMinutes' => (int) env("SINGLE_DATA_MINUTES", 60),
+        'multiDataMinutes' => (int) env("MULTI_DATA_MINUTES", 1440),
     ],
 
     'sisActiveStudent' => [
         'key' => env("UCRGW_API_KEY"),
         'baseUrl' => env("UCRGW_API_BASEURL"),
-        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
-        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+        'singleDataMinutes' => (int) env("SINGLE_DATA_MINUTES", 60),
+        'multiDataMinutes' => (int) env("MULTI_DATA_MINUTES", 1440),
     ],
 
     'hrEmployeeDetail' => [
         'key' => env("UCRGW_API_KEY"),
         'baseUrl' => env("UCRGW_API_BASEURL"),
-        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
-        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+        'singleDataMinutes' => (int) env("SINGLE_DATA_MINUTES", 60),
+        'multiDataMinutes' => (int) env("MULTI_DATA_MINUTES", 1440),
     ],
 
     'sisData' => [
         'key' => env("UCRGW_API_KEY"),
         'baseUrl' => env("UCRGW_API_BASEURL"),
-        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
-        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+        'singleDataMinutes' => (int) env("SINGLE_DATA_MINUTES", 60),
+        'multiDataMinutes' => (int) env("MULTI_DATA_MINUTES", 1440),
     ],
 
     'idmsCardData' => [
         'key' => env("UCRGW_API_KEY"),
         'baseUrl' => env("UCRGW_API_BASEURL"),
-        'singleDataMinutes' => env("SINGLE_DATA_MINUTES"),
-        'multiDataMinutes' => env("MULTI_DATA_MINUTES"),
+        'singleDataMinutes' => (int) env("SINGLE_DATA_MINUTES", 60),
+        'multiDataMinutes' => (int) env("MULTI_DATA_MINUTES", 1440),
     ],
 ];

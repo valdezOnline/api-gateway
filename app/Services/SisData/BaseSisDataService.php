@@ -16,8 +16,8 @@ abstract class BaseSisDataService
     public function __construct(
         protected readonly string $key,
         protected readonly string $baseUrl,
-        protected readonly string $singleDataMinutes,
-        protected readonly string $multiDataMinutes,
+        protected readonly int $singleDataMinutes,
+        protected readonly int $multiDataMinutes,
     ) {
     }
 

@@ -18,8 +18,8 @@ class ExLibrisAlmaPatronDataService
     public function __construct(
         private readonly string $key,
         private readonly string $baseUrl,
-        private readonly string $singleDataMinutes,
-        private readonly string $multiDataMinutes,
+        private readonly int $singleDataMinutes,
+        private readonly int $multiDataMinutes,
     ) {
     }
     // public function getResponse($url)
