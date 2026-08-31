@@ -8,6 +8,7 @@ use App\Models\Application;
 use App\Traits\ApiResponses;
 use Illuminate\Support\Facades\Crypt;
 use Closure;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,8 +30,12 @@ class EnsureApiKeyIsValid
         if (empty($application)) {
             return $this->invalidKeyPair();
         }
-        // Decrypt the stored key
-        $decryptedStoredKey = Crypt::decrypt($application->apikey);
+        try {
+            // Stored keys are expected to be encrypted with the current APP_KEY.
+            $decryptedStoredKey = Crypt::decrypt($application->apikey);
+        } catch (DecryptException) {
+            return $this->invalidKeyPair();
+        }
 
         // Check if the apikey matches
         if ($request->get('apikey') !== $decryptedStoredKey) {

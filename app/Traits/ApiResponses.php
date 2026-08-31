@@ -11,7 +11,6 @@ trait ApiResponses
 
     protected function success($message, $data = [], $statusCode = 200)
     {
-        // dd(count($data));
         if (is_array($data)) {
             return response()->json([
                 'message' => $message,
