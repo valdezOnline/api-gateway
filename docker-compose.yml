@@ -1,11 +1,11 @@
 services:
   app:
-    image: devenv/techstack-php:local
+    image: library-apps-php:8.5.12
     container_name: app-library-api
     working_dir: /workspaces/app-library-api
-    command: sh -lc "php artisan serve --host=0.0.0.0 --port=9000"
+    command: sh -lc "php artisan serve --host=0.0.0.0 --port=9001"
     ports:
-      - "19000:9000"
+      - "19001:9001"
     volumes:
       # Use the configuration below if running this docker-compose from another computer...
       # Use the actual path of the project from the host computer /home/sudo-joelv/workspaces/library-public-api      
@@ -16,7 +16,7 @@ services:
     environment:
       APP_ENV: local
       APP_DEBUG: "true"
-      APP_URL: http://localhost:19000
+      APP_URL: http://localhost:19001
       DB_CONNECTION: mysql
       DB_HOST: db-mysql
       DB_PORT: "3306"
@@ -24,24 +24,12 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: secret
     networks:
-      - techstack
-      - db
-
-  vite:
-    image: devenv/techstack-nodejs:local
-    container_name: app-library-api-vite
-    working_dir: /workspaces/app-library-api
-    command: sh -lc "npm run dev -- --host 0.0.0.0 --port 6173"
-    ports:
-      - "16173:6173"
-    volumes:
-      # Use the configuration below if running this docker-compose from another computer...
-      # Use the actual path from the host computer /home/sudo-joelv/workspaces/library-public-api
-      #- ${APP_HOST_PATH:-/home/sudo-joelv/workspaces/library-public-api}:/workspaces/app-library-api
-      # Otherwise, use the current working directory as the volume if running this docker-compose from the same computer.
-      - ${APP_HOST_PATH:-.}:/workspaces/app-library-api
-    networks:
-      - techstack
+      techstack:
+        aliases:
+          - app-library-api 
+      db:
+        aliases:
+          - db-mysql
 
 networks:
   techstack:
