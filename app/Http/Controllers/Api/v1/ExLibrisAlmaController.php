@@ -25,7 +25,12 @@ class ExLibrisAlmaController extends Controller
 
     public function guestLogin(ExLibrisAlmaPatronDataService $exLibrisAlmaPatronDataService, Request $request)
     {
-        return $exLibrisAlmaPatronDataService->GuestLogin($request->stringCreds);
+        $stringCreds = $request->route('stringCreds') ?? $request->input('stringCreds');
+        if (! is_string($stringCreds) || $stringCreds === '') {
+            return $this->error('stringCreds is required.', 422);
+        }
+
+        return $exLibrisAlmaPatronDataService->GuestLogin($stringCreds);
     }
 
     public function search(ExLibrisAlmaPatronDataService $exLibrisAlmaPatronDataService, Request $request)

@@ -61,19 +61,21 @@ class ExLibrisAlmaLoanDataService
      * Get loans for a specific user
      *
      * @param string $userId
+     * @param string $loanStatus
      * @param string $limit
      * @param string $offset
      * @return \Illuminate\Http\JsonResponse
      */
-    public function Loans(string $userId, string $limit, string $offset)
+    public function Loans(string $userId, string $limit = '50', string $offset = '0', string $loanStatus = 'COMPLETE')
     {
         try {
 
-            $url = "{$this->baseUrl}/almaws/v1/users/{$userId}/loans?limit={$limit}&offset={$offset}";
+            $url = "{$this->baseUrl}/almaws/v1/users/{$userId}/loans?loan_status={$loanStatus}&limit={$limit}&offset={$offset}";
             Log::info('Fetching user loans', [
-                'user_id' => $userId,
+                'user_id' => $userId,                
                 'limit' => $limit,
                 'offset' => $offset,
+                'loan_status' => $loanStatus,
                 'url' => $url,
             ]);
             // return $this->ok($url);
