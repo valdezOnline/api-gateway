@@ -50,6 +50,30 @@ class ExLibrisAlmaController extends Controller
 
     public function loans(ExLibrisAlmaLoanDataService $exLibrisAlmaLoanDataService, Request $request)
     {
-        return $exLibrisAlmaLoanDataService->Loans($request->stringId, $request->limit ?? '25', $request->offset ?? '0');
+        return $exLibrisAlmaLoanDataService->Loans($request->route('stringId'), $request->limit ?? '25', $request->offset ?? '0',loanStatus:$request->loanStatus ?? 'COMPLETE');
+    }
+
+    public function loan(ExLibrisAlmaLoanDataService $exLibrisAlmaLoanDataService, Request $request)
+    {
+        $stringId = $request->route('stringId');
+        $loanId = $request->route('loanId');
+
+        if (! is_string($stringId) || $stringId === '' || ! is_string($loanId) || $loanId === '') {
+            return $this->error('stringId and loanId are required.', 422);
+        }
+
+        return $exLibrisAlmaLoanDataService->Loan($stringId, $loanId);
+    }
+
+    public function renewLoan(ExLibrisAlmaLoanDataService $exLibrisAlmaLoanDataService, Request $request)
+    {
+        $stringId = $request->route('stringId');
+        $loanId = $request->route('loanId');
+
+        if (! is_string($stringId) || $stringId === '' || ! is_string($loanId) || $loanId === '') {
+            return $this->error('stringId and loanId are required.', 422);
+        }
+
+        return $exLibrisAlmaLoanDataService->renewLoan($stringId, $loanId);
     }
 }

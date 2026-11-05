@@ -90,8 +90,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/alma-user/fees/{stringId}/{feeId}');
     Route::get('/alma-user/fees/{stringId}/{status}');
     Route::get('/alma-user/loans/{stringId}', [ExLibrisAlmaController::class, 'loans']);
-    Route::get('/alma-user/loans/{stringId}/{loanId}');
-    Route::post('/alma-user/loans/renew/{stringId}/{loanId}');
+    Route::get('/alma-user/loans/{stringId}/{loanId}', [ExLibrisAlmaController::class, 'loan']);
+    Route::post('/alma-user/loans/renew/{stringId}/{loanId}', [ExLibrisAlmaController::class, 'renewLoan']);
 });
 
 // UCR Card Data API Requests
