@@ -132,7 +132,10 @@ App\Providers\ExLibrisAlmaDataServiceProvider::class,
 Located in [`routes/api_v1.php`](routes/api_v1.php )
 
 Protected routes under `auth:sanctum` middleware:
+- `POST /alma-user/patron/guestLogin` (recommended: send `stringCreds` in request body)
+- `POST /alma-user/patron/guest-login` (recommended: send `stringCreds` in request body)
 - `POST /alma-user/patron/guestLogin/{stringCreds}`
+- `POST /alma-user/patron/guest-login/{stringCreds}`
 - `GET /alma-user/patron/{stringId}`
 - `GET /alma-user/patron-search`
 - `GET /alma-user/fees/{stringId}`

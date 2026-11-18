@@ -80,16 +80,18 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // ExLibris Alma API Requests
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/alma-user/patron/guestLogin/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
-    Route::post('/alma-user/patron/guest-login/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin']);
+    Route::post('/alma-user/patron/guestLogin', [ExLibrisAlmaController::class, 'guestLogin']);
+    Route::post('/alma-user/patron/guest-login', [ExLibrisAlmaController::class, 'guestLogin']);
+    Route::post('/alma-user/patron/guestLogin/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin'])->where('stringCreds', '.*');
+    Route::post('/alma-user/patron/guest-login/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin'])->where('stringCreds', '.*');
     Route::get('/alma-user/patron/{stringId}', [ExLibrisAlmaController::class, 'patron']);
     Route::get('/alma-user/patron-search', [ExLibrisAlmaController::class, 'search']);
     Route::get('/alma-user/fees/{stringId}', [ExLibrisAlmaController::class, 'fees']);
     Route::get('/alma-user/fees/{stringId}/{feeId}');
     Route::get('/alma-user/fees/{stringId}/{status}');
     Route::get('/alma-user/loans/{stringId}', [ExLibrisAlmaController::class, 'loans']);
-    Route::get('/alma-user/loans/{stringId}/{loanId}');
-    Route::post('/alma-user/loans/renew/{stringId}/{loanId}');
+    Route::get('/alma-user/loans/{stringId}/{loanId}', [ExLibrisAlmaController::class, 'loan']);
+    Route::post('/alma-user/loans/renew/{stringId}/{loanId}', [ExLibrisAlmaController::class, 'renewLoan']);
 });
 
 // UCR Card Data API Requests
