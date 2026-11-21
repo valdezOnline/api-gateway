@@ -4,7 +4,7 @@ namespace Tests\Unit\Http\Controllers\Api\v1;
 
 use Tests\TestCase;
 use App\Http\Controllers\Api\v1\UcrCardDataController;
-use App\Models\UcrCardDataActual;
+use App\Models\IdmsCardData;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -36,14 +36,18 @@ class UcrCardDataControllerTest extends TestCase
     public function test_list_returns_all_records_with_pagination()
     {
         // Create test data
-        UcrCardDataActual::factory()->count(5)->create();
+        IdmsCardData::factory()->count(5)->create();
 
         $request = new Request();
         $response = $this->controller->list($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('success', $responseData['status']);
+=======
+        $this->assertEquals(200, $responseData['status']);
+>>>>>>> main
         $this->assertEquals('All UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -55,15 +59,19 @@ class UcrCardDataControllerTest extends TestCase
     {
         // Create test data
         $netId = 'test001';
-        UcrCardDataActual::factory()->count(2)->create(['net_id' => $netId]);
-        UcrCardDataActual::factory()->create(['net_id' => 'other001']);
+        IdmsCardData::factory()->count(2)->create(['net_id' => $netId]);
+        IdmsCardData::factory()->create(['net_id' => 'other001']);
 
         $request = new Request(['net_id' => $netId]);
         $response = $this->controller->list($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('success', $responseData['status']);
+=======
+        $this->assertEquals(200, $responseData['status']);
+>>>>>>> main
         $this->assertEquals('UCR card data retrieved successfully by net_id', $responseData['message']);
         $this->assertCount(2, $responseData['data']);
     }
@@ -78,7 +86,11 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('error', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('No records found for the provided net_id', $responseData['message']);
     }
 
@@ -88,14 +100,18 @@ class UcrCardDataControllerTest extends TestCase
     public function test_list_search_by_ssn_returns_single_record()
     {
         $ssn = '123456789';
-        UcrCardDataActual::factory()->create(['ssn' => $ssn]);
+        IdmsCardData::factory()->create(['ucr_id' => $ssn]);
 
         $request = new Request(['ssn' => $ssn]);
         $response = $this->controller->list($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('success', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('UCR card data retrieved successfully by SSN', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -110,7 +126,11 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('error', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('No record found for the provided SSN', $responseData['message']);
     }
 
@@ -120,14 +140,18 @@ class UcrCardDataControllerTest extends TestCase
     public function test_list_search_by_student_id_returns_single_record()
     {
         $studentId = '862123456';
-        UcrCardDataActual::factory()->create(['student_id' => $studentId]);
+        IdmsCardData::factory()->create(['student_id' => $studentId]);
 
         $request = new Request(['student_id' => $studentId]);
         $response = $this->controller->list($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('success', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('UCR card data retrieved successfully by student_id', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -142,7 +166,11 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('error', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('No record found for the provided student_id', $responseData['message']);
     }
 
@@ -152,14 +180,18 @@ class UcrCardDataControllerTest extends TestCase
     public function test_list_search_by_iso_returns_single_record()
     {
         $iso = '12345';
-        UcrCardDataActual::factory()->create(['iso' => $iso]);
+        IdmsCardData::factory()->create(['iso' => $iso]);
 
         $request = new Request(['iso' => $iso]);
         $response = $this->controller->list($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('success', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('UCR card data retrieved successfully by ISO', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -174,7 +206,11 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('error', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('No record found for the provided ISO', $responseData['message']);
     }
 
@@ -187,9 +223,9 @@ class UcrCardDataControllerTest extends TestCase
         $endDate = '2024-12-31';
 
         // Create records within the date range
-        UcrCardDataActual::factory()->count(3)->create(['issued' => '2024-06-15']);
+        IdmsCardData::factory()->count(3)->create(['issue_date' => '2024-06-15']);
         // Create records outside the date range
-        UcrCardDataActual::factory()->create(['issued' => '2023-12-31']);
+        IdmsCardData::factory()->create(['issue_date' => '2023-12-31']);
 
         $request = new Request([
             'start_date' => $startDate,
@@ -199,7 +235,11 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('success', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('UCR card data retrieved successfully by date range', $responseData['message']);
         $this->assertCount(3, $responseData['data']);
     }
@@ -217,7 +257,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Invalid date format. Please use YYYY-MM-DD format', $responseData['message']);
     }
 
@@ -234,7 +274,11 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
+<<<<<<< HEAD
             $this->assertEquals('error', $responseData['status']);
+=======
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
+>>>>>>> main
         $this->assertEquals('No records found for the provided date range', $responseData['message']);
     }
 
@@ -244,14 +288,14 @@ class UcrCardDataControllerTest extends TestCase
     public function test_search_by_net_id_endpoint_returns_records()
     {
         $netId = 'test001';
-        UcrCardDataActual::factory()->count(2)->create(['net_id' => $netId]);
+        IdmsCardData::factory()->count(2)->create(['net_id' => $netId]);
 
         $request = new Request();
         $response = $this->controller->searchByNetId($request, $netId);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertCount(2, $responseData['data']);
     }
@@ -266,7 +310,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No records found for net_id:', $responseData['message']);
     }
 
@@ -276,14 +320,14 @@ class UcrCardDataControllerTest extends TestCase
     public function test_search_by_ssn_endpoint_returns_record()
     {
         $ssn = '123456789';
-        UcrCardDataActual::factory()->create(['ssn' => $ssn]);
+        IdmsCardData::factory()->create(['ucr_id' => $ssn]);
 
         $request = new Request();
         $response = $this->controller->searchBySsn($request, $ssn);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -298,7 +342,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No record found for SSN:', $responseData['message']);
     }
 
@@ -308,14 +352,14 @@ class UcrCardDataControllerTest extends TestCase
     public function test_search_by_student_id_endpoint_returns_record()
     {
         $studentId = '862123456';
-        UcrCardDataActual::factory()->create(['student_id' => $studentId]);
+        IdmsCardData::factory()->create(['student_id' => $studentId]);
 
         $request = new Request();
         $response = $this->controller->searchByStudentId($request, $studentId);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -330,7 +374,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No record found for student_id:', $responseData['message']);
     }
 
@@ -340,14 +384,14 @@ class UcrCardDataControllerTest extends TestCase
     public function test_search_by_iso_endpoint_returns_record()
     {
         $iso = '12345';
-        UcrCardDataActual::factory()->create(['iso' => $iso]);
+        IdmsCardData::factory()->create(['iso' => $iso]);
 
         $request = new Request();
         $response = $this->controller->searchByIso($request, $iso);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -362,7 +406,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No record found for ISO:', $responseData['message']);
     }
 
@@ -372,7 +416,7 @@ class UcrCardDataControllerTest extends TestCase
     public function test_search_by_date_range_endpoint_returns_records()
     {
         // Create records within the date range
-        UcrCardDataActual::factory()->count(2)->create(['issued' => '2024-06-15']);
+        IdmsCardData::factory()->count(2)->create(['issue_date' => '2024-06-15']);
 
         $request = new Request([
             'start_date' => '2024-01-01',
@@ -382,7 +426,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully for date range', $responseData['message']);
 
         // Check the structured response
@@ -408,7 +452,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -423,7 +467,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
     }
 
@@ -440,7 +484,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
     }
 
@@ -460,14 +504,14 @@ class UcrCardDataControllerTest extends TestCase
     public function test_list_respects_pagination_parameters()
     {
         // Create test data
-        UcrCardDataActual::factory()->count(10)->create();
+        IdmsCardData::factory()->count(10)->create();
 
         $request = new Request(['per_page' => 5]);
         $response = $this->controller->list($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertArrayHasKey('data', $responseData);
         // Check pagination structure
         $this->assertArrayHasKey('current_page', $responseData['data']);
@@ -482,9 +526,9 @@ class UcrCardDataControllerTest extends TestCase
     {
         $netId1 = 'test001';
         $netId2 = 'test002';
-        UcrCardDataActual::factory()->create(['net_id' => $netId1]);
-        UcrCardDataActual::factory()->create(['net_id' => $netId2]);
-        UcrCardDataActual::factory()->create(['net_id' => 'other001']);
+        IdmsCardData::factory()->create(['net_id' => $netId1]);
+        IdmsCardData::factory()->create(['net_id' => $netId2]);
+        IdmsCardData::factory()->create(['net_id' => 'other001']);
 
         $request = new Request([
             'net_ids' => [$netId1, $netId2]
@@ -493,7 +537,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully for multiple search parameters', $responseData['message']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
@@ -508,8 +552,8 @@ class UcrCardDataControllerTest extends TestCase
     {
         $ssn1 = '123456789';
         $ssn2 = '987654321';
-        UcrCardDataActual::factory()->create(['ssn' => $ssn1]);
-        UcrCardDataActual::factory()->create(['ssn' => $ssn2]);
+        IdmsCardData::factory()->create(['ucr_id' => $ssn1]);
+        IdmsCardData::factory()->create(['ucr_id' => $ssn2]);
 
         $request = new Request([
             'ssns' => [$ssn1, $ssn2]
@@ -518,7 +562,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
         $this->assertEquals([$ssn1, $ssn2], $responseData['data']['search_summary']['ssns_searched']);
@@ -531,8 +575,8 @@ class UcrCardDataControllerTest extends TestCase
     {
         $studentId1 = '862123456';
         $studentId2 = '862654321';
-        UcrCardDataActual::factory()->create(['student_id' => $studentId1]);
-        UcrCardDataActual::factory()->create(['student_id' => $studentId2]);
+        IdmsCardData::factory()->create(['student_id' => $studentId1]);
+        IdmsCardData::factory()->create(['student_id' => $studentId2]);
 
         $request = new Request([
             'student_ids' => [$studentId1, $studentId2]
@@ -541,7 +585,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
         $this->assertEquals([$studentId1, $studentId2], $responseData['data']['search_summary']['student_ids_searched']);
@@ -554,8 +598,8 @@ class UcrCardDataControllerTest extends TestCase
     {
         $iso1 = '12345';
         $iso2 = '54321';
-        UcrCardDataActual::factory()->create(['iso' => $iso1]);
-        UcrCardDataActual::factory()->create(['iso' => $iso2]);
+        IdmsCardData::factory()->create(['iso' => $iso1]);
+        IdmsCardData::factory()->create(['iso' => $iso2]);
 
         $request = new Request([
             'isos' => [$iso1, $iso2]
@@ -564,7 +608,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(2, $responseData['data']['total_found']);
         $this->assertArrayHasKey('records', $responseData['data']);
         $this->assertEquals([$iso1, $iso2], $responseData['data']['search_summary']['isos_searched']);
@@ -580,10 +624,10 @@ class UcrCardDataControllerTest extends TestCase
         $studentId = '862123456';
         $iso = '12345';
 
-        UcrCardDataActual::factory()->create(['net_id' => $netId]);
-        UcrCardDataActual::factory()->create(['ssn' => $ssn]);
-        UcrCardDataActual::factory()->create(['student_id' => $studentId]);
-        UcrCardDataActual::factory()->create(['iso' => $iso]);
+        IdmsCardData::factory()->create(['net_id' => $netId]);
+        IdmsCardData::factory()->create(['ucr_id' => $ssn]);
+        IdmsCardData::factory()->create(['student_id' => $studentId]);
+        IdmsCardData::factory()->create(['iso' => $iso]);
 
         $request = new Request([
             'net_ids' => [$netId],
@@ -595,7 +639,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals(4, $responseData['data']['total_found']);
         $this->assertArrayHasKey('search_summary', $responseData['data']);
         $this->assertEquals([$netId], $responseData['data']['search_summary']['net_ids_searched']);
@@ -614,7 +658,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('At least one search parameter must be provided', $responseData['message']);
     }
 
@@ -633,7 +677,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(400, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('At least one search parameter must be provided', $responseData['message']);
     }
 
@@ -650,7 +694,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No records found for the provided search parameters', $responseData['message']);
     }
 
@@ -666,7 +710,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('No records found for the provided search parameters', $responseData['message']);
     }
 
@@ -682,7 +726,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(422, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('Validation failed', $responseData['message']);
         $this->assertArrayHasKey('data', $responseData);
     }
@@ -693,7 +737,7 @@ class UcrCardDataControllerTest extends TestCase
     public function test_search_by_date_range_endpoint_returns_structured_response()
     {
         // Create records within the date range
-        UcrCardDataActual::factory()->count(3)->create(['issued' => '2024-06-15']);
+        IdmsCardData::factory()->count(3)->create(['issue_date' => '2024-06-15']);
 
         $request = new Request([
             'start_date' => '2024-01-01',
@@ -703,7 +747,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertEquals('UCR card data retrieved successfully for date range', $responseData['message']);
 
         // Check the structured response
@@ -729,7 +773,7 @@ class UcrCardDataControllerTest extends TestCase
 
         $this->assertEquals(404, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
         $this->assertStringContainsString('No records found for the date range: 2025-01-01 to 2025-12-31', $responseData['message']);
     }
 
@@ -741,14 +785,14 @@ class UcrCardDataControllerTest extends TestCase
         // This test would typically mock database errors
         // For now, we'll test with a valid request that should work
         $netId = 'test001';
-        UcrCardDataActual::factory()->create(['net_id' => $netId]);
+        IdmsCardData::factory()->create(['net_id' => $netId]);
 
         $request = new Request(['net_ids' => [$netId]]);
         $response = $this->controller->searchMultiple($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
     }
 
     /**
@@ -758,43 +802,43 @@ class UcrCardDataControllerTest extends TestCase
     {
         // Test searchByNetId exception handling
         $netId = 'test001';
-        UcrCardDataActual::factory()->create(['net_id' => $netId]);
+        IdmsCardData::factory()->create(['net_id' => $netId]);
 
         $request = new Request();
         $response = $this->controller->searchByNetId($request, $netId);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
 
         // Test searchBySsn exception handling
         $ssn = '123456789';
-        UcrCardDataActual::factory()->create(['ssn' => $ssn]);
+        IdmsCardData::factory()->create(['ucr_id' => $ssn]);
 
         $response = $this->controller->searchBySsn($request, $ssn);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
 
         // Test searchByStudentId exception handling
         $studentId = '862123456';
-        UcrCardDataActual::factory()->create(['student_id' => $studentId]);
+        IdmsCardData::factory()->create(['student_id' => $studentId]);
 
         $response = $this->controller->searchByStudentId($request, $studentId);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
 
         // Test searchByIso exception handling
         $iso = '12345';
-        UcrCardDataActual::factory()->create(['iso' => $iso]);
+        IdmsCardData::factory()->create(['iso' => $iso]);
 
         $response = $this->controller->searchByIso($request, $iso);
 
         $this->assertEquals(200, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
-        $this->assertEquals('success', $responseData['status']);
+        $this->assertEquals($response->getStatusCode(), $responseData['status']);
     }
 }

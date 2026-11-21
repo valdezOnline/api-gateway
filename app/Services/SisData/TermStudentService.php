@@ -16,8 +16,8 @@ class TermStudentService
     public function __construct(
         private readonly string $key,
         private readonly string $baseUrl,
-        private readonly string $singleDataMinutes,
-        private readonly string $multiDataMinutes,
+        private readonly int $singleDataMinutes,
+        private readonly int $multiDataMinutes,
     ) {
     }
 
@@ -53,6 +53,15 @@ class TermStudentService
                 $termCode = $params['termCode'];
                 $stringCriteria = '{"userName": "' . $netId . '", "term": {"code": "' . $termCode . '"}}';
             }
+            // else if check if there is a parameter for isCurrentTerm
+            elseif (isset($params['isCurrentTerm']) && !empty($params['isCurrentTerm'])) {
+                $isCurrentTerm = $params['isCurrentTerm'];
+                $stringCriteria = '{"userName": "' . $netId . '", "term": {"isCurrentTerm": "' . $isCurrentTerm . '"}}';
+            }
+            // else default to just the netId if no termCode or isCurrentTerm is provided
+            else {
+                $stringCriteria = '{"userName": "' . $netId . '"}';
+            }   
         }
         // Check for studentId and isCurrentTerm combination
         elseif (isset($params['studentId']) && !empty($params['studentId'])) {

@@ -10,6 +10,7 @@ use Hash;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponses;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
@@ -63,7 +64,9 @@ class ApiAuthController extends Controller
     public function exit(Request $request)
     {
         $token = $request->user()->currentAccessToken();
-        if ($token) {
+
+        // currentAccessToken() is typed as HasAbilities; only PersonalAccessToken can be deleted.
+        if ($token instanceof PersonalAccessToken) {
             $token->delete();
         }
 

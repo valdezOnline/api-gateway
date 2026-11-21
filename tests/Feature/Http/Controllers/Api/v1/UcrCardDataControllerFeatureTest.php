@@ -3,7 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api\v1;
 
 use Tests\TestCase;
-use App\Models\UcrCardDataActual;
+use App\Models\IdmsCardData;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -31,7 +31,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         // Create test data
-        UcrCardDataActual::factory()->count(5)->create();
+        IdmsCardData::factory()->count(5)->create();
 
         $response = $this->getJson('/api/v1/ucr-card-data/list');
 
@@ -91,8 +91,8 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $netId = 'test001';
-        UcrCardDataActual::factory()->count(2)->create(['net_id' => $netId]);
-        UcrCardDataActual::factory()->create(['net_id' => 'other001']);
+        IdmsCardData::factory()->count(2)->create(['net_id' => $netId]);
+        IdmsCardData::factory()->create(['net_id' => 'other001']);
 
         $response = $this->getJson('/api/v1/ucr-card-data/list?net_id=' . $netId);
 
@@ -116,7 +116,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $ssn = '123456789';
-        $record = UcrCardDataActual::factory()->create(['ssn' => $ssn]);
+        $record = IdmsCardData::factory()->create(['ucr_id' => $ssn]);
 
         $response = $this->getJson('/api/v1/ucr-card-data/list?ssn=' . $ssn);
 
@@ -135,7 +135,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $studentId = '862123456';
-        $record = UcrCardDataActual::factory()->create(['student_id' => $studentId]);
+        $record = IdmsCardData::factory()->create(['student_id' => $studentId]);
 
         $response = $this->getJson('/api/v1/ucr-card-data/list?student_id=' . $studentId);
 
@@ -154,7 +154,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $iso = '12345';
-        $record = UcrCardDataActual::factory()->create(['iso' => $iso]);
+        $record = IdmsCardData::factory()->create(['iso' => $iso]);
 
         $response = $this->getJson('/api/v1/ucr-card-data/list?iso=' . $iso);
 
@@ -176,9 +176,9 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $endDate = '2024-12-31';
 
         // Create records within the date range
-        UcrCardDataActual::factory()->count(3)->create(['issued' => '2024-06-15']);
+        IdmsCardData::factory()->count(3)->create(['issue_date' => '2024-06-15']);
         // Create records outside the date range
-        UcrCardDataActual::factory()->create(['issued' => '2023-12-31']);
+        IdmsCardData::factory()->create(['issue_date' => '2023-12-31']);
 
         $response = $this->getJson('/api/v1/ucr-card-data/list?start_date=' . $startDate . '&end_date=' . $endDate);
 
@@ -196,7 +196,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $netId = 'test001';
-        UcrCardDataActual::factory()->count(2)->create(['net_id' => $netId]);
+        IdmsCardData::factory()->count(2)->create(['net_id' => $netId]);
 
         $response = $this->getJson('/api/v1/ucr-card-data/net-id/' . $netId);
 
@@ -214,7 +214,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $ssn = '123456789';
-        $record = UcrCardDataActual::factory()->create(['ssn' => $ssn]);
+        $record = IdmsCardData::factory()->create(['ucr_id' => $ssn]);
 
         $response = $this->getJson('/api/v1/ucr-card-data/ssn/' . $ssn);
 
@@ -233,7 +233,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $studentId = '862123456';
-        $record = UcrCardDataActual::factory()->create(['student_id' => $studentId]);
+        $record = IdmsCardData::factory()->create(['student_id' => $studentId]);
 
         $response = $this->getJson('/api/v1/ucr-card-data/student-id/' . $studentId);
 
@@ -252,7 +252,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $iso = '12345';
-        $record = UcrCardDataActual::factory()->create(['iso' => $iso]);
+        $record = IdmsCardData::factory()->create(['iso' => $iso]);
 
         $response = $this->getJson('/api/v1/ucr-card-data/iso/' . $iso);
 
@@ -271,7 +271,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         // Create records within the date range
-        UcrCardDataActual::factory()->count(2)->create(['issued' => '2024-06-15']);
+        IdmsCardData::factory()->count(2)->create(['issue_date' => '2024-06-15']);
 
         $requestData = [
             'start_date' => '2024-01-01',
@@ -283,6 +283,10 @@ class UcrCardDataControllerFeatureTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonPath('status_code', $response->getStatusCode())
             ->assertJsonPath('message', 'UCR card data retrieved successfully for date range')
+<<<<<<< HEAD
+=======
+            ->assertJsonPath('data.total_found', 2)
+>>>>>>> main
             ->assertJsonCount(2, 'data.records');
     }
 
@@ -294,7 +298,7 @@ class UcrCardDataControllerFeatureTest extends TestCase
         Sanctum::actingAs($this->user);
 
         // Create test data
-        UcrCardDataActual::factory()->count(10)->create();
+        IdmsCardData::factory()->count(10)->create();
 
         $response = $this->getJson('/api/v1/ucr-card-data/list?per_page=5');
 
@@ -436,12 +440,12 @@ class UcrCardDataControllerFeatureTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $record = UcrCardDataActual::factory()->create();
+        $record = IdmsCardData::factory()->create();
 
         $endpoints = [
             '/api/v1/ucr-card-data/list?net_id=' . $record->net_id,
             '/api/v1/ucr-card-data/net-id/' . $record->net_id,
-            '/api/v1/ucr-card-data/ssn/' . $record->ssn,
+            '/api/v1/ucr-card-data/ssn/' . $record->ucr_id,
             '/api/v1/ucr-card-data/student-id/' . $record->student_id,
             '/api/v1/ucr-card-data/iso/' . $record->iso,
         ];

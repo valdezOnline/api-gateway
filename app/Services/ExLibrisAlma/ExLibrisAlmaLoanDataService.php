@@ -16,26 +16,32 @@ class ExLibrisAlmaLoanDataService
     public function __construct(
         private readonly string $key,
         private readonly string $baseUrl,
-        private readonly string $singleDataMinutes,
-        private readonly string $multiDataMinutes,
+        private readonly int $singleDataMinutes,
+        private readonly int $multiDataMinutes,
     ) {
     }
 
     public function getResponse($url)
     {
         try {
+            $separator = str_contains($url, '?') ? '&' : '?';
             $resp = Http::acceptJson()
-                ->get($url . "&apikey=$this->key");
+                ->get($url . $separator . "apikey={$this->key}");
 
             //Check if successful
             if ($resp->ok()) {
-                // If were are to return a more flatten data...
+                // If we are to return a more flatten data...
                 $recCount = $resp->json('total_record_count');
-                // return $this->ok($recCount);
+                // Log the raw data for debugging purposes
+                $data = (array) $resp->json('item_loan');
+                // Log the raw data for debugging purposes
+                Log::info('Raw loan data', [
+                    'data' => $data,
+                ]);
                 $data = (array) $resp->json('item_loan');
                 // Check if its empty
                 if (count($data) < 1) {
-                    return $this->error('No Loans Found.', 404);
+                    return $this->error('No Loans Found.', 204);
                 }
 
                 $mappedData = collect($data)->map(fn(array $arrayData) => LoanData::fromArray($arrayData));
@@ -49,11 +55,18 @@ class ExLibrisAlmaLoanDataService
 
             }
 
-            // Return Error
+            // Log the response if not successful
+            Log::error('Failed to fetch successful response', [
+                'response' => $resp->body(),
+            ]);
+            // Return error response if the request was not successful
             return $this->error($resp->json(), $resp->status());
 
         } catch (ErrorException $errorException) {
-            //throw $th;
+            // Log the error
+            Log::error('Exception while fetching response', [
+                'error' => $errorException->getMessage(),
+            ]);
             return $this->error($errorException->getMessage(), 500);
         }
     }
@@ -61,19 +74,31 @@ class ExLibrisAlmaLoanDataService
      * Get loans for a specific user
      *
      * @param string $userId
+     * @param string $loanStatus
      * @param string $limit
      * @param string $offset
      * @return \Illuminate\Http\JsonResponse
      */
-    public function Loans(string $userId, string $limit, string $offset)
+    public function Loans(string $userId, string $limit = '50', string $offset = '0', string $loanStatus = 'COMPLETE')
     {
         try {
+            // Capture the loan status, defaulting to 'COMPLETE' if not provided
+            Log::info('Loan status before defaulting', [
+                'loan_status' => $loanStatus,
+            ]);            
+            // Check of loan status is provided, if not default to 'COMPLETE'
+            $loanStatus = $loanStatus ?: 'COMPLETE';
 
-            $url = "{$this->baseUrl}/almaws/v1/users/{$userId}/loans?limit={$limit}&offset={$offset}";
+            Log::info('Loan status after defaulting', [
+                'loan_status' => $loanStatus,
+            ]);
+
+            $url = "{$this->baseUrl}/almaws/v1/users/{$userId}/loans?loan_status={$loanStatus}&limit={$limit}&offset={$offset}";
             Log::info('Fetching user loans', [
-                'user_id' => $userId,
+                'user_id' => $userId,                
                 'limit' => $limit,
                 'offset' => $offset,
+                'loan_status' => $loanStatus,
                 'url' => $url,
             ]);
             // return $this->ok($url);
@@ -100,18 +125,28 @@ class ExLibrisAlmaLoanDataService
     {
         try {
             $url = "{$this->baseUrl}/almaws/v1/users/{$userId}/loans/{$loanId}";
+            $separator = str_contains($url, '?') ? '&' : '?';
 
-            return $this->getResponse($url);
-            // $response = Http::withHeaders([
-            //     'Authorization' => 'apikey ' . $this->key,
-            //     'Accept' => 'application/json',
-            // ])->get("{$this->baseUrl}/almaws/v1/users/{$userId}/loans/{$loanId}");
+            $resp = Http::acceptJson()
+                ->get($url . $separator . "apikey={$this->key}");
 
-            // if ($response->successful()) {
-            //     return $response->json();
-            // }
+            if ($resp->ok()) {
+                $data = $resp->json('item_loan');
 
-            return null;
+                if (empty($data)) {
+                    return $this->error('No Loan Found.', 404);
+                }
+
+                if (is_array($data) && array_is_list($data)) {
+                    $mappedData = collect($data)->map(fn(array $arrayData) => LoanData::fromArray($arrayData));
+
+                    return $this->success('Success', $mappedData->all(), 200);
+                }
+
+                return $this->success('Success', LoanData::fromArray((array) $data), 200);
+            }
+
+            return $this->error($resp->json(), $resp->status());
         } catch (\Exception $errorException) {
             Log::error('Exception while fetching loan', [
                 'user_id' => $userId,
