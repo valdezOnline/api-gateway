@@ -36,13 +36,13 @@ Route::middleware(EnsureApiKeyIsValid::class)->group(function () {
 });
 
 // API Exit Point
-Route::middleware('auth:sanctum')->post('/exit', [ApiAuthController::class, 'exit']);
+Route::middleware(['auth:sanctum', 'ability:gateway:read,gateway:write,user:admin'])->post('/exit', [ApiAuthController::class, 'exit']);
 
 // API User Login
 Route::post('/login', [UserAuthController::class, 'login']);
 
 // Applications Request
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'ability:user:admin'])->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -51,11 +51,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('applications', ApplicationsController::class)->except(['store', 'update', 'delete']);
     Route::post('applications', [ApplicationsController::class, 'store']);
     Route::patch('applications/{application}', [ApplicationsController::class, 'update']);
-    Route::post('/exit', [ApiAuthController::class, 'exit']);
+    Route::post('applications/{application}/rotate-key', [ApplicationsController::class, 'rotateApiKey']);
+    Route::post('applications/{application}/revoke-key', [ApplicationsController::class, 'revokeApiKey']);
 });
 
 // UCRGW API Requests
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'ability:gateway:read,user:admin'])->group(function () {
     Route::get('/ucr-person/{stringId}', [UcrPersonController::class, 'person']);
     Route::get('/ucr-person/{searchField}/{searchTerm}', [UcrPersonController::class, 'personSearch']);
     Route::get('/sis/active-students/{stringId}', [SisActiveStudentController::class, 'activeStudent']);
@@ -70,20 +71,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/hr/employee/{netId}', [HrEmployeeDetailController::class, 'hrEmployee']);
     Route::get('/hr/employee-details/{netIds}', [HrEmployeeDetailController::class, 'hrEmployeeDetails']);
     Route::get('/hr/employee-job/{netId}', [HrEmployeeDetailController::class, 'hrEmployeeJob']);
-    Route::post('/file-upload', [FileLoadController::class, 'upload']);
-    Route::get('/file-download/{fileName}', [FileLoadController::class, 'download']);
+    Route::get('/file-download/{fileName}', [FileLoadController::class, 'download'])->where('fileName', '[A-Za-z0-9._-]+');
 
     Route::get('/idms/card-data', [IdmsCardDataController::class, 'searchCriteria']);
     Route::get('/idms/card-data/no-cache', [IdmsCardDataController::class, 'searchCriteriaNoCache']);
     Route::get('/idms/card-data/all', [IdmsCardDataController::class, 'allIdmsCardData']);
 });
 
+Route::middleware(['auth:sanctum', 'ability:gateway:write,user:admin'])->group(function () {
+    Route::post('/file-upload', [FileLoadController::class, 'upload']);
+});
+
 // ExLibris Alma API Requests
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'ability:gateway:write,user:admin'])->group(function () {
     Route::post('/alma-user/patron/guestLogin', [ExLibrisAlmaController::class, 'guestLogin']);
     Route::post('/alma-user/patron/guest-login', [ExLibrisAlmaController::class, 'guestLogin']);
     Route::post('/alma-user/patron/guestLogin/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin'])->where('stringCreds', '.*');
     Route::post('/alma-user/patron/guest-login/{stringCreds}', [ExLibrisAlmaController::class, 'guestLogin'])->where('stringCreds', '.*');
+    Route::post('/alma-user/loans/renew/{stringId}/{loanId}', [ExLibrisAlmaController::class, 'renewLoan']);
+});
+
+Route::middleware(['auth:sanctum', 'ability:gateway:read,user:admin'])->group(function () {
     Route::get('/alma-user/patron/{stringId}', [ExLibrisAlmaController::class, 'patron']);
     Route::get('/alma-user/patron-search', [ExLibrisAlmaController::class, 'search']);
     Route::get('/alma-user/fees/{stringId}', [ExLibrisAlmaController::class, 'fees']);
@@ -91,16 +99,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/alma-user/fees/{stringId}/{status}');
     Route::get('/alma-user/loans/{stringId}', [ExLibrisAlmaController::class, 'loans']);
     Route::get('/alma-user/loans/{stringId}/{loanId}', [ExLibrisAlmaController::class, 'loan']);
-    Route::post('/alma-user/loans/renew/{stringId}/{loanId}', [ExLibrisAlmaController::class, 'renewLoan']);
 });
 
 // UCR Card Data API Requests
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'ability:gateway:read,user:admin'])->group(function () {
     // Main list endpoint with query parameters
     Route::get('/ucr-card-data/list', [UcrCardDataController::class, 'list']);
-
-    // Multiple parameter search endpoint
-    Route::post('/ucr-card-data/search-multiple', [UcrCardDataController::class, 'searchMultiple']);
 
     // Specific search endpoints (alternative approach)
     Route::get('/ucr-card-data/net-id/{netId}', [UcrCardDataController::class, 'searchByNetId']);
@@ -109,5 +113,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/ucr-card-data/iso/{iso}', [UcrCardDataController::class, 'searchByIso']);
     Route::get('/ucr-card-data/library-number/{libraryNumber}', [UcrCardDataController::class, 'searchByLibraryNumber']);
     Route::get('/ucr-card-data/barcode/{barcode}', [UcrCardDataController::class, 'searchByLibraryNumber']);
+});
+
+Route::middleware(['auth:sanctum', 'ability:gateway:write,user:admin'])->group(function () {
+    // Multiple parameter search endpoint
+    Route::post('/ucr-card-data/search-multiple', [UcrCardDataController::class, 'searchMultiple']);
     Route::post('/ucr-card-data/date-range', [UcrCardDataController::class, 'searchByDateRange']);
 });

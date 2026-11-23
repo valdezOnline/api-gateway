@@ -4,7 +4,6 @@ namespace App\Http\Resources\v1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Crypt;
 
 class ApplicationResource extends JsonResource
 {
@@ -24,7 +23,11 @@ class ApplicationResource extends JsonResource
                 'description' => $this->description,
                 'createdBy' => $this->created_by,
                 'status' => $this->status,
-                'apikey' => Crypt::decrypt($this->apikey),
+                'allowedAbilities' => $this->allowed_abilities,
+                'apiKeyRotatedAt' => $this->api_key_rotated_at,
+                'apiKeyRevokedAt' => $this->api_key_revoked_at,
+                'apiKeyLastUsedAt' => $this->api_key_last_used_at,
+                'apiKeyLastUsedIp' => $this->api_key_last_used_ip,
             ],
         ];
     }

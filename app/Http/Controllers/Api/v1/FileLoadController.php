@@ -30,45 +30,39 @@ class FileLoadController extends Controller
          * NOTE: At this time - ONLY single file is allowed to be uploaded at a time.
          */
 
-        // Check if has a file
-        if (!$request->hasFile('file')) {
-            // return response()->json(['upload_file_not_found'], 400);
-            return $this->error('Upload File Not Found', 400);
-        }
-
         try {
-            // Allowed file extensions
-            $allowedFileExtension = ['csv', 'xslx', 'xml', 'json'];
-            // $fileUploaded = [];
+            $validated = $request->validate([
+                'file' => 'required|file|mimes:csv,xlsx,xml,json|max:10240',
+            ]);
 
-            // validate extension
-            $fileExtension = $request->file('file')->getClientOriginalExtension();
+            $uploadedFile = $validated['file'];
+            $fileExtension = Str::lower($uploadedFile->getClientOriginalExtension());
+            $fileType = $uploadedFile->getClientMimeType();
+            $fileSize = $uploadedFile->getSize();
 
-            $allowedFile = in_array(Str::lower($fileExtension), haystack: $allowedFileExtension);
-
-            if ($allowedFile) {
-                // return response()->json(['file_extension_is_valid'], 200);
-                $fileName = $request->file('file')->getClientOriginalName();
-                $filePath = $request->file('file')->storePubliclyAs('public/uploads', $fileName);
-
-                $fileExtension = $request->file('file')->getClientOriginalExtension();
-                $fileType = $request->file('file')->getClientMimeType();
-                $fileSize = $request->file('file')->getSize();
-
-                // dd($this->getApiInvoker());
-
-                $fileLoad = [
-                    'filePath' => $filePath,
-                    'fileName' => $fileName,
-                    'fileType' => $fileType,
-                    'fileSize' => $this->filesize_format($fileSize),
-                    'createdBy' => $this->getApiInvoker(),
-                ];
-
-            } else {
-                return $this->error('Invalid File Format', statusCode: 422);
-                // return response()->json(['invalid_file_format'], 422);
+            $originalBaseName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeBaseName = Str::slug($originalBaseName, '_');
+            if ($safeBaseName === '') {
+                $safeBaseName = 'upload';
             }
+
+            $fileName = sprintf(
+                '%s_%s_%s.%s',
+                Str::limit($safeBaseName, 80, ''),
+                now()->format('YmdHis'),
+                Str::random(8),
+                $fileExtension
+            );
+
+            $filePath = $uploadedFile->storeAs('public/uploads', $fileName);
+
+            $fileLoad = [
+                'filePath' => $filePath,
+                'fileName' => $fileName,
+                'fileType' => $fileType,
+                'fileSize' => $this->filesize_format($fileSize),
+                'createdBy' => $this->getApiInvoker(),
+            ];
         } catch (\ErrorException $errorException) {
             return $this->error($errorException->getMessage(), 404);
         }
@@ -91,17 +85,25 @@ class FileLoadController extends Controller
     public function download(string $fileName)
     {
         try {
-            // dd(public_path());
-            $path = storage_path("app/public/downloads/$fileName");
+            if (!preg_match('/\A[a-zA-Z0-9][a-zA-Z0-9._-]*\z/', $fileName)) {
+                return $this->error('Invalid file name format.', 400);
+            }
+
+            $safeFileName = basename($fileName);
+            if ($safeFileName !== $fileName) {
+                return $this->error('Invalid file name format.', 400);
+            }
+
+            $path = storage_path("app/public/downloads/$safeFileName");
             $headers = [
                 'Content-Type' => 'text/csv',
             ];
 
             if (!file_exists($path)) {
-                return $this->error("File $fileName does not exist.", 404);
+                return $this->error("File $safeFileName does not exist.", 404);
             }
 
-            return response()->download($path);
+            return response()->download($path, $safeFileName, $headers);
 
         } catch (\ErrorException $errorException) {
             //throw $th;

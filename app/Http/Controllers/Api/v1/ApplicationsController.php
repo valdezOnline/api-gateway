@@ -9,7 +9,6 @@ use App\Http\Requests\Api\v1\UpdateApplicationRequest;
 use App\Http\Resources\v1\ApplicationResource;
 use App\Models\Application;
 use App\Http\Filters\v1\ApplicationFilter;
-use Crypt;
 use Illuminate\Support\Str;
 
 class ApplicationsController extends Controller
@@ -38,16 +37,23 @@ class ApplicationsController extends Controller
     {
         // dd($request->all());
         $rememberToken = Str::random(100);
-        return new ApplicationResource(Application::Create(
-            [
-                'name' => $request->name,
-                'description' => $request->description,
-                'created_by' => $request->createdBy,
-                'apikey' => Crypt::encrypt($request->apikey),
-                'status' => $request->status,
-                'remember_token' => $rememberToken,
-            ]
-        ));
+        $allowedAbilities = Application::sanitizeGatewayAbilities(
+            $this->resolveAllowedAbilitiesFromRequest($request) ?? Application::GATEWAY_ABILITIES
+        );
+
+        $application = Application::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'created_by' => $request->createdBy,
+            'apikey' => $request->apikey,
+            'status' => $request->status,
+            'allowed_abilities' => $allowedAbilities,
+            'remember_token' => $rememberToken,
+            'api_key_rotated_at' => now(),
+            'api_key_revoked_at' => null,
+        ]);
+
+        return new ApplicationResource($application);
     }
 
     /**
@@ -72,12 +78,48 @@ class ApplicationsController extends Controller
      */
     public function update(UpdateApplicationRequest $request, Application $application)
     {
-        //PATCH
+        $attributes = $request->mappedAttributes();
+        $shouldRevokeKey = (bool) $request->input('data.attributes.revokeApiKey', false);
 
-        $application->update($request->mappedAttributes());
+        if (array_key_exists('apikey', $attributes)) {
+            $application->rotateApiKey((string) $attributes['apikey']);
+            unset($attributes['apikey']);
+        }
+
+        if (array_key_exists('allowed_abilities', $attributes)) {
+            $attributes['allowed_abilities'] = Application::sanitizeGatewayAbilities((array) $attributes['allowed_abilities']);
+        }
+
+        if ($shouldRevokeKey) {
+            $application->revokeApiKey();
+        } elseif (array_key_exists('status', $attributes) && (bool) $attributes['status'] === true) {
+            $attributes['api_key_revoked_at'] = null;
+        }
+
+        if ($attributes !== []) {
+            $application->update($attributes);
+        }
 
         return new ApplicationResource($application);
 
+    }
+
+    public function rotateApiKey(Request $request, Application $application)
+    {
+        $validated = $request->validate([
+            'apikey' => 'required|string|min:32|max:255',
+        ]);
+
+        $application->rotateApiKey($validated['apikey']);
+
+        return new ApplicationResource($application);
+    }
+
+    public function revokeApiKey(Application $application)
+    {
+        $application->revokeApiKey();
+
+        return new ApplicationResource($application);
     }
 
     /**
@@ -86,5 +128,30 @@ class ApplicationsController extends Controller
     public function destroy(Application $application)
     {
         //
+    }
+
+    private function resolveAllowedAbilitiesFromRequest(Request $request): ?array
+    {
+        $candidate = $request->input('allowed_abilities');
+        if (is_array($candidate)) {
+            return $candidate;
+        }
+
+        $candidate = $request->input('allowedAbilities');
+        if (is_array($candidate)) {
+            return $candidate;
+        }
+
+        $candidate = $request->input('data.attributes.allowedAbilities');
+        if (is_array($candidate)) {
+            return $candidate;
+        }
+
+        $candidate = $request->input('data.attributes.allowed_abilities');
+        if (is_array($candidate)) {
+            return $candidate;
+        }
+
+        return null;
     }
 }

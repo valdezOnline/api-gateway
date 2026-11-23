@@ -16,6 +16,8 @@ class UserAuthController extends Controller
 {
     use ApiResponses;
 
+    private const TOKEN_ABILITIES = ['user:admin'];
+
     /**
      * Login
      * 
@@ -54,6 +56,8 @@ class UserAuthController extends Controller
         // Create the session user
         Session::put('apiInvoker', $user->name);
 
+        $expirationMinutes = (int) config('sanctum.expiration');
+        $expiresAt = $expirationMinutes > 0 ? now()->addMinutes($expirationMinutes) : null;
 
         // Successfully Authenticated
         return $this->ok(
@@ -61,9 +65,9 @@ class UserAuthController extends Controller
             [
                 'token' => $user->createToken(
                     'User access token for ' . $user->netid,
-                    ['*'],
+                    self::TOKEN_ABILITIES,
                     // Abilities::getAbilities($user),
-                    now()->addDays(1)
+                    $expiresAt
                 )->plainTextToken
             ]
         );

@@ -22,8 +22,8 @@ class ApiEntryRequest extends FormRequest
     public function rules(): array
     { 
         return [
-            'application' => 'required',
-            'apikey' => 'required',
+            'application' => 'required|string|max:120',
+            'apikey' => 'required|string|max:255',
         ];
     }
 }

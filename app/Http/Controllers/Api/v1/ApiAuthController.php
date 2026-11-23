@@ -4,21 +4,17 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\ApiEntryRequest;
-use App\Http\Resources\v1\ApplicationResource;
 use App\Models\Application;
-use Hash;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponses;
 use Laravel\Sanctum\PersonalAccessToken;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ApiAuthController extends Controller
 {
     use ApiResponses;
+
     public function entry(ApiEntryRequest $request)
     {
         // Validate entries
@@ -42,12 +38,15 @@ class ApiAuthController extends Controller
             Session::put('apiInvoker', $application->name);
 
             // Prepare the data
+            $expirationMinutes = (int) config('sanctum.expiration');
+            $expiresAt = $expirationMinutes > 0 ? now()->addMinutes($expirationMinutes) : null;
+
             $data = [
                 'name' => $application->name,
                 'token' => $application->createToken(
                     'Application access token for ' . $application->name,
-                    ['*'],
-                    now()->addDays(1)
+                    $application->tokenAbilitiesForGateway(),
+                    $expiresAt
                 )->plainTextToken
             ];
 

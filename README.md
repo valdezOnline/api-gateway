@@ -16,3 +16,26 @@ The library public API is the gateway for calling other restFUL API that the lib
 
 ## Deployment to AWS via Laravel Forge
 1.
+
+## Security Baseline Configuration
+- Keep `APP_DEBUG=false` outside local troubleshooting.
+- Set `SANCTUM_EXPIRATION` to a short value (default `60` minutes).
+- Restrict CORS using:
+  - `CORS_ALLOWED_ORIGINS`
+  - `CORS_ALLOWED_METHODS`
+  - `CORS_ALLOWED_HEADERS`
+  - `CORS_MAX_AGE`
+  - `CORS_SUPPORTS_CREDENTIALS`
+- Always provide a strong `APP_ENCRYPTION_KEY` in deployed environments.
+
+## API Key Lifecycle and Token Abilities
+- Application API keys are now stored as one-way hashes and support lifecycle metadata (rotated/revoked/last used).
+- New key lifecycle endpoints:
+  - `POST /api/v1/applications/{application}/rotate-key`
+  - `POST /api/v1/applications/{application}/revoke-key`
+- Per-application ability policy:
+  - `allowed_abilities` controls app token scopes (`gateway:read`, `gateway:write`)
+  - App entry token issuance is restricted to each application's configured abilities
+- Gateway routes require Sanctum abilities:
+  - `gateway:read` and `gateway:write` for app-issued tokens
+  - `user:admin` for user-issued admin tokens

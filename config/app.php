@@ -230,5 +230,5 @@ return [
    |
    */
 
-    'app_encryption_key' => env('APP_ENCRYPTION_KEY', 'my-encryption-key'),
+    'app_encryption_key' => env('APP_ENCRYPTION_KEY'),
 ];

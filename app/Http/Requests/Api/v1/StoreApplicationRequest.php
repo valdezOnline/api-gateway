@@ -24,11 +24,19 @@ class StoreApplicationRequest extends FormRequest
         return [
             // 'type' => 'application',
             // 'id' => $this->id,
+            'allowed_abilities' => 'sometimes|array',
+            'allowed_abilities.*' => 'string|in:gateway:read,gateway:write',
+            'allowedAbilities' => 'sometimes|array',
+            'allowedAbilities.*' => 'string|in:gateway:read,gateway:write',
+            'data.attributes.allowedAbilities' => 'sometimes|array',
+            'data.attributes.allowedAbilities.*' => 'string|in:gateway:read,gateway:write',
+            'data.attributes.allowed_abilities' => 'sometimes|array',
+            'data.attributes.allowed_abilities.*' => 'string|in:gateway:read,gateway:write',
             'attributes' => [
                 'name' => 'required|string',
                 'description' => 'required|string',
                 'created_by' => 'required|string',
-                'apikey' => 'required|string',
+                'apikey' => 'required|string|min:32|max:255',
                 'status' => 'required|boolean',
             ]
         ];

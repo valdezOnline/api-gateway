@@ -4,6 +4,9 @@ use App\Models\Application;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 return new class extends Migration {
     /**
@@ -15,7 +18,7 @@ return new class extends Migration {
             [
                 'name' => 'ul-apps',
                 'description' => 'Library Application Portal',
-                'apikey' => Crypt::encrypt(Str::uuid()->toString()),
+                'apikey' => Hash::make(Str::uuid()->toString()),
                 'status' => true,
                 'created_by' => 'joelval',
                 'created_at' => now()
