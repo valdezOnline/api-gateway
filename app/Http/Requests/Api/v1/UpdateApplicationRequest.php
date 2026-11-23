@@ -21,25 +21,37 @@ class UpdateApplicationRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxExpiryDate = now()->addYear()->toDateString();
+
         return [
-            // 'type' => 'application',
-            // 'id' => 'required|string',
+            'name' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string|max:1000',
+            'createdBy' => 'sometimes|string|max:255',
+            'apikey' => 'sometimes|string|min:32|max:255',
+            'revokeApiKey' => 'sometimes|boolean',
+            'renewApiKey' => 'sometimes|boolean',
+            'status' => 'sometimes|boolean',
+            'apiKeyExpiresAt' => "sometimes|date|after:today|before_or_equal:$maxExpiryDate",
+            'selectedServices' => 'sometimes|array|min:1',
+            'selectedServices.*' => 'string',
             'allowed_abilities' => 'sometimes|array',
             'allowed_abilities.*' => 'string|in:gateway:read,gateway:write',
             'allowedAbilities' => 'sometimes|array',
             'allowedAbilities.*' => 'string|in:gateway:read,gateway:write',
+            'data.attributes.name' => 'sometimes|string|max:255',
+            'data.attributes.description' => 'sometimes|string|max:1000',
+            'data.attributes.createdBy' => 'sometimes|string|max:255',
+            'data.attributes.apikey' => 'sometimes|string|min:32|max:255',
+            'data.attributes.revokeApiKey' => 'sometimes|boolean',
+            'data.attributes.renewApiKey' => 'sometimes|boolean',
+            'data.attributes.status' => 'sometimes|boolean',
+            'data.attributes.apiKeyExpiresAt' => "sometimes|date|after:today|before_or_equal:$maxExpiryDate",
+            'data.attributes.selectedServices' => 'sometimes|array|min:1',
+            'data.attributes.selectedServices.*' => 'string',
             'data.attributes.allowedAbilities' => 'sometimes|array',
             'data.attributes.allowedAbilities.*' => 'string|in:gateway:read,gateway:write',
             'data.attributes.allowed_abilities' => 'sometimes|array',
             'data.attributes.allowed_abilities.*' => 'string|in:gateway:read,gateway:write',
-            'attributes' => [
-                'name' => 'sometimes|string',
-                'description' => 'sometimes|string',
-                'createdBy' => 'sometimes|string',
-                'apikey' => 'sometimes|string',
-                'revokeApiKey' => 'sometimes|boolean',
-                'status' => 'sometimes|boolean',
-            ]
         ];
     }
 
@@ -52,6 +64,8 @@ class UpdateApplicationRequest extends FormRequest
             'data.attributes.apikey' => 'apikey',
             'data.attributes.allowedAbilities' => 'allowed_abilities',
             'data.attributes.allowed_abilities' => 'allowed_abilities',
+            'data.attributes.apiKeyExpiresAt' => 'api_key_expires_at',
+            'data.attributes.selectedServices' => 'assigned_services',
             'data.attributes.status' => 'status',
             'data.attributes.createdAt' => 'created_at',
             'data.attributes.updatedAt' => 'updated_at',

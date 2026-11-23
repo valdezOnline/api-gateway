@@ -18,6 +18,7 @@ class Application extends Model
     use HasApiTokens, HasFactory, Notifiable;
 
     public const GATEWAY_ABILITIES = ['gateway:read', 'gateway:write'];
+    public const API_KEY_MAX_VALIDITY_DAYS = 365;
 
     /**
      * The attributes that are mass assignable.
@@ -32,9 +33,11 @@ class Application extends Model
         'apikey',
         'api_key_rotated_at',
         'api_key_revoked_at',
+        'api_key_expires_at',
         'api_key_last_used_at',
         'api_key_last_used_ip',
         'allowed_abilities',
+        'assigned_services',
     ];
 
     /**
@@ -56,8 +59,10 @@ class Application extends Model
         'email_verified_at' => 'datetime',
         'api_key_rotated_at' => 'datetime',
         'api_key_revoked_at' => 'datetime',
+        'api_key_expires_at' => 'datetime',
         'api_key_last_used_at' => 'datetime',
         'allowed_abilities' => 'array',
+        'assigned_services' => 'array',
     ];
 
     public function scopeFilter(Builder $builder, QueryFilter $filters)
@@ -78,12 +83,22 @@ class Application extends Model
         );
     }
 
-    public function rotateApiKey(string $plainApiKey): void
+    public function rotateApiKey(string $plainApiKey, $expiresAt = null): void
     {
         $this->forceFill([
             'apikey' => $plainApiKey,
             'api_key_rotated_at' => now(),
             'api_key_revoked_at' => null,
+            'api_key_expires_at' => $expiresAt ?? now()->addDays(self::API_KEY_MAX_VALIDITY_DAYS),
+        ])->save();
+    }
+
+    public function renewApiKey($expiresAt = null): void
+    {
+        $this->forceFill([
+            'api_key_expires_at' => $expiresAt ?? now()->addDays(self::API_KEY_MAX_VALIDITY_DAYS),
+            'api_key_revoked_at' => null,
+            'status' => true,
         ])->save();
     }
 

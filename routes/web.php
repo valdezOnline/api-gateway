@@ -18,6 +18,11 @@ Route::get('/test', function (Request $request) {
     return view('test');
 });
 
+Route::view('/login', 'auth.login')->name('login');
+Route::view('/applications-access', 'auth.applications')->name('applications.access');
+Route::view('/applications-access/create', 'auth.application-create')->name('applications.create');
+Route::view('/applications-access/{application}/edit', 'auth.application-edit')->name('applications.edit');
+
 Route::get('/welcome', function (Request $request) {
     return view('welcome');
 });

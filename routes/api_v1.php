@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\v1\TermStudentController;
 use App\Http\Controllers\Api\v1\UcrCardDataController;
 use App\Http\Controllers\Api\v1\UserAuthController;
 use App\Http\Controllers\Api\v1\ApplicationsController;
+use App\Http\Controllers\Api\v1\ApiServiceCatalogController;
 use App\Http\Controllers\Api\v1\ExLibrisAlmaController;
 use App\Http\Controllers\Api\v1\HrEmployeeDetailController;
 use App\Http\Controllers\Api\v1\SisActiveStudentController;
@@ -44,6 +45,7 @@ Route::post('/login', [UserAuthController::class, 'login']);
 // Applications Request
 Route::middleware(['auth:sanctum', 'ability:user:admin'])->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout']);
+    Route::get('/service-catalog', [ApiServiceCatalogController::class, 'index']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });

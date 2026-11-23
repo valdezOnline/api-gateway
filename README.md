@@ -12,7 +12,7 @@ The library public API is the gateway for calling other restFUL API that the lib
 - NginX
 
 ## Setup and Run for Local Development
-1. 
+- Check docker-compose.yml 
 
 ## API Service Scaffolding
 - Create a new API service scaffold (controller, service, provider, model, and config registration):

@@ -4,9 +4,44 @@
     "isEntry": true,
     "src": "resources/css/app.css"
   },
+  "resources/css/login.css": {
+    "file": "assets/login-AHCDRZMA.css",
+    "isEntry": true,
+    "src": "resources/css/login.css"
+  },
+  "resources/css/applications.css": {
+    "file": "assets/applications-J2AVDUUB.css",
+    "isEntry": true,
+    "src": "resources/css/applications.css"
+  },
+  "resources/css/application-create.css": {
+    "file": "assets/application-create-NBCWFHM5.css",
+    "isEntry": true,
+    "src": "resources/css/application-create.css"
+  },
   "resources/js/app.js": {
     "file": "assets/app-db6683bb.js",
     "isEntry": true,
     "src": "resources/js/app.js"
+  },
+  "resources/js/login.js": {
+    "file": "assets/login-MDA3WCHG.js",
+    "isEntry": true,
+    "src": "resources/js/login.js"
+  },
+  "resources/js/applications.js": {
+    "file": "assets/applications-HGMTVTV3.js",
+    "isEntry": true,
+    "src": "resources/js/applications.js"
+  },
+  "resources/js/application-create.js": {
+    "file": "assets/application-create-R6EMANFY.js",
+    "isEntry": true,
+    "src": "resources/js/application-create.js"
+  },
+  "resources/js/application-edit.js": {
+    "file": "assets/application-edit-DMHZBMWA.js",
+    "isEntry": true,
+    "src": "resources/js/application-edit.js"
   }
 }

@@ -21,9 +21,25 @@ class StoreApplicationRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxExpiryDate = now()->addYear()->toDateString();
+
         return [
-            // 'type' => 'application',
-            // 'id' => $this->id,
+            'name' => 'required_without:data.attributes.name|string|max:255',
+            'description' => 'required_without:data.attributes.description|string|max:1000',
+            'createdBy' => 'required_without:data.attributes.createdBy|string|max:255',
+            'apikey' => 'required_without:data.attributes.apikey|string|min:32|max:255',
+            'status' => 'sometimes|boolean',
+            'apiKeyExpiresAt' => "sometimes|date|after:today|before_or_equal:$maxExpiryDate",
+            'selectedServices' => 'sometimes|array|min:1',
+            'selectedServices.*' => 'string',
+            'data.attributes.name' => 'required_without:name|string|max:255',
+            'data.attributes.description' => 'required_without:description|string|max:1000',
+            'data.attributes.createdBy' => 'required_without:createdBy|string|max:255',
+            'data.attributes.apikey' => 'required_without:apikey|string|min:32|max:255',
+            'data.attributes.status' => 'sometimes|boolean',
+            'data.attributes.apiKeyExpiresAt' => "sometimes|date|after:today|before_or_equal:$maxExpiryDate",
+            'data.attributes.selectedServices' => 'sometimes|array|min:1',
+            'data.attributes.selectedServices.*' => 'string',
             'allowed_abilities' => 'sometimes|array',
             'allowed_abilities.*' => 'string|in:gateway:read,gateway:write',
             'allowedAbilities' => 'sometimes|array',
@@ -32,13 +48,6 @@ class StoreApplicationRequest extends FormRequest
             'data.attributes.allowedAbilities.*' => 'string|in:gateway:read,gateway:write',
             'data.attributes.allowed_abilities' => 'sometimes|array',
             'data.attributes.allowed_abilities.*' => 'string|in:gateway:read,gateway:write',
-            'attributes' => [
-                'name' => 'required|string',
-                'description' => 'required|string',
-                'created_by' => 'required|string',
-                'apikey' => 'required|string|min:32|max:255',
-                'status' => 'required|boolean',
-            ]
         ];
     }
 }

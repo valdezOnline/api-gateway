@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'App Template') }} - @yield('title', 'API Gateway')</title>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
+
+    <!-- Styles -->
+    @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/css/custom.css', 'resources/js/app.js'])
+</head>
+
+<body>
+    <header>
+        @if (!auth()->check())
+            <div class=" border-bottom">
+                @include('layouts.includes.top-nav')
+            </div>
+        @endif
+        <div class="">
+            @include('layouts.includes.logo-section')
+        </div>
+        <div id="app" class="container-fluid ucr-blue-bg">
+            @include('layouts.includes.main-nav')
+        </div>
+    </header>
+
+    <main class="py-4">
+        <div class="container">
+            @if (session('impersonation.active') && auth()->check())
+                <div class="alert alert-warning d-flex flex-column flex-md-row justify-content-between align-items-md-center"
+                    role="alert">
+                    <div>
+                        <i class="fas fa-user-secret me-2"></i>
+                        <strong>Admin Impersonation Active:</strong>
+                        You are impersonating <strong>{{ auth()->user()->full_name }}</strong>.
+                    </div>
+                    <form method="POST" action="{{ route('admin.impersonation.stop') }}" class="mt-3 mt-md-0">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-dark">
+                            <i class="fas fa-user-check me-1"></i>Stop Impersonation
+                        </button>
+                    </form>
+                </div>
+            @endif
+
+            @if (($activeSiteStatus ?? null) && auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->is_admin))
+                <div class="alert alert-dark d-flex flex-column flex-md-row justify-content-between align-items-md-center"
+                    role="alert">
+                    <div>
+                        <i class="fas fa-tools me-2"></i>
+                        <strong>Site Status Active:</strong>
+                        {{ $activeSiteStatus->displayTitle() }} —
+                        {{ $activeSiteStatus->displayMessage() }}
+                    </div>
+                    <a class="btn btn-sm btn-outline-light mt-3 mt-md-0" href="{{ route('site-status-config.edit') }}">
+                        <i class="fas fa-cog me-1"></i>Manage Site Status
+                    </a>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if (session('warning'))
+                <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>{{ session('warning') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @yield('content')
+        </div>
+    </main>
+
+    <footer>
+        @include('layouts.includes.footer-nonav')        
+    </footer>
+
+    @yield('scripts')
+    @stack('scripts')
+</body>
+
+</html>
