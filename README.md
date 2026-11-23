@@ -14,6 +14,19 @@ The library public API is the gateway for calling other restFUL API that the lib
 ## Setup and Run for Local Development
 1. 
 
+## API Service Scaffolding
+- Create a new API service scaffold (controller, service, provider, model, and config registration):
+  - `a app:scaffold-api-service LibraryStatus`
+- Running in Docker container `api-gateway`:
+  - `docker exec api-gateway php artisan app:scaffold-api-service LibraryStatus`
+- Optional flags:
+  - `--service-key=libraryStatus`
+  - `--controller-namespace=v1`
+  - `--model-name=LibraryStatusRecord`
+  - `--with-route`
+  - `--route-uri=library-status`
+  - `--force`
+
 ## Deployment to AWS via Laravel Forge
 1.
 
